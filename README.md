@@ -1,30 +1,29 @@
-# incubator-2019-slack-bot-client
-Slack bot client repository(Front-end)
+# integracija
 
-# WELCOME-BOT
-Materijali i podjela zadataka na : https://drive.google.com/drive/folders/1oX5iD3qJL6NcMcSVcKLciVfY976Ohw8E?usp=sharing
+## Project setup
+```
+npm install
+```
 
-## Tema - Modul za welcome bota
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
 
-### Članovi tima
-- Amina Fajić
-- Tarik Čolakhodžić
-- Mario Prusina
-- Amer Kovač
+### Compiles and minifies for production
+```
+npm run build
+```
 
-### Tehnologije
-- Front application:
-  HTML5
-  CSS with SCSS preprocessor
-  Javascript, Vue.js
-  - Backend service:
-  Java (Spring)
-  MariaDB
+### Run your tests
+```
+npm run test
+```
 
-  
-### Opis modula
-Welcome Bot je sistem koji pruža korisniku opciju da instalira bot u Slack sistem.
-Bot je odgovoran za objavljivanje poruka na kanalu ili privatnih poruka.Bot je kontrolisan unutar Bot Admin aplikacije.
-### Uloge u sistemu
-- Administrator
--Korisnik
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
