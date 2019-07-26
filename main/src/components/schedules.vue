@@ -1,7 +1,7 @@
 <template>
    <div id="Schedules" class="tabcontent">
 
-     <formaS />
+    <router-view></router-view>
 
     <table cols="8">
         <tr>
@@ -37,30 +37,31 @@
           <td>Cleveland</td>
           <td>Brown</td>
           <td>$250</td>
-          <td colspan="5">    </td>
+          <td colspan="5"></td>
         </tr>
         <tr>
                 
                 <td>Peter</td>
                 <td>Griffin</td>
                 <td>$100</td>
-                <td colspan="5">     </td>
+                <td colspan="5"></td>
               </tr>
               <tr>
                     
                     <td>Peter</td>
                     <td>Griffin</td>
                     <td>$100</td>
-                    <td colspan="5">     </td>
+                    <td colspan="5"></td>
                   </tr>
                   <tr>
                 
                         <td>Peter</td>
                         <td>Griffin</td>
                         <td>$100</td>
-                        <td colspan="5">     </td>
+                        <td colspan="5"></td>
                       </tr>
       </table>
+    
   <button @click="showScheduleForm" id="btn"> + </button>
 </div>
 </template>
@@ -70,6 +71,7 @@ export default {
     name: "schedules",
     methods:{
       showScheduleForm(){
+        this.$router.push("/schedules/newSchedule");
       }
     }
 }
@@ -129,8 +131,8 @@ table {
     border-radius: 50%;
     font-size: 30px;
     position: absolute;
-    bottom: 85px;
-    right: 60px;
+    bottom: 50px;
+    right: 13px;
     background-color:  #006BF5;;
     color: white;
     border: 1px solid white;
@@ -142,4 +144,28 @@ table {
 #btn:hover{
   cursor: pointer;
 }
+
+#footer{
+  width: 92%;
+  height: 7vh;
+  background-color: white;
+  float: left;
+  z-index: 0;
+  position: absolute;
+  border: 1px solid lightgray;
+  bottom: 0px;
+  margin: 0px;
+  padding: 0px 20px;
+}
+
+#footer-btn{
+    border: 1px solid grey;
+    padding: 5px 5px;
+    width: 105px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 4px;
+}
+
 </style>

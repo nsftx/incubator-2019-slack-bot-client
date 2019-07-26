@@ -14,9 +14,9 @@ Vue.config.productionTip = false;
 const router = new VueRouter({
   routes: [
   {path: "/", component: messages, redirect: "/messages"},
+
   {
     path: "/messages", 
-    //name: "messages",
     component: messages, 
     children: 
     [ 
@@ -25,19 +25,48 @@ const router = new VueRouter({
         component: formaM 
       },
       {
-        path: "newTrigger",
+        path: "newMessage/:id",
+        component: formaM
+      },
+      {
+        path: "newTrigger/:id",
         component: formaT
       },
+      {
+        path: "newSchedule/:id",
+        component: formaS
+      },
+      {
+        path: "updateMessage/:id",
+        component: formaM
+      }
+    ] 
+  },
+
+  {
+    path: "/schedules", 
+    component: schedules,
+
+    children: 
+    [
       {
         path: "newSchedule",
         component: formaS
       }
-    ] 
+    ]
   },
-  {path: "/schedules", component: schedules},
-  {path: "/triggers", component: triggers},
-  {path: "/formaS", component: formaS},
-  {path: "/formaT", component: formaT},
+
+  {
+    path: "/triggers", 
+    component: triggers,
+    children: 
+    [
+      {
+        path: "newTrigger",
+        component: formaT
+      }
+    ]
+  },
   ],
   mode: "history"
 });

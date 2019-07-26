@@ -1,0 +1,7 @@
+
+{  
+      "title":"Naslov koji treba biti azuriran, a mozda i ne treba...",
+      "text":"Tekst poruke koji treba biti azuriran, a mozda ni on ne treba...",
+      "id":1,
+      "created_at":"2019-04-21T06:17:00.000+0000"
+}

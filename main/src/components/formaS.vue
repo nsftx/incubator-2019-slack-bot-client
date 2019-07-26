@@ -22,7 +22,7 @@
         <input type="checkbox" id="active"/> <label class="check-label"> Active </label> 
     <br>
     <br>
-        <input type="submit" value="Save"/>
+        <input type="button" value="Save" id="submit" @click="save"/>
         <input type="button" value="Cancel" @click="exit"/>
 </div>
 
@@ -34,6 +34,7 @@
 
 <script>
 
+/*
 window.addEventListener("mouseup", function(event){
 	if(event.target != document.getElementById("formaS") && event.target.parentNode != document.getElementById("formaS") && 
 	event.target.parentNode !=  document.getElementById("forma") && event.target.parentNode != document.getElementById("inner-wrap")
@@ -48,7 +49,7 @@ window.addEventListener("mouseup", function(event){
 		document.getElementById("field1").value = "";
 		document.getElementById("textarea").value = "";
 	}
-})
+})*/
 
 export default {
     name: "formaS",
@@ -56,8 +57,10 @@ export default {
 		exit(){
 			this.$router.go(-1);
 		},
-		sacuvaj(){
+		save(){
             alert("Sacuvaj");
+            if(this.$route.params.id != null)
+                alert(this.$route.params.id);
             this.$router.go(-1);
 		}
     }
@@ -77,6 +80,7 @@ export default {
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
+    z-index: 99;
 }
 
 .form-style-10{
@@ -91,11 +95,10 @@ export default {
     overflow:hidden;
     box-sizing:border-box;
     display:block;
-	-webkit-border-radius:1px;
-	-moz-border-radius: 1px;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
 	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
 	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+    z-index: 99;
 }
 
 .form-style-10 .inner-wrap{
@@ -161,7 +164,7 @@ export default {
     margin-top: 18px;
 }
 
-.form-style-10 input[type="submit"]{
+.form-style-10 #submit{
     float:right;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     width:20%;
@@ -177,6 +180,14 @@ export default {
 	font: normal 30px 'Bitter', serif;
 	border: 1px solid #0080ff;;
 	font-size: 17px;
+}
+
+.form-style-10 #submit:hover{
+    
+	background:darkblue;
+	-moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
+	-webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
+	box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
 }
 
 .form-style-10 input[type="button"]{

@@ -12,11 +12,11 @@
         <label class="la"> Trigger </label>  <select name="field1" id="field2"> 
             <option value="">On channel join</option>
         </select>
-        <label class="la"> Channel </label>  <input type="text" name="field1" id="field3" />
-        <input type="checkbox" id="check"/> <label id="active"> Active </label> 
+        <label class="la"> Channel </label>  <input type="text" name="field1" id="field3"/>
+        <input type="checkbox" id="check" /> <label id="active"> Active </label> 
     <br>
     <br>
-        <input type="submit" value="Save" />
+        <input type="button" value="Save" id="submit" @click="save" />
         <input type="button" value="Cancel" @click="exit" />
 </div>
 </form>
@@ -26,6 +26,7 @@
 
 <script>
 
+/*
 window.addEventListener("mouseup", function(event){
 	if(event.target != document.getElementById("formaT") && event.target.parentNode != document.getElementById("formaT") && 
 	event.target.parentNode !=  document.getElementById("forma") && event.target.parentNode != document.getElementById("inner-wrap")
@@ -39,7 +40,7 @@ window.addEventListener("mouseup", function(event){
         document.getElementById("field2").value = "";
 		document.getElementById("field3").value = "";        
 	}
-})
+})*/
 
 export default {
     name: "formaT",
@@ -49,7 +50,12 @@ export default {
         },
         save(){
             alert("Sacuvaj");
+            if(this.$route.params.id != null)
+                alert(this.$route.params.id);
             this.$router.go(-1);
+        },
+        ispis(){
+            alert("Ispis");
         }
     }
 }
@@ -70,6 +76,11 @@ export default {
     transform: translateX(-50%) translateY(-50%);
     background-color: white;
     padding: 10px;
+    z-index: 99;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+    z-index: 99;
 }
 
 #form-style-10{
@@ -84,9 +95,7 @@ export default {
     overflow:hidden;
     box-sizing:border-box;
     display:block;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+    z-index: 99;
 }
 .form-style-10 .inner-wrap{
     height:auto;
@@ -152,7 +161,7 @@ export default {
     margin-top: 18px;
 }
 
-.form-style-10 input[type="submit"]{
+.form-style-10 #submit{
     float:right;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     width:20%;
@@ -169,6 +178,15 @@ export default {
 	border: 1px solid #0080ff;;
 	font-size: 15px;
 } 
+
+.form-style-10 #submit:hover{
+    
+	background:darkblue;
+	-moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
+	-webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
+	box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
+}
+
 .form-style-10 input[type="button"]{
     margin-right:35px;
     float:right;

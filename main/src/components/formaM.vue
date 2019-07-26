@@ -7,8 +7,8 @@
     <div id="section">  <p>Create Message <label id="close-icon" @click="exit" style="font-size: 20px"> X </label> </p></div>
     <div id="inner-wrap">
 		
-        <label>Title </label><input type="text" name="field1" placeholder="New message" id="field1"/>
-        <label> Text </label><textarea id="textarea" name="field2" placeholder="Type your message text here"  cols="30" rows="8"></textarea>
+        <label>Title </label><input type="text" name="field1" placeholder="New message" v-model="title" id="field1"/>
+        <label> Text </label><textarea id="textarea" name="field2" placeholder="Type your message text here" v-model="text"  cols="30" rows="8"></textarea>
         <input type="button" value="Save" @click="save" id="submit"/>
         <input type="button" value="Cancel" @click="exit" id="cancle"/>
 	</div>
@@ -19,26 +19,58 @@
 </template>
 
 <script>
+import axios from "axios"
 
+/*
 window.addEventListener("mouseup", function(event){
 	if(event.target != document.getElementById("formaM") && event.target.parentNode != document.getElementById("formaM") && 
 	event.target.parentNode !=  document.getElementById("forma") && event.target.parentNode != document.getElementById("inner-wrap")
 	&& event.target != document.getElementById("section") && event.target.parentNode != document.getElementById("section"))
 	{
-		document.getElementById("field1").value = "";
-		document.getElementById("textarea").value = "";
+		this.exit;
 	}
-});
+});*/
 
 export default {
-
-    name: "formaM",
-    methods:{
+	name: "formaM",
+	data(){
+		return{
+			title: "",
+			text: ""
+		}
+	},
+	mounted: function(){
+		if(this.$route.params.id == null)
+			console.log("Nije prosljedjen parametar");
+		else
+		{
+			console.log(this.$route.params.id)
+			this.create();
+		}
+	},
+    methods: {
 		exit(){
 			this.$router.go(-1);
 		},
 		save(){
+			if(this.$route.params.id == null)
+			{
+				alert("Sacuvaj");
+			}
+			else
+			{
+				alert("Update -> " + this.$route.params.id);
+			}
 			this.$router.go(-1);
+		},
+		async create(){
+			const res = await axios.get("../../jsonM.txt");
+			this.title = res.data.title;
+			this.text = res.data.text;
+		},
+		async destroyed(){
+			this.title = "",
+			this.text = ""
 		}
 	},
 }
@@ -68,6 +100,7 @@ export default {
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
 	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
 	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+	z-index: 99;
 }
 
 #form-style-10 #inner-wrap{

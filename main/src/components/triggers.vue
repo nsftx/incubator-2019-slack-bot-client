@@ -1,7 +1,7 @@
 <template>
     <div id="Triggers" class="tabcontent">
 
-      <formaT />
+      <router-view></router-view>
 
     <table cols="15">
         <tr>
@@ -59,6 +59,7 @@
                         <td colspan="5">     </td>
                       </tr>
       </table>
+    
     <button @click="showTriggerForm" id="btn"> + </button>
 </div>
 </template>
@@ -67,6 +68,7 @@
 export default {
     methods: {
       showTriggerForm(){
+        this.$router.push("/triggers/newTrigger");
       }
     }
 }
@@ -126,8 +128,8 @@ table {
     border-radius: 50%;
     font-size: 30px;
     position: absolute;
-    bottom: 85px;
-    right: 60px;
+    bottom: 50px;
+    right: 13px;
     background-color:  #006BF5;;
     color: white;
     border: 1px solid white;

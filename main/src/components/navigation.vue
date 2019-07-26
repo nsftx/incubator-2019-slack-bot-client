@@ -2,52 +2,30 @@
     <div class="tab">
         <div id="logo" class="tablinks"></div>
 
-        <button class="active" @click="goToMessages">
-            <v-icon color="white" style="margin-bottom: 10px">local_post_office</v-icon> <br>
-            Messages
+        <router-link to="/messages" class="router-link">
+         <button class="active">
+            <v-icon color="white" style="margin-bottom: 10px">local_post_office</v-icon> <br> Messages
         </button>
+        </router-link>
 
-        <button @click="goToSchedules">
-            <v-icon color="white" style="margin-bottom: 10px">assignment_turned_in</v-icon> <br>
-            Schedules
+       <router-link to="/schedules" class="router-link">
+        <button>
+            <v-icon color="white" style="margin-bottom: 10px">assignment_turned_in</v-icon> <br> Schedules
         </button>
+        </router-link>
 
-        <button @click="goToTriggers">
-            <v-icon color="white" style="margin-bottom: 10px">assistant</v-icon> <br>
-            Triggers
+      <router-link to="/triggers" class="router-link">
+        <button>
+            <v-icon color="white" style="margin-bottom: 10px">assistant</v-icon> <br> Triggers
         </button>
-</div>
+      </router-link>
+    </div>
 </template>
 
 <script>
 
-function changeAcitve(index){
-  var activeClass = document.getElementsByTagName("button");
-  activeClass[index].classList.add("active");
-  
-  for(var i = 0; i<activeClass.length; i++)
-  {
-    if(i != index)
-      activeClass[i].classList.remove("active");
-  }
-}
-
 export default {
     name: "navigation",
-    methods: {
-      goToMessages(){
-        this.$router.push("/messages");
-        changeAcitve(0);
-      },
-      goToSchedules(){
-        this.$router.push("/schedules");
-        changeAcitve(1);
-      },
-      goToTriggers(){
-        this.$router.push("/triggers");
-        changeAcitve(2);
-      }
-    }
 }
 </script>
 
@@ -88,7 +66,11 @@ export default {
 }
 
 /* Create an active/current "tab button" class */
-.active {
+a.router-link.router-link-exact-active.router-link-active button{
+  background-color: rgb(45, 146, 247);
+}
+
+.router-link.router-link-active button{
   background-color: rgb(45, 146, 247);
 }
 
@@ -102,23 +84,26 @@ export default {
 }
 
 li i{
-          margin-left: 25px;
-        }
+  margin-left: 25px;
+}
 
-        li .material-icons{
-          font-size: 18px;
-          color: gray;
-          display: none;
-        }
+li .material-icons{
+  font-size: 18px;
+  color: gray;
+  display: none;
+}
 
-        li:hover .material-icons{
-          display: inline;
-          display: block;
-        }
+li:hover .material-icons{
+  display: inline;
+  display: block;
+}
 
-        .material-icons:hover{
-          color: black;
-          cursor: pointer;
-        }
+.material-icons:hover{
+  color: black;
+  cursor: pointer;
+}
 
+.router-link{
+  text-decoration: none;
+}
 </style>

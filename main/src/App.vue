@@ -9,10 +9,6 @@
         <div id="table">
           <router-view></router-view>
         </div>
-
-        <div id="footer">
-
-        </div>
     </div>
 
     </div>
@@ -20,17 +16,11 @@
 
 <script>
 import navigation from "./components/navigation.vue"
-import messages from "./components/messages.vue"
-import triggers from "./components/triggers.vue"
-import schedules from "./components/schedules.vue"
 
 export default {
   name: 'app',
   components: {
     navigation,
-    messages,
-    triggers,
-    schedules
   },
   data () {
     return {
