@@ -3,7 +3,7 @@
 <div id="formaS">
 
     <div class="form-style-10">
-<form id="forma">
+<v-form id="forma">
     <div class="section">  <p id="section-text">Create Schedule <label id="close-icon" @click="exit">x </label> </p></div>
     <div class="inner-wrap">
         <label class="la">Message</label><select  name="field1" id="field1"> 
@@ -12,7 +12,7 @@
         <label class="la"> Run At </label>  <br> 
         <div class="input-append date form_datetime">
             <input size="16" type="text" value="" readonly id="field2">
-            <span class="add-on"><i class="icon-th"></i></span>
+            <span class="add-on"> icon </span>
         </div>
 
         <br>
@@ -26,7 +26,7 @@
         <input type="button" value="Cancel" @click="exit"/>
 </div>
 
-</form>
+</v-form>
 </div>
     
 </div>
@@ -95,9 +95,7 @@ export default {
     overflow:hidden;
     box-sizing:border-box;
     display:block;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);	
     z-index: 99;
 }
 
@@ -162,6 +160,7 @@ export default {
     font-weight: bold;
     color:black;
     margin-top: 18px;
+    margin-bottom: 5px;
 }
 
 .form-style-10 #submit{
@@ -257,6 +256,20 @@ export default {
     height: 40px;
     margin-top: 10px;
     font-size: 15px;
+}
+
+#field2{
+    width: 90%;
+    display: inline-block;
+}
+
+.la{
+    background-color: white;
+    position: relative;
+    top: 17px;
+    left: 10px;
+    padding: 0px 7px;
+    text-align: center;
 }
 
 </style>

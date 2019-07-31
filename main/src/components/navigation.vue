@@ -1,24 +1,32 @@
 <template>
     <div class="tab">
-        <div id="logo" class="tablinks"></div>
 
-        <router-link to="/messages" class="router-link">
-         <button class="active">
-            <v-icon color="white" style="margin-bottom: 10px">local_post_office</v-icon> <br> Messages
+      <div id="logo" class="tablinks"></div>
+
+      <router-link to="/messages" class="router-link">
+        <button class="active">
+          <v-icon color="white" style="margin-bottom: 10px">local_post_office</v-icon> <br> Messages
         </button>
-        </router-link>
+      </router-link>
 
-       <router-link to="/schedules" class="router-link">
+      <router-link to="/schedules" class="router-link">
         <button>
-            <v-icon color="white" style="margin-bottom: 10px">assignment_turned_in</v-icon> <br> Schedules
+          <v-icon color="white" style="margin-bottom: 10px">assignment_turned_in</v-icon> <br> Schedules
         </button>
-        </router-link>
+      </router-link>
 
       <router-link to="/triggers" class="router-link">
         <button>
-            <v-icon color="white" style="margin-bottom: 10px">assistant</v-icon> <br> Triggers
+          <v-icon color="white" style="margin-bottom: 10px">assistant</v-icon> <br> Triggers
         </button>
       </router-link>
+
+      <router-link to="/user" class="router-link">
+        <button>
+          <v-icon color="white" size="32" style="margin-bottom: 10px">person</v-icon> <br> User
+        </button>
+      </router-link>
+
     </div>
 </template>
 
@@ -106,4 +114,19 @@ li:hover .material-icons{
 .router-link{
   text-decoration: none;
 }
+
+@media only screen and ( max-width: 1300px )
+{
+  .tab{
+    background-color: red;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+  }
+
+  #logo{
+    width: 50px;
+  }
+}
+
 </style>

@@ -8,6 +8,7 @@ import triggers from "./components/triggers.vue"
 import formaM from "./components/formaM.vue"
 import formaS from "./components/formaS.vue"
 import formaT from "./components/formaT.vue"
+import user from "./components/user.vue"
 
 Vue.config.productionTip = false;
 
@@ -67,6 +68,11 @@ const router = new VueRouter({
       }
     ]
   },
+
+  {
+    path: "/user",
+    component: user
+  }
   ],
   mode: "history"
 });

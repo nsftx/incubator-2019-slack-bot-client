@@ -65,16 +65,17 @@ html, body{
 }
 
 #footer{
-  width: 92%;
-  height: 7vh;
   background-color: white;
-  float: left;
   z-index: 2;
-  position: absolute;
   border-top: 2px solid grey;
-  margin: 0px 20px;
   bottom: 0px;
 }
 
-</style>
+@media only screen and (max-width: 1300px) {
+  #nav-bar{
+    height: 10%;
+    width: 100%;
+  }
+}
 
+</style>
