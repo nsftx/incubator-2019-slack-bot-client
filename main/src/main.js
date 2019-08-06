@@ -9,70 +9,84 @@ import formaM from "./components/formaM.vue"
 import formaS from "./components/formaS.vue"
 import formaT from "./components/formaT.vue"
 import user from "./components/user.vue"
+import login from "./components/login.vue"
+import Dashboard from "./components/dashboard.vue"
 
 Vue.config.productionTip = false;
 
 const router = new VueRouter({
   routes: [
-  {path: "/", component: messages, redirect: "/messages"},
+  {path: "/", component: login, redirect: "/login"},
+  {path: "/login", component: login},
 
   {
-    path: "/messages", 
-    component: messages, 
-    children: 
-    [ 
-      {
-        path: "newMessage",
-        component: formaM 
-      },
-      {
-        path: "newMessage/:id",
-        component: formaM
-      },
-      {
-        path: "newTrigger/:id",
-        component: formaT
-      },
-      {
-        path: "newSchedule/:id",
-        component: formaS
-      },
-      {
-        path: "updateMessage/:id",
-        component: formaM
-      }
-    ] 
-  },
-
-  {
-    path: "/schedules", 
-    component: schedules,
-
-    children: 
+    path: "/dashboard",
+    component: Dashboard,
+    children:
     [
       {
-        path: "newSchedule",
-        component: formaS
+        path: "messages", 
+        component: messages,
+        children:
+        [
+          {
+            path: "newMessage",
+            component: formaM 
+          },
+          {
+            path: "newMessage/:id",
+            component: formaM
+          },
+          {
+            path: "newTrigger/:id",
+            component: formaT
+          },
+          {
+            path: "newSchedule/:id",
+            component: formaS
+          },
+          {
+            path: "updateMessage/:id",
+            component: formaM
+          }
+        ]
+      },
+      {
+        path: "schedules",
+        component: schedules,
+        children:
+        [
+          {
+            path: "newSchedule",
+            component: formaS
+          },
+          {
+            path: "updateSchedule/:id",
+            component: formaS
+          }
+        ]
+      },
+      {
+        path: "triggers",
+        component: triggers,
+        children:
+        [
+          {
+            path: "newTrigger",
+            component: formaT
+          },
+          {
+            path: "updateTrigger/:id",
+            component: formaT
+          }
+        ]
+      },
+      {
+        path: "user",
+        component: user
       }
     ]
   },
-
-  {
-    path: "/triggers", 
-    component: triggers,
-    children: 
-    [
-      {
-        path: "newTrigger",
-        component: formaT
-      }
-    ]
-  },
-
-  {
-    path: "/user",
-    component: user
-  }
   ],
   mode: "history"
 });

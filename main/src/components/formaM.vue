@@ -66,8 +66,8 @@ export default {
       showMessageError: false,
       invalid: false,
       liveValidation: false,
-      regexTitle: /.{5,30}/,
-      regexText: /.{20,}/
+      regexTitle: /^.{5,30}$/,
+      regexText: /^.{20,}$/
     };
   },
 
@@ -227,9 +227,6 @@ export default {
   -moz-border-radius: 6px;
   /*border: 1px inset rgba(0, 0, 0, 0.2);*/
   font-size: 15px;
-  /*box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, 0.33);
-	-moz-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.33);
-	-webkit-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.33);*/
 }
 
 input,

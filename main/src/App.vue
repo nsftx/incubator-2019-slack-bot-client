@@ -1,16 +1,6 @@
 <template>
     <div id="app">
-
-     <div id="nav-bar">
-       <navigation />
-    </div>
-
-    <div id="dashboard">
-        <div id="table">
-          <router-view></router-view>
-        </div>
-    </div>
-
+      <router-view></router-view>
     </div>
 </template>
 
@@ -24,7 +14,7 @@ export default {
   },
   data () {
     return {
-      //
+      rowSizesValue: [5, 10, 20],
     }
   }
 }
@@ -35,6 +25,10 @@ export default {
 *{
   box-sizing: border-box;
   margin: 0px;
+}
+
+*:focus {
+  outline: none;
 }
 
 html, body{
@@ -48,34 +42,11 @@ html, body{
     color: #2c3e50;
 }
 
-#nav-bar{
-  height: 100%;
-  width: 6%;
-  float: left;
-}
-
-#dashboard{
-  width: 94%;
-  height: 100%;
-  float: left;
-}
-
-#table{
-  height: 90vh;
-}
-
 #footer{
   background-color: white;
   z-index: 2;
   border-top: 2px solid grey;
   bottom: 0px;
-}
-
-@media only screen and (max-width: 1300px) {
-  #nav-bar{
-    height: 10%;
-    width: 100%;
-  }
 }
 
 </style>

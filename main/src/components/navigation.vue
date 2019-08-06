@@ -3,25 +3,25 @@
 
       <div id="logo" class="tablinks"></div>
 
-      <router-link to="/messages" class="router-link">
+      <router-link to="/dashboard/messages" class="router-link">
         <button class="active">
           <v-icon color="white" style="margin-bottom: 10px">local_post_office</v-icon> <br> Messages
         </button>
       </router-link>
 
-      <router-link to="/schedules" class="router-link">
+      <router-link to="/dashboard/schedules" class="router-link">
         <button>
           <v-icon color="white" style="margin-bottom: 10px">assignment_turned_in</v-icon> <br> Schedules
         </button>
       </router-link>
 
-      <router-link to="/triggers" class="router-link">
+      <router-link to="/dashboard/triggers" class="router-link">
         <button>
           <v-icon color="white" style="margin-bottom: 10px">assistant</v-icon> <br> Triggers
         </button>
       </router-link>
 
-      <router-link to="/user" class="router-link">
+      <router-link to="/dashboard/user" class="router-link">
         <button>
           <v-icon color="white" size="32" style="margin-bottom: 10px">person</v-icon> <br> User
         </button>
@@ -53,6 +53,7 @@ export default {
   background-color: #006BF5;
   width: 100%;
   height: 100vh;
+  padding: 5px 0px;
 }
 
 .tab button {
@@ -113,20 +114,6 @@ li:hover .material-icons{
 
 .router-link{
   text-decoration: none;
-}
-
-@media only screen and ( max-width: 1300px )
-{
-  .tab{
-    background-color: red;
-    height: 10vh;
-    display: flex;
-    align-items: center;
-  }
-
-  #logo{
-    width: 50px;
-  }
 }
 
 </style>

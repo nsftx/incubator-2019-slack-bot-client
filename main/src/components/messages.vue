@@ -7,19 +7,19 @@
         <div class="column1 column">
           <h5>Title</h5>
           <p>
-            <i class="material-icons">arrow_drop_down</i>
+            <i class="material-icons" @click="sortByTitle">arrow_drop_down</i>
           </p>
         </div>
         <div class="column2 column">
           <h5>Text</h5>
           <p>
-            <i class="material-icons">arrow_drop_down</i>
+            <i class="material-icons" @click="sortByText">arrow_drop_down</i>
           </p>
         </div>
         <div class="column3 column">
           <h5>Created At</h5>
           <p>
-            <i class="material-icons" @click="sortByDate">arrow_drop_down</i>
+            <i class="tooltip, material-icons" @click="sortByDate">arrow_drop_down</i>
           </p>
         </div>
         <div class="column4 column">
@@ -42,12 +42,13 @@
           <p>{{message.createdAt | shortDate }}</p>
         </div>
         <div class="column4 column">
-          <i class="material-icons"@click="showScheduleForm(message.messageId)">assignment_turned_in</i>
+          <i class="material-icons tooltip" @click="showScheduleForm(message.messageId)" data-tooltip="Neki tekst">assignment_turned_in</i>
           <i class="material-icons" @click="showTriggerForm(message.messageId)">assistant</i>
           <i class="material-icons" @click="editMessage(message.messageId)">create</i>
           <i class="material-icons" @click="deleteMessage(message.messageId)">delete</i>
         </div>
       </li>
+      
     </ul>
 
     <div id="footer">
@@ -65,13 +66,14 @@
 
     <div id="notification" v-show="showNoti" :class="{redBorder: errorOccured, greenBorder: !errorOccured}">
       <input type="text" v-model="textNoti" readonly :class="{redText: errorOccured, greenText: !errorOccured}" />
-      <button @click="showNotification">OK</button>
+      <button @click="showNotification" :class="{redBackground: errorOccured, greenBackground: !errorOccured}">OK</button>
     </div>
   </div>
 </template>
 
 
 <script>
+/* eslint-disable */
 import axios from "axios";
 import ClickOutside from "vue-click-outside";
 import { setTimeout } from 'timers';
@@ -86,7 +88,10 @@ export default {
       page: 1, //current active page
       menu: false,
       rowSizesValue: [5, 10, 20],
-      dateSort: "desc",
+      sortType: "desc",
+      dateSort: true,
+      titleSort: false,
+      textSort: false,
       showNoti: false,
       textNoti: "",
       errorOccured: false
@@ -109,7 +114,13 @@ export default {
       var pg = this.page - 1;
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&&sort=createdAt," + this.dateSort);
+        var res;
+        if(this.titleSort == true)
+          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=title," + this.sortType);
+        else if(this.textSort == true)
+          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=text," + this.sortType);
+        else
+          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
 
         if (res.data.totalPages < this.page)
           this.changePage(res.data.totalPages);
@@ -119,7 +130,7 @@ export default {
       } 
       catch (err) 
       {
-        alert(err);
+        this.showNotification(-1);
       }
     },
 
@@ -135,8 +146,8 @@ export default {
           this.textNoti = "Succes"; 
        }
        this.showNoti = !this.showNoti;
-       setTimeout(this.closeNoti, 2000)
-       {};
+       setTimeout(this.closeNoti, 1500)
+       {}
     },
 
     closeNoti(){
@@ -144,19 +155,19 @@ export default {
     },
 
     showMessageForm() {
-      this.$router.push("/messages/newMessage");
+      this.$router.push("/dashboard/messages/newMessage");
     },
 
     showTriggerForm(id) {
-      this.$router.push("/messages/newTrigger/" + id);
+      this.$router.push("/dashboard/messages/newTrigger/" + id);
     },
 
     showScheduleForm(id) {
-      this.$router.push("/messages/newSchedule/" + id);
+      this.$router.push("/dashboard/messages/newSchedule/" + id);
     },
 
     async editMessage(id) {
-      this.$router.push("/messages/updateMessage/" + id);
+      this.$router.push("/dashboard/messages/updateMessage/" + id);
     },
 
     async deleteMessage(id) {
@@ -164,7 +175,14 @@ export default {
       var pg = this.page - 1;
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.dateSort);
+        var res;
+        if(this.titleSort == true)
+          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=title," + this.sortType);
+        else if(this.textSort == true)
+          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=text," + this.sortType);
+        else
+          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
+        
         if (res.data.numberOfElements == 0) 
         {
           if (this.page != 1) 
@@ -175,10 +193,11 @@ export default {
             this.pagesSize = 1;
         else 
             this.pagesSize = res.data.totalPages;
+        this.showNotification(200);
       } 
       catch (err) 
       {
-        alert(err);
+        this.showNotification(-1);
       }
     },
 
@@ -206,7 +225,7 @@ export default {
     async create() {
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/messages?sort=createdAt,desc&page=0&size=" + this.rowSize + "&sort=createdAt," + this.dateSort);
+        const res = await axios.get("http://localhost:8080/api/messages?page=0&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
         this.messagesData = res.data.content;
         if (res.data.totalPages == 0) 
             this.pagesSize = 1;
@@ -218,14 +237,44 @@ export default {
         alert(err);
       }
     },
+
     sortByDate() {
-      if (this.dateSort == "desc") 
-        this.dateSort = "asc";
+      if (this.sortType == "desc") 
+        this.sortType = "asc";
       else 
-        this.dateSort = "desc";
+        this.sortType = "desc";
+      this.dateSort = true,
+      this.titleSort = false,
+      this.textSort = false,
+
+      this.reloadMessages();
+    },
+
+    sortByTitle(){
+      if (this.sortType == "desc") 
+        this.sortType = "asc";
+      else 
+        this.sortType = "desc";
+      this.dateSort = false,
+      this.titleSort = true,
+      this.textSort = false
+
+      this.reloadMessages();
+    },
+
+    sortByText(){
+      if (this.sortType == "desc") 
+        this.sortType = "asc";
+      else 
+        this.sortType = "desc";
+      this.dateSort = false,
+      this.titleSort = false,
+      this.textSort = true
+
       this.reloadMessages();
     }
   },
+
   directives: {
     ClickOutside
   }
@@ -356,6 +405,10 @@ li p {
   color: black;
 }
 
+#title-li .column4{
+  padding-right: 20px;
+}
+
 li p {
   margin: 0px;
   color: rgb(70, 67, 67);
@@ -384,7 +437,7 @@ li p {
 
 .column4 {
   justify-content: flex-end;
-  padding-right: 20px;
+  padding-right: 55px;
 }
 
 li:hover {
@@ -427,7 +480,7 @@ li:hover .linear2 {
     white 100%
   );
   width: 60px;
-  height: 40px;
+  height: 39px;
   margin-top: 5px;
   z-index: 5;
   position: absolute;
@@ -448,7 +501,7 @@ li:hover .linear2 {
   border: 1px solid white;
   font-family: "Courier New", Courier, monospace;
   line-height: 60px;
-  z-index: 99;
+  z-index: 95;
 }
 
 #btn:hover {
@@ -527,6 +580,22 @@ li:hover .linear2 {
     color: rgb(85, 235, 85);
 }
 
+.redBackground{
+  background-color: rgb(248, 74, 74);
+}
+
+.redBackground:hover{
+  background-color: rgb(241, 101, 101);
+}
+
+.greenBackground{
+  background-color: rgb(85, 235, 85);
+}
+
+.greenBackground:hover{
+  background-color: rgb(140, 231, 140);
+}
+
 #notification {
   height: 10vh;
   width: 400px;
@@ -538,21 +607,59 @@ li:hover .linear2 {
 }
 
 #notification input{
-    height: 60%;
-    width: 100%;
-    text-align: center;
-    font-size: 25px;
+  height: 60%;
+  width: 100%;
+  text-align: center;
+  font-size: 25px;
 }
 
 #notification button{
-    width: 100%;
-    height: 40%;
-    text-align: center;
-    font-size: 20px;
-    background-color: rgb(211, 205, 205);
+  width: 100%;
+  height: 40%;
+  text-align: center;
+  font-size: 20px;
+  color: white;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
-#notification button:hover{
-    background-color: rgb(233, 224, 224);
+/*
+.tooltip{
+  position: relative;
 }
+
+.tooltip::before, .tooltip::after{
+  position: absolute;
+  left: 20%;
+  opacity: 0;
+  transition: all ease 0.3s;
+}
+
+.tooltip::before{
+  content: "";
+  border-width: 10px 8px 0px 8px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.3) transparent;
+  top: -10px;
+}
+
+.tooltip::after{
+  content: attr(data-tooltip);
+  background: rgba(0, 0, 0, 0.3);
+  top: -10px;
+  width: 155px;
+  font-size: 16px;
+  margin-left: -100px;
+  padding: 14px;
+  border-radius: 10px;
+  color: #eee;
+  transform: translateY(-100%);
+  color: white;
+  text-align: center;
+}
+
+.tooltip:hover::before, .tooltip:hover::after{
+  opacity: 1;
+}
+*/
 </style>

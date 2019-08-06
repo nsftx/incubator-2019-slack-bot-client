@@ -3,16 +3,19 @@
 <div id="formaS">
 
     <div class="form-style-10">
-<v-form id="forma">
+<form id="forma">
     <div class="section">  <p id="section-text">Create Schedule <label id="close-icon" @click="exit">x </label> </p></div>
     <div class="inner-wrap">
+        
         <label class="la">Message</label><select  name="field1" id="field1"> 
             <option value="" disabled selected>Some message title</option>
         </select>
         <label class="la"> Run At </label>  <br> 
         <div class="input-append date form_datetime">
-            <input size="16" type="text" value="" readonly id="field2">
-            <span class="add-on"> icon </span>
+            <div>
+           <date-picker v-model="date" :lang="lang"></date-picker>
+            </div>
+            <span class="add-on"><i class="icon-th"></i></span>
         </div>
 
         <br>
@@ -23,16 +26,18 @@
     <br>
     <br>
         <input type="button" value="Save" id="submit" @click="save"/>
-        <input type="button" value="Cancel" @click="exit"/>
+        <input type="button" id="cancel" value="Cancel" @click="exit"/>
 </div>
 
-</v-form>
+</form>
 </div>
     
 </div>
 </template>
 
 <script>
+import DatePicker from 'vue2-datepicker'
+
 
 /*
 window.addEventListener("mouseup", function(event){
@@ -53,6 +58,25 @@ window.addEventListener("mouseup", function(event){
 
 export default {
     name: "formaS",
+    components:{  DatePicker},
+     data (){  
+        return {
+            date: null,
+            time1: '',
+            time2: '',
+            time3: '',
+            // custom lang
+            lang: {
+                days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                pickers: ['next 7 days', 'next 30 days', 'previous 7 days', 'previous 30 days'],
+                placeholder: {
+                date: 'Select Date',
+                dateRange: 'Select Date Range'
+            }
+        }
+        }
+    },
     methods:{
 		exit(){
 			this.$router.go(-1);
@@ -73,6 +97,30 @@ export default {
     font-family: 'Roboto', sans-serif;
 }
 
+
+
+*[data-v-f2ae3234] {
+    width: 100%;
+    height:13px;
+    font-family: 'Roboto', sans-serif;
+}
+#check{
+    margin-top:15px;
+}
+#check,#active{
+    
+    width:10%;
+}
+#cancel,#submit{
+    width:30%;
+    height:auto;
+}
+.mx-input{
+    width:100%;
+    height:100px;
+    border:2px solid gray;
+    overflow: visible;
+}
 #formaS{
     width: 640px;
     height: 480px;
@@ -92,10 +140,11 @@ export default {
 	left:50%;
 	transform:translateX(-50%) translateY(-50%);
 	background: #FFF;
-    overflow:hidden;
     box-sizing:border-box;
     display:block;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);	
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
     z-index: 99;
 }
 
@@ -160,14 +209,12 @@ export default {
     font-weight: bold;
     color:black;
     margin-top: 18px;
-    margin-bottom: 5px;
 }
 
 .form-style-10 #submit{
     float:right;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     width:20%;
-    height:30%;
     overflow: hidden;
     background: #0080ff;
 	padding: 8px 20px 8px 20px;
@@ -256,20 +303,6 @@ export default {
     height: 40px;
     margin-top: 10px;
     font-size: 15px;
-}
-
-#field2{
-    width: 90%;
-    display: inline-block;
-}
-
-.la{
-    background-color: white;
-    position: relative;
-    top: 17px;
-    left: 10px;
-    padding: 0px 7px;
-    text-align: center;
 }
 
 </style>
