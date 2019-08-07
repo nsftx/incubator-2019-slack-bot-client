@@ -7,19 +7,19 @@
         <div class="column1 column">
           <h5>Title</h5>
           <p>
-            <i class="material-icons" @click="sortByTitle">arrow_drop_down</i>
+            <i class="material-icons" @click="sortBy('title')">arrow_drop_down</i>
           </p>
         </div>
         <div class="column2 column">
           <h5>Text</h5>
           <p>
-            <i class="material-icons" @click="sortByText">arrow_drop_down</i>
+            <i class="material-icons" @click="sortBy('text')">arrow_drop_down</i>
           </p>
         </div>
         <div class="column3 column">
           <h5>Created At</h5>
           <p>
-            <i class="tooltip, material-icons" @click="sortByDate">arrow_drop_down</i>
+            <i class="tooltip, material-icons" @click="sortBy('createdAt')">arrow_drop_down</i>
           </p>
         </div>
         <div class="column4 column">
@@ -90,11 +90,10 @@ export default {
       rowSizesValue: [5, 10, 20],
       sortType: "desc",
       dateSort: true,
-      titleSort: false,
-      textSort: false,
-      showNoti: false,
+      sortByValue: "createdAt",
       textNoti: "",
-      errorOccured: false
+      errorOccured: false,
+      showNoti: false
     };
   },
   mounted: function() {
@@ -114,13 +113,7 @@ export default {
       var pg = this.page - 1;
       try 
       {
-        var res;
-        if(this.titleSort == true)
-          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=title," + this.sortType);
-        else if(this.textSort == true)
-          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=text," + this.sortType);
-        else
-          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
+        const res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
 
         if (res.data.totalPages < this.page)
           this.changePage(res.data.totalPages);
@@ -234,45 +227,19 @@ export default {
         this.rowSize = res.data.size;
       }
       catch (err) {
-        alert(err);
+        this.showNotification(-1);
       }
     },
 
-    sortByDate() {
+    sortBy(value) {
       if (this.sortType == "desc") 
         this.sortType = "asc";
       else 
         this.sortType = "desc";
-      this.dateSort = true,
-      this.titleSort = false,
-      this.textSort = false,
-
+      
+      this.sortByValue = value;
       this.reloadMessages();
     },
-
-    sortByTitle(){
-      if (this.sortType == "desc") 
-        this.sortType = "asc";
-      else 
-        this.sortType = "desc";
-      this.dateSort = false,
-      this.titleSort = true,
-      this.textSort = false
-
-      this.reloadMessages();
-    },
-
-    sortByText(){
-      if (this.sortType == "desc") 
-        this.sortType = "asc";
-      else 
-        this.sortType = "desc";
-      this.dateSort = false,
-      this.titleSort = false,
-      this.textSort = true
-
-      this.reloadMessages();
-    }
   },
 
   directives: {

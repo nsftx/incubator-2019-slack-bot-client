@@ -33,7 +33,7 @@
           ></textarea>
           <span v-show="showMessageError">Text size should be more then 20 characters</span>
 
-          <input type="button" v-model="submitType" @click="save" id="submit" />
+          <input type="button" value="Save" @click="save" id="submit" />
           <input type="button" value="Cancel" @click="exit" id="cancle" />
         </div>
       </form>
@@ -61,7 +61,6 @@ export default {
       title: "",
       text: "",
       formType: "Create",
-      submitType: "Save",
       showTitleError: false,
       showMessageError: false,
       invalid: false,
@@ -74,7 +73,7 @@ export default {
   mounted: function() {
     if (this.$route.params.id != null) {
       this.create();
-      (this.formType = "Update"), (this.submitType = "Update");
+      (this.formType = "Update");
     }
   },
 
@@ -148,20 +147,23 @@ export default {
           }
         }
         this.$emit("reload-messages");
-        this.$emit("show-notification", 200, 100);
+        this.$emit("show-notification");
         this.$router.go(-1);
       }
     },
 
     async create() {
-		const res = await axios.get("http://localhost:8080/api/messages/" + this.$route.params.id);
+      try
+      {
+		    const res = await axios.get("http://localhost:8080/api/messages/" + this.$route.params.id);
       	this.title = res.data.title;
-      	this.text = res.data.text;
+        this.text = res.data.text;
+      }
+      catch(err)
+      {
+        this.$emit("show-notification", -1);
+      }
     },
-
-    async destroyed() {
-		(this.title = ""), (this.text = "");
-    }
   }
 };
 </script>

@@ -70,12 +70,4 @@ html, body{
   border-top: 2px solid grey;
   bottom: 0px;
 }
-
-@media only screen and (max-width: 1300px) {
-  #nav-bar{
-    height: 10%;
-    width: 100%;
-  }
-}
-
 </style>

@@ -10,8 +10,8 @@
 
         <select id="field1" class="border" v-model="messageTitle" @click="getMessageID" :class="{errorBorder: showTitleError, noErrorBorder: !showTitleError}"> 
             
-            <option disabled selected >Some message title</option>
-            <option v-for="message in messagesData" :key="message.messageId"> {{ message.title }} </option>
+            <option disabled selected >{{ messageTitle }}</option>
+            <option v-for="message in messagesData" :key="message.messageId" v-show="showMessageOption"> {{ message.title }} </option>
             
         </select>
 
@@ -28,9 +28,6 @@
         <br>
         <br>
 
-        <!--<label class="la"> Channel </label>  
-        <input type="text"  id="field3" v-model="channelName" :class="{errorBorder: showTriggerError, noErrorBorder: !showTriggerError}"/> -->
-
         <select id="field3" class="border"  v-model="channelName" :class="{errorBorder: showChannelError, noErrorBorder: !showChannelError}"> 
             <option disabled selected >Some channel name</option>
             <option v-for="channel in channelsData" :key="channel.name"> {{ channel.name }} </option>
@@ -43,7 +40,7 @@
         <input type="checkbox" id="check" v-model="active" class="checkBox" /> <label id="active" for="check" class="checkBox"> Active </label> 
     <br>
     <br>
-        <input type="button" v-model="submitType" id="submit" @click="save"/>
+        <input type="button" value="Save" id="submit" @click="save"/>
         <input type="button" value="Cancel" @click="exit" />
 </div>
 </form>
@@ -77,42 +74,80 @@ export default {
             messagesData: [],
             channelsData: [],
             targetMess: "",
-            targetID: null,
             messageTitle: "Some message title",
             triggerType: "Some trigger type",
             channelName: "Some channel name",
             active: false,
             formType: "Create",
-            submitType: "Save",
             messId: "",
             liveValidation: false,
             showTitleError: false,
             showTriggerError: false,
-            showChannelError: false
+            showChannelError: false,
+            showMessageOption: true
         }
     },
-    mounted: async function(){
-
+    mounted: async function()
+    {
         if (this.$route.params.id != null) 
         {
-            this.formType = "Update";
-            this.submitType = "Update";
 
-            const res = await axios.get("http://localhost:8080/api/triggers/" + this.$route.params.id);
-            this.targetID = res.data.triggerId;
-            this.messageTitle = res.data.message.title;
-            this.channelName = res.data.channel;
-            this.active = res.data.active;
-            this.triggerType = res.data.triggerType;
-            this.messId = res.data.message.messageId;
+            var currentR = this.$router.currentRoute.fullPath;
+            var path = currentR.substring(0, 30);
+
+            if(path == "/dashboard/messages/newTrigger")
+            {
+                try
+                {
+                    const res = await axios.get("http://localhost:8080/api/messages/" + this.$route.params.id);
+                    this.messagesData = res.data;
+                    this.messageTitle = this.messagesData.title;
+                    this.showMessageOption = false;
+                }
+                catch(err)
+                {
+                    this.$emit("show-notification", -1);                    
+                }
+            }
+            else
+            {
+                this.formType = "Update";
+
+                var res;
+                try
+                {
+                    res = await axios.get("http://localhost:8080/api/triggers/" + this.$route.params.id);
+                    this.messageTitle = res.data.message.title;
+                    this.channelName = res.data.channel;
+                    this.active = res.data.active;
+                    this.triggerType = res.data.triggerType;
+                    this.messId = res.data.message.messageId;
+                }
+                catch(err)
+                {
+                    this.$emit("show-notification", -1);         
+                }
+                try
+                {
+                    const resM = await axios.get("http://localhost:8080/api/messages");
+                    this.messagesData = resM.data.content;
+                }
+                catch(err)
+                {
+                    this.$emit("show-notification", -1);               
+                }
+            }
         }
-        try 
+        else
         {
-            const res = await axios.get("http://localhost:8080/api/messages");
+            try 
+            {
+                const res = await axios.get("http://localhost:8080/api/messages");
                 this.messagesData = res.data.content;             
-        }
-        catch (err) {
-            this.$emit("show-notification", -1);
+            }
+            catch (err) {
+                this.$emit("show-notification", -1);
+            }
         }
         try
         {
@@ -200,27 +235,42 @@ export default {
 
             if(this.$route.params.id != null)
             {
-                
-                try
-                {
-                    const res = await axios.get("http://localhost:8080/api/messages");
-                    this.messagesData = res.data.content;
-                    this.targetMess = this.messagesData.filter( mess => mess.title == this.messageTitle);
-                    this.messId = this.targetMess[0].messageId;
+                var cr = this.$router.currentRoute.fullPath;
+                var path = cr.substring(0, 30);
 
-                    await axios.put("http://localhost:8080/api/triggers/" + this.$route.params.id, {channel: this.channelName, triggerType: this.triggerType, active: this.active, messageId: this.messId})
-                    this.$emit("show-notification")                    
-                }
-                catch(err)
+                if(path == "/dashboard/messages/newTrigger")
                 {
-                    this.$emit("show-notification", -1)
+                    try
+                    {
+                        await axios.post("http://localhost:8080/api/triggers", {channel: this.channelName, triggerType: this.triggerType, active: this.active, messageId: this.$route.params.id})
+                        this.$emit("show-notification")                    
+                    }
+                    catch(err)
+                    {
+                        this.$emit("show-notification", -1)
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        const res = await axios.get("http://localhost:8080/api/messages");
+                        this.messagesData = res.data.content;
+
+                        await axios.put("http://localhost:8080/api/triggers/" + this.$route.params.id, {channel: this.channelName, triggerType: this.triggerType, active: this.active, messageId: this.messId})
+                        this.$emit("show-notification")                    
+                    }
+                    catch(err)
+                    {
+                        this.$emit("show-notification", -1)
+                    }
                 }
             }
             else
             {
                 try
                 {
-                    await axios.post("http://localhost:8080/api/triggers", {active: this.active, channel: this.channelName, messageId: this.targetID, triggerType:  this.triggerType});
+                    await axios.post("http://localhost:8080/api/triggers", {active: this.active, channel: this.channelName, messageId: this.messId, triggerType:  this.triggerType});
                     this.$emit("show-notification")
                 }
                 catch(err)
@@ -233,8 +283,11 @@ export default {
         },
         getMessageID()
         {   
-            this.targetMess = this.messagesData.filter( mess => mess.title == this.messageTitle);
-            this.targetID = this.targetMess[0].messageId;
+            if(this.messagesData.length>1)
+            {
+                this.targetMess = this.messagesData.filter( mess => mess.title == this.messageTitle);
+                this.messId = this.targetMess[0].messageId;
+            }
         }
     }
 }

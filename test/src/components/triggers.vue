@@ -9,28 +9,28 @@
         <div class="column1 column">
           <h5>Message</h5>
           <p>
-            <i class="material-icons" @click="sortByTitle">arrow_drop_down</i>
+            <i class="material-icons" @click="sortBy('message.title')">arrow_drop_down</i>
           </p>
         </div>
 
         <div class="column2 column">
           <h5>Trigger</h5>
           <p>
-            <i class="material-icons" @click="sortByDate">arrow_drop_down</i>
+            <i class="material-icons" @click="sortBy('createdAt')">arrow_drop_down</i>
           </p>
         </div>
 
         <div class="column3 column">
           <h5>Channel</h5>
           <p>
-            <i class="tooltip material-icons" @click="sortByChannel">arrow_drop_down</i>
+            <i class="tooltip material-icons" @click="sortBy('channel')">arrow_drop_down</i>
           </p>
         </div>
 
         <div class="column5 column">
           <h5>Active</h5>
           <p>
-            <i class="tooltip material-icons" @click="sortByActive">arrow_drop_down</i>
+            <i class="tooltip material-icons" @click="sortBy('active')">arrow_drop_down</i>
           </p>
         </div>
 
@@ -99,10 +99,7 @@ export default {
         menu: false,
         rowSizesValue: [5, 10, 20],
         sortType: "desc",
-        titleSort: false,
-        dateSort: true,
-        channelSort: false,
-        activeSort: false,
+        sortByValue: "createdAt",
         textNoti: "",
         errorOccured: false,
         showNoti: false
@@ -125,8 +122,6 @@ export default {
   },
 
   mounted: function() {
-    //onload funkcija
-    //console.log(this.$router.currentRoute.fullPath == "/dashboard/triggers");
     this.create();
   },
 
@@ -139,19 +134,7 @@ export default {
       var pg = this.page - 1;
       try 
       {
-        var res;
-
-        if(this.titleSort == true)
-          res = await axios.get("http://localhost:8080/api/triggers?page=" + pg + "&size=" + this.rowSize + "&sort=message.title," + this.sortType);
-
-        else if(this.channelSort == true)
-          res = await axios.get("http://localhost:8080/api/triggers?page=" + pg + "&size=" + this.rowSize + "&sort=channel," + this.sortType);
-
-        else if(this.activeSort == true)
-          res = await axios.get("http://localhost:8080/api/triggers?page=" + pg + "&size=" + this.rowSize + "&sort=active," + this.sortType);
-
-        else
-          res = await axios.get("http://localhost:8080/api/triggers?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
+        const res = await axios.get("http://localhost:8080/api/triggers?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
 
         if (res.data.totalPages < this.page)
           this.changePage(res.data.totalPages);
@@ -194,11 +177,7 @@ export default {
       var pg = this.page - 1;
       try 
       {
-        var res;
-        if(this.textSort == true)
-          res = await axios.get("http://localhost:8080/api/triggers?page=" + pg + "&size=" + this.rowSize + "&sort=text," + this.sortType);
-        else
-          res = await axios.get("http://localhost:8080/api/triggers?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
+        const res = await axios.get("http://localhost:8080/api/triggers?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
         
         if (res.data.numberOfElements == 0) 
         {
@@ -243,7 +222,7 @@ export default {
     async create() {
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/triggers");
+        const res = await axios.get("http://localhost:8080/api/triggers?page=0&size=" + this.rowSize);
         this.triggersData = res.data.content;
         if (res.data.totalPages == 0) 
             this.pagesSize = 1;
@@ -252,7 +231,7 @@ export default {
         this.rowSize = res.data.size;
       }
       catch (err) {
-        alert(err);
+        this.showNotification(-1);
       }
     },
 
@@ -263,48 +242,14 @@ export default {
         this.sortType = "asc";
     },
 
-    sortByDate() {
+    sortBy(value)
+    {
+      if (this.sortType == "asc") 
+        this.sortType = "desc";
+      else 
+        this.sortType = "asc";
 
-      this.changeSortType();
-
-      this.dateSort = true;
-      this.titleSort = false;
-      this.channelSort = false;
-      this.activeSort = false;
-
-      this.reloadTriggers();
-    },
-
-    sortByTitle(){
-      this.changeSortType();
-
-      this.dateSort = false;
-      this.titleSort = true;
-      this.channelSort = false;
-      this.activeSort = false;
-
-      this.reloadTriggers();
-    },
-
-    sortByChannel(){
-      this.changeSortType();
-
-      this.dateSort = false;
-      this.titleSort = false;
-      this.channelSort = true;
-      this.activeSort = false;
-
-      this.reloadTriggers();
-    },
-
-    sortByActive(){
-      this.changeSortType();
-
-      this.dateSort = false;
-      this.titleSort = false;
-      this.channelSort = false;
-      this.activeSort = true;
-
+      this.sortByValue = value;
       this.reloadTriggers();
     }
   },

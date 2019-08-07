@@ -1,25 +1,37 @@
 <template>
    <div id="Schedules" class="tabcontent">
-<router-view @reload-messages="reloadSchedules()" @show-notification="showNotification($event)"></router-view>
+<router-view @reload-schedules="reloadSchedules()" @show-notification="showNotification($event)"></router-view>
 
     <ul id="list">
       <li id="title-li">
         <div class="column1 column">
           <h5>Message</h5>
           <p>
-            <i class="material-icons" @click="sortByTitle">arrow_drop_down</i>
+            <i class="material-icons" @click="sortBy('message.title')">arrow_drop_down</i>
           </p>
         </div>
         <div class="column2 column">
           <h5>Next Run</h5>
           <p>
-            <i class="material-icons" @click="sortByText">arrow_drop_down</i>
+            <i class="material-icons" @click="sortBy('runAt')">arrow_drop_down</i>
           </p>
         </div>
         <div class="column3 column">
           <h5>Active At</h5>
           <p>
-            <i class="tooltip, material-icons" @click="sortByDate">arrow_drop_down</i>
+            <i class="tooltip, material-icons" @click="sortBy('active')">arrow_drop_down</i>
+          </p>
+        </div>
+        <div class="column6 column">
+          <h5>Repeat</h5>
+          <p>
+            <i class="tooltip, material-icons" @click="sortBy('repeat')">arrow_drop_down</i>
+          </p>
+        </div>
+        <div class="column5 column">
+          <h5>Channel</h5>
+          <p>
+            <i class="tooltip, material-icons" @click="sortBy('channel')">arrow_drop_down</i>
           </p>
         </div>
         <div class="column4 column">
@@ -29,43 +41,30 @@
         </div>
       </li>
 
-      <li>
+      <li v-for="schedule in schedulesData" :key="schedule.scheduleId">
         <div class="linear1"></div>
+        <div class="linear2"></div>
         <div class="column1 column">
-          <p>Testni naslov naslov naslov naslov naslov naslov naslov naslov naslov naslov naslov naslov naslov naslov naslov naslov naslov naslov naslov naslov</p>
+          <p>{{ schedule.message.title }}</p>
         </div>
         <div class="column2 column">
-          <p>26 Sept 2019</p>
+          <p>{{ schedule.runAt | shortDate}}</p>
         </div>
         <div class="column3 column">
-          <p>Active</p>
+          <p>{{ schedule.active | activeView }}</p>
+        </div>
+        <div class="column6 column">
+          <p>{{ schedule.repeat | repeatView }}</p>
+        </div>
+        <div class="column5 column">
+          <p>{{ schedule.channel }}</p>
         </div>
         <div class="column4 column">
-          <i class="material-icons" @click="editSchedule(0)">create</i>
-          <i class="material-icons" @click="deleteSchedule(0)">delete</i>
+          <i class="material-icons" @click="editSchedule(schedule.scheduleId)">create</i>
+          <i class="material-icons" @click="deleteSchedule(schedule.scheduleId)">delete</i>
         </div>
 
       </li>
-
-      <!-- <li v-for="message in messagesData" :key="message.messageId">
-        <div class="linear2"></div>
-        <div class="linear1"></div>
-        <div class="column1 column">
-          <p>{{message.title}}</p>
-        </div>
-        <div class="column2 column">
-          <p>{{message.text}}</p>
-        </div>
-        <div class="column3 column">
-          <p>{{message.createdAt | shortDate }}</p>
-        </div>
-        <div class="column4 column">
-          <i class="material-icons tooltip" @click="showScheduleForm(message.messageId)" data-tooltip="Neki tekst">assignment_turned_in</i>
-          <i class="material-icons" @click="showTriggerForm(message.messageId)">assistant</i>
-          <i class="material-icons" @click="editSchedule(message.messageId)">create</i>
-          <i class="material-icons" @click="deleteSchedule(message.messageId)">delete</i>
-        </div>
-      </li> -->
     </ul>
 
     <div id="footer">
@@ -106,8 +105,13 @@ export default {
       sortType: "desc",
       textNoti: "",
       errorOccured: false,
-      showNoti: false
-    }
+      showNoti: false,
+      sortByValue: "createdAt",
+    }  
+  },
+
+  mounted: function(){
+    this.create();
   },
 
   filters: {
@@ -116,12 +120,19 @@ export default {
       let dataVar2 = dateVar.toDateString();
       let data = dataVar2.substring(4);
       return data;
+    },
+    activeView(value){
+      if(value == true)
+        return "Active";
+      else
+        return "Not active";
+    },
+    repeatView(value){
+      if(value == true)
+        return "Repeat";
+      else
+        return "Not repeat";
     }
-  },
-
-  mounted: function() {
-    //onload funkcija
-    this.create();
   },
 
   methods: {
@@ -133,18 +144,12 @@ export default {
       var pg = this.page - 1;
       try 
       {
-        var res;
-        if(this.titleSort == true)
-          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=title," + this.sortType);
-        else if(this.textSort == true)
-          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=text," + this.sortType);
-        else
-          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
+        const res = await axios.get("http://localhost:8080/api/schedules?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
 
         if (res.data.totalPages < this.page)
           this.changePage(res.data.totalPages);
 
-        this.messagesData = res.data.content;
+        this.schedulesData = res.data.content;
         this.pagesSize = res.data.totalPages;
       } 
       catch (err) 
@@ -182,15 +187,11 @@ export default {
     },
 
     async deleteSchedule(id) {
-      await axios.delete("http://localhost:8080/api/messages/" + id);
+      await axios.delete("http://localhost:8080/api/schedules/" + id);
       var pg = this.page - 1;
       try 
       {
-        var res;
-        if(this.textSort == true)
-          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=text," + this.sortType);
-        else
-          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
+        const res = await axios.get("http://localhost:8080/api/schedules?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
         
         if (res.data.numberOfElements == 0) 
         {
@@ -208,6 +209,7 @@ export default {
       {
         this.showNotification(-1);
       }
+      this.reloadSchedules();
     },
 
     toggleMenu() {
@@ -221,7 +223,7 @@ export default {
     setRows(value) {
       if (value != this.rowSize) {
         this.rowSize = value;
-        //this.reloadSchedules();
+        this.reloadSchedules();
       }
       this.menu = !this.menu;
     },
@@ -234,8 +236,7 @@ export default {
     async create() {
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/schedules");
-        console.log(res.data)
+        const res = await axios.get("http://localhost:8080/api/schedules?page=0&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
         this.schedulesData = res.data.content;
         if (res.data.totalPages == 0) 
             this.pagesSize = 1;
@@ -244,45 +245,20 @@ export default {
         this.rowSize = res.data.size;
       }
       catch (err) {
-        alert(err);
+        this.showNotification(-1);
       }
     },
 
-    sortByDate() {
+    sortBy(value)
+    {
       if (this.sortType == "desc") 
         this.sortType = "asc";
       else 
         this.sortType = "desc";
-      this.dateSort = true,
-      this.titleSort = false,
-      this.textSort = false,
-
+      
+      this.sortByValue = value;
       this.reloadSchedules();
     },
-
-    sortByTitle(){
-      if (this.sortType == "desc") 
-        this.sortType = "asc";
-      else 
-        this.sortType = "desc";
-      this.dateSort = false,
-      this.titleSort = true,
-      this.textSort = false
-
-      this.reloadSchedules();
-    },
-
-    sortByText(){
-      if (this.sortType == "desc") 
-        this.sortType = "asc";
-      else 
-        this.sortType = "desc";
-      this.dateSort = false,
-      this.titleSort = false,
-      this.textSort = true
-
-      this.reloadSchedules();
-    }
   },
   directives: {
     ClickOutside
@@ -323,26 +299,7 @@ background:#EAEAEA;}
 }
 
 #footer{
-  width: 92%;
-  height: 7vh;
-  background-color: white;
-  float: left;
-  z-index: 0;
-  position: absolute;
-  border: 1px solid lightgray;
-  bottom: 0px;
-  margin: 0px;
-  padding: 0px 20px;
-}
-
-#footer-btn{
-    border: 1px solid grey;
-    padding: 5px 5px;
-    width: 105px;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-    border-radius: 4px;
+  bottom: 0%;
 }
 
 .column1{
@@ -351,20 +308,51 @@ background:#EAEAEA;}
 }
 
 .column2{
-  width: 5%;
-  margin-right: 20px;
+  width: 7%;
+  margin-right: 25px;
+  margin-left: 0px;
+  position: relative;
+  right: 15px;
+}
+
+#title-li .column2{
+  position: unset;
 }
 
 #title-li .column4{
   margin-left: 30px;
 }
 
+.column3{
+  margin-left: 5px;
+}
+
 .column4{
-  width: 50%;
+  width: 33%;
+  margin-left: 0px;
+}
+
+.column5{
+  width: 11%;
+  margin-left: 0px;
+  padding-left: 20px;
+}
+
+#title-li .column5{
+  padding-left: 0px;
+}
+
+.column6{
+  width: 7%;
+  margin-left: 0px;
 }
 
 .linear1{
-  left: 36%;
+  left: 34%;
+}
+
+.linear2{
+  left: 67%;
 }
 
 </style>
