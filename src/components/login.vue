@@ -2,17 +2,15 @@
     <div id="login">
         <div id="right">        
             <div id="right-content">
-                <a href="http://localhost:8080/oauth2/authorize/google?redirect_uri=http://localhost:3000/oauth2/redirect">
-                <i class="fab fa-google" ></i>
-               </a>
-                <h1 @click="ispis" id="loginTekst">Log in</h1>
-                
+<a href="http://localhost:8080/oauth2/authorize/google?redirect_uri=http://localhost:3000/oauth2/redirect">
+                <i class="fab fa-google"></i>
+  </a>
+                <h1  id="loginTekst">Log in</h1>
+               
             
-                 <!-- iznad zakomentirano, ispod 1 linija OAUTH -->
-                <!--<div class="g-signin2" data-onsuccess="onSignIn"></div> --> 
+                
             </div>
-            </div>
-      
+        </div>
     <div id="left">
         <div id="logo"></div>
         <h1>Nsoft <br>
@@ -21,21 +19,12 @@
   </div>
 </template>
 
-
-
-
-
-
 <script>
-
-
 
 export default {
     name: "login",
     methods: {
-    ispis(){
-      alert("Ispis");
-    }
+    
   }
 }
 </script>
@@ -44,7 +33,7 @@ export default {
 <style scoped>
 
 #login{
-    height: 100%;
+    height: 100vh;
 }
 
 #right{
@@ -106,8 +95,8 @@ i:hover{
     left: 0px;
     right: 0px;
     bottom: 0px;
-    z-index: -1;
     display: flex;
+    background-color: white;
 }
 
 #left h1{

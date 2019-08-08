@@ -13,9 +13,9 @@ mounted:function(){
         
                 if(token) {
                     localStorage.setItem(ACCESS_TOKEN, token);
-                    this.$router.push("/messages"); 
+                    this.$router.push("/dashboard/messages"); 
                 } else {
-                    this.$router.push("/login");
+                    this.$router.push("/error");
                 }
             },
 

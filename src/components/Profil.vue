@@ -1,45 +1,23 @@
 <template>
-    <div>
-        <h1> Hello World </h1>
+    <div id="profil">
+        <h1> Profile </h1>
+        <br>
               <div class="data" id="profile">
               <img id="pic" class="img-circle" width="100" height="100"/>
               <br>
               <br>
             <p> <strong> Ime:  </strong> </p>
-            <br>
-            <p id="ime">
+            <p id="ime"> </p>
                 <br>
                 <p> <strong> Email address: </strong> </p>
-                <br>
             <p id="email" class="alert alert-danger"> </p>
           <br>
-<button @click="signOut()" class=" btn btn-danger"> Sign Out </button>
+<button @click="signOut()" class="btn btn-danger"> Sign Out </button>
         </div>
         </div>
 </template>
 <script>
-     /*const request = (options) => {
-    const headers = new Headers({
-        'Content-Type': 'application/json',
-    })
     
-    if(localStorage.getItem(ACCESS_TOKEN)) {
-        headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN))
-    }
-
-    const defaults = {headers: headers};
-    options = Object.assign({}, defaults, options);
-
-    return fetch(options.url, options)
-    .then(response => 
-        response.json().then(json => {
-            if(!response.ok) {
-                return Promise.reject(json);
-            }
-            return json;
-        })
-    );
-};*/
 
 import {ACCESS_TOKEN} from "../constants/index.js";
 export default {
@@ -54,7 +32,6 @@ xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TO
 //console.log("dohvati ga");
 }
 xhr.send();
-//xhr.responseType = 'json';
       xhr.onload = function() {
   console.log('Signed in as: ' + xhr.responseText);
  var obj=JSON.parse(xhr.responseText);
@@ -73,10 +50,7 @@ methods:{
     }
 
 }
-   // document.getElementById("profile").style.display="block";
-  //document.getElementById("email").innerHTML=currentUser;
-  //document.getElementById("ime").innerHTML=profile.getName();
-  //document.getElementById("pic").src=profile.getImageUrl();
+   
     }
 
 
@@ -84,13 +58,48 @@ methods:{
 
 <style scoped>
 .data p{
+    margin-left:20px;
+    float:left;
     text-align:left;
    
 }
 .data{
+    width:100%;
     margin-left:20px;
 }
+#email{
+    float:left;
+    width:30%;
+}
+#ime{
+    float:left;
+    width:30%;
+}
 #profile{
-    display:block;
+    display:flex;
+    flex-direction: column;
+    height:500px;
+    text-align:left;
+    
+}
+#pic{
+    float:left;
+}
+button{
+    float:left;
+    padding-top:30px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+  	width:18%;
+  	overflow: hidden;
+    background: #0080ff;
+	padding: 8px 20px 8px 20px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	color: #fff;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.12);
+	font: normal 30px 'Bitter', serif;
+	border: 1px solid #0080ff;;
+	font-size: 15px;
 }
 </style>

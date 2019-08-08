@@ -4,19 +4,43 @@
 <div id="formaT">
     <div class="form-style-10">
 <form id="forma">
-    <div class="section">  <p>Create Trigger <label id="close-icon" @click="exit"> x </label> </p> </div>
+    <div class="section">  <p>{{ formType }} Trigger <label id="close-icon" @click="exit"> x </label> </p> </div>
     <div class="inner-wrap">
-        <label class="la">Message</label><select  name="field1" id="field1"> 
-            <option value="" disabled selected>Some message title</option>
+        <label class="la">Message</label>
+
+        <select id="field1" class="border" v-model="messageTitle" @click="getMessageID" :class="{errorBorder: showTitleError, noErrorBorder: !showTitleError}"> 
+            
+            <option disabled selected >{{ messageTitle }}</option>
+            <option v-for="message in messagesData" :key="message.messageId" v-show="showMessageOption"> {{ message.title }} </option>
+            
         </select>
-        <label class="la"> Trigger </label>  <select name="field1" id="field2"> 
-            <option value="">On channel join</option>
+
+        <span v-show="showTitleError">Message title is required</span>
+        <br>
+
+        <label class="la"> Trigger </label>  
+        <select  id="field2" class="border"  v-model="triggerType" :class="{errorBorder: showTriggerError, noErrorBorder: !showTriggerError}"> 
+            <option disabled selected >Some trigger type</option>
+            <option>On channel join</option>
         </select>
-        <label class="la"> Channel </label>  <input type="text" name="field1" id="field3"/>
-        <input type="checkbox" id="check" /> <label id="active"> Active </label> 
+
+        <span v-show="showTriggerError">Trigger type is required</span>
+        <br>
+        <br>
+
+        <select id="field3" class="border"  v-model="channelName" :class="{errorBorder: showChannelError, noErrorBorder: !showChannelError}"> 
+            <option disabled selected >Some channel name</option>
+            <option v-for="channel in channelsData" :key="channel.name"> {{ channel.name }} </option>
+        </select>
+
+        <span v-show="showChannelError">Channel name is required</span>
+        <br>
+        <br>
+
+        <input type="checkbox" id="check" v-model="active" class="checkBox" /> <label id="active" for="check" class="checkBox"> Active </label> 
     <br>
     <br>
-        <input type="button" value="Save" id="submit" @click="save" />
+        <input type="button" value="Save" id="submit" @click="save"/>
         <input type="button" value="Cancel" @click="exit" />
 </div>
 </form>
@@ -25,6 +49,7 @@
 </template>
 
 <script>
+import axios from "axios"
 
 /*
 window.addEventListener("mouseup", function(event){
@@ -44,18 +69,225 @@ window.addEventListener("mouseup", function(event){
 
 export default {
     name: "formaT",
+    data(){
+        return{
+            messagesData: [],
+            channelsData: [],
+            targetMess: "",
+            messageTitle: "Some message title",
+            triggerType: "Some trigger type",
+            channelName: "Some channel name",
+            active: false,
+            formType: "Create",
+            messId: "",
+            liveValidation: false,
+            showTitleError: false,
+            showTriggerError: false,
+            showChannelError: false,
+            showMessageOption: true
+        }
+    },
+    mounted: async function()
+    {
+        if (this.$route.params.id != null) 
+        {
+
+            var currentR = this.$router.currentRoute.fullPath;
+            var path = currentR.substring(0, 30);
+
+            if(path == "/dashboard/messages/newTrigger")
+            {
+                try
+                {
+                    const res = await axios.get("http://localhost:8080/api/messages/" + this.$route.params.id);
+                    this.messagesData = res.data;
+                    this.messageTitle = this.messagesData.title;
+                    this.showMessageOption = false;
+                }
+                catch(err)
+                {
+                    this.$emit("show-notification", -1);                    
+                }
+            }
+            else
+            {
+                this.formType = "Update";
+
+                var res;
+                try
+                {
+                    res = await axios.get("http://localhost:8080/api/triggers/" + this.$route.params.id);
+                    this.messageTitle = res.data.message.title;
+                    this.channelName = res.data.channel;
+                    this.active = res.data.active;
+                    this.triggerType = res.data.triggerType;
+                    this.messId = res.data.message.messageId;
+                }
+                catch(err)
+                {
+                    this.$emit("show-notification", -1);         
+                }
+                try
+                {
+                    const resM = await axios.get("http://localhost:8080/api/messages");
+                    this.messagesData = resM.data.content;
+                }
+                catch(err)
+                {
+                    this.$emit("show-notification", -1);               
+                }
+            }
+        }
+        else
+        {
+            try 
+            {
+                const res = await axios.get("http://localhost:8080/api/messages");
+                this.messagesData = res.data.content;             
+            }
+            catch (err) {
+                this.$emit("show-notification", -1);
+            }
+        }
+        try
+        {
+            //Aplikacija nije povezana sa listom kanala
+            const res = await axios.get("http://localhost:8080/api/channels");
+            this.channelsData = [{name: "#general"}, {name: "#incubator"}];
+        }
+        catch(err)
+        {
+            this.$emit("show-notification", -1);
+        }
+    },
+
+    watch: {
+        messageTitle(value) {
+          this.messageTitle = value;
+          if (this.liveValidation == true) this.check_messageTitle(value);
+        },
+
+        triggerType(value) {
+          this.triggerType = value;
+          if (this.liveValidation == true) this.check_triggerType(value);
+        },
+
+        channelName(value){
+            this.channelName = value;
+            if (this.liveValidation == true) this.check_channelName(value);
+        }
+    },
+
     methods: {
         exit(){
             this.$router.go(-1);
         },
-        save(){
-            alert("Sacuvaj");
+
+        check_messageTitle(value) 
+        {
+            if (this.messageTitle == "Some message title") 
+            {
+                this.showTitleError = true;
+                return false;
+            } 
+            else
+            {
+                this.showTitleError = false;
+                return true;
+            }
+        },
+
+        check_triggerType(value) {
+            if (this.triggerType == "Some trigger type") 
+            {
+                this.showTriggerError = true;
+                return false;
+            } 
+            else {
+                this.showTriggerError = false;
+                return true;
+            }
+        },
+
+        check_channelName(value) {
+            if (this.channelName == "Some channel name") 
+            {
+                this.showChannelError = true;
+                return false;
+            } 
+            else {
+                this.showChannelError = false;
+                return true;
+            }
+        },
+
+        async save(){
+
+            this.liveValidation = true;
+            if (this.check_messageTitle(this.messageTitle) == false) this.invalid = true;
+            if (this.check_triggerType(this.triggerType) == false) this.invalid = true;
+            if (this.check_channelName(this.channelName) == false) this.invalid = true;
+            if (this.invalid == true) 
+            {
+                this.invalid = false;
+                return;
+            }
+
             if(this.$route.params.id != null)
-                alert(this.$route.params.id);
+            {
+                var cr = this.$router.currentRoute.fullPath;
+                var path = cr.substring(0, 30);
+
+                if(path == "/dashboard/messages/newTrigger")
+                {
+                    try
+                    {
+                        await axios.post("http://localhost:8080/api/triggers", {channel: this.channelName, triggerType: this.triggerType, active: this.active, messageId: this.$route.params.id})
+                        this.$emit("show-notification")                    
+                    }
+                    catch(err)
+                    {
+                        this.$emit("show-notification", -1)
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        const res = await axios.get("http://localhost:8080/api/messages");
+                        this.messagesData = res.data.content;
+
+                        await axios.put("http://localhost:8080/api/triggers/" + this.$route.params.id, {channel: this.channelName, triggerType: this.triggerType, active: this.active, messageId: this.messId})
+                        this.$emit("show-notification")                    
+                    }
+                    catch(err)
+                    {
+                        this.$emit("show-notification", -1)
+                    }
+                }
+            }
+            else
+            {
+                try
+                {
+                    await axios.post("http://localhost:8080/api/triggers", {active: this.active, channel: this.channelName, messageId: this.messId, triggerType:  this.triggerType});
+                    this.$emit("show-notification")
+                }
+                catch(err)
+                {
+                    this.$emit("show-notification", -1);
+                }
+            }
+            this.$emit("reload-triggers");
             this.$router.go(-1);
         },
-        ispis(){
-            alert("Ispis");
+        getMessageID()
+        {   
+            if(this.messagesData.length>1)
+            {
+                this.targetMess = this.messagesData.filter( mess => mess.title == this.messageTitle);
+                this.messId = this.targetMess[0].messageId;
+            }
         }
     }
 }
@@ -77,10 +309,7 @@ export default {
     background-color: white;
     padding: 10px;
     z-index: 99;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-    z-index: 99;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 #form-style-10{
@@ -129,7 +358,7 @@ export default {
 .form-style-10 select {
     padding-top:10px;
     overflow:none;
-    margin-bottom: 35px;
+    margin-bottom: 15px;
 	display: block;
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -140,17 +369,12 @@ export default {
 	border-radius: 6px;
 	-webkit-border-radius:6px;
 	-moz-border-radius:6px;
-	border: 1px inset rgba(0, 0, 0, 0.2);
-	/*box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, 0.33);
-	-moz-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.33);
-	-webkit-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.33);*/
     font-size: 15px;
 }
 
 .form-style-10 .section{
 	font: normal 23px 'Bitter', serif;
     padding-left: 20px;
-	padding-bottom: 15px;
 }
 
 .form-style-10 .section p{
@@ -159,6 +383,7 @@ export default {
     font-weight: bold;
     color:black;
     margin-top: 18px;
+    margin-bottom: 25px;
 }
 
 .form-style-10 #submit{
@@ -239,6 +464,34 @@ export default {
 
 #close-icon:hover{
     cursor: pointer;
+}
+
+.la{
+    position: relative;
+    top: 7px;
+    left: 10px;
+    text-align: center;
+    padding: 0px 7px;
+    background-color: white;
+}
+
+span {
+  color: rgb(253, 38, 38);
+  font-weight: 400;
+}
+
+.errorBorder {
+    border: 1px inset rgb(253, 38, 38);
+}
+
+.noErrorBorder{
+    border: 1px inset rgba(0, 0, 0, 0.2);
+}
+
+.checkBox{
+    position: relative;
+    top: 15px;
+    left: 5px;
 }
 
 </style>

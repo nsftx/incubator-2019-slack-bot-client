@@ -4,26 +4,46 @@
 
     <div class="form-style-10">
 <form id="forma">
-    <div class="section">  <p id="section-text">Create Schedule <label id="close-icon" @click="exit">x </label> </p></div>
+    <div class="section">  <p id="section-text">{{ formType }} Schedule <label id="close-icon" @click="exit">x </label> </p></div>
     <div class="inner-wrap">
-        <label class="la">Message</label><select  name="field1" id="field1"> 
-            <option value="" disabled selected>Some message title</option>
+        
+        <label class="la">Message</label>
+        
+        <select name="field1" id="field1" v-model="messageTitle" @click="getMessageID" :class="{errorBorder: showTitleError, noErrorBorder: !showTitleError}"> 
+            <option disabled selected>{{ messageTitle }}</option>
+            <option v-for="message in messagesData" :key="message.messageId" v-show="showMessageOption"> {{ message.title }} </option>
         </select>
+
+        <span v-show="showTitleError">Message title is required</span>
+        <br>
+
         <label class="la"> Run At </label>  <br> 
         <div class="input-append date form_datetime">
-            <input size="16" type="text" value="" readonly id="field2">
-            <span class="add-on"><i class="icon-th"></i></span>
+            <div>
+           <date-picker v-model="date" :lang="lang" style="margin-top: 8px"></date-picker>
+            </div>
         </div>
+        <br>
+        <br>
+        <span v-show="showDateError">Date is required and must not be less then today date</span>
+        <br>
+
+        <label class="la"> Channel name </label> 
+        <select id="field3" v-model="channelName" :class="{errorBorder: showChannelError, noErrorBorder: !showChannelError}"> 
+            <option disabled selected >Some channel name</option>
+            <option v-for="channel in channelsData" :key="channel.name"> {{ channel.name }} </option>
+        </select>
+
+        <span v-show="showChannelError"> Channel name is required </span>
 
         <br>
-        <input type="checkbox" id="check"/> <label class="check-label"> Repeat </label> 
+        <input type="checkbox" id="check" class="checkBox" v-model="repeat"/> <label class="check-label checkBox" for="check"> Repeat </label> 
+        <br> 
         <br>
+        <input type="checkbox" id="active" class="checkBox" v-model="active"/> <label class="check-label checkBox" for="active"> Active </label> 
         <br>
-        <input type="checkbox" id="active"/> <label class="check-label"> Active </label> 
-    <br>
-    <br>
-        <input type="button" value="Save" id="submit" @click="save"/>
-        <input type="button" value="Cancel" @click="exit"/>
+        <input type="button" class="bottomOption" value="Save" id="submit" @click="save"/>
+        <input type="button" class="bottomOption" id="cancel" value="Cancel" @click="exit"/>
 </div>
 
 </form>
@@ -33,6 +53,9 @@
 </template>
 
 <script>
+import axios from "axios"
+import DatePicker from 'vue2-datepicker'
+
 
 /*
 window.addEventListener("mouseup", function(event){
@@ -53,16 +76,250 @@ window.addEventListener("mouseup", function(event){
 
 export default {
     name: "formaS",
+    components:{DatePicker},
+     data (){  
+        return {
+            messagesData: [],
+            channelsData: [],
+            messageTitle: "Some message title",
+            channelName: "Some channel name",
+            targetMess: "",
+            messId: "",
+            showTitleError: false,
+            showDateError: false,
+            showChannelError: false,
+            repeat: false,
+            active: false,
+            date: null,
+            formType: "Create",
+            showMessageOption: true,
+
+            time1: '',
+            time2: '',
+            time3: '',
+            // custom lang
+            lang: {
+                days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                pickers: ['next 7 days', 'next 30 days', 'previous 7 days', 'previous 30 days'],
+                placeholder: {
+                date: 'Select Date',
+                dateRange: 'Select Date Range'
+            }
+        }
+        }
+    },
+
+    mounted: async function(){
+        if(this.$route.params.id == null)
+        {
+            try 
+            {
+                const res = await axios.get("http://localhost:8080/api/messages");
+                    this.messagesData = res.data.content;             
+            }
+            catch (err) {
+                this.$emit("show-notification", -1);
+            }
+        }
+        else
+        {
+            var currentR = this.$router.currentRoute.fullPath;
+            var path = currentR.substring(0, 31);
+
+            if(path == "/dashboard/messages/newSchedule")
+            {
+                try
+                {
+                    const res = await axios.get("http://localhost:8080/api/messages/" + this.$route.params.id);
+                    this.messagesData = res.data;
+                    this.messageTitle = this.messagesData.title;
+                    this.showMessageOption = false;
+                }
+                catch(err)
+                {
+                    this.$emit("show-notification", -1);
+                }   
+            }
+            else
+            {
+                this.formType = "Update";
+                var res;
+                try
+                {
+                    res = await axios.get("http://localhost:8080/api/schedules/" + this.$route.params.id);
+                    this.active = res.data.active;
+                    this.repeat = res.data.repeat;
+                    this.channelName = res.data.channel;
+                    this.messageTitle = res.data.message.title;
+                    this.date = res.data.runAt;
+                    this.messId = res.data.message.messageId;
+                }
+                catch(err)
+                {
+                    this.$emit("show-notification", -1);               
+                }
+                try
+                {
+                    const resM = await axios.get("http://localhost:8080/api/messages");
+                    this.messagesData = resM.data.content;
+                }
+                catch(err)
+                {
+                    this.$emit("show-notification", -1);               
+                }
+            }
+        }
+        try
+        {
+            //Aplikacija nije povezana sa listom kanala
+            const res = await axios.get("http://localhost:8080/api/channels");
+            this.channelsData = [{name: "#general"}, {name: "#incubator"}];
+        }
+        catch(err)
+        {
+            this.$emit("show-notification", -1);
+        }
+    },
+
+    watch: {
+        messageTitle(value) {
+          this.messageTitle = value;
+          if (this.liveValidation == true) this.check_messageTitle(value);
+        },
+
+        date(value){
+            this.date = value;
+            if(this.liveValidation == true) this.check_date(value);
+        },
+
+        channelName(value){
+            this.channelName = value;
+            if (this.liveValidation == true) this.check_channelName(value);
+        }
+    },
+
     methods:{
 		exit(){
 			this.$router.go(-1);
-		},
-		save(){
-            alert("Sacuvaj");
+        },
+
+        check_messageTitle(value) 
+        {
+            if (this.messageTitle == "Some message title") 
+            {
+                this.showTitleError = true;
+                return false;
+            } 
+            else
+            {
+                this.showTitleError = false;
+                return true;
+            }
+        },
+
+        check_channelName(value) {
+            if (this.channelName == "Some channel name") 
+            {
+                this.showChannelError = true;
+                return false;
+            } 
+            else {
+                this.showChannelError = false;
+                return true;
+            }
+        },
+
+        check_date(value){
+            if(this.date == null)
+            {
+                var inputi = document.getElementsByClassName("mx-input")[0];
+                inputi.style.borderColor = "red";
+                this.showDateError = true;
+                return false;
+            }
+            var today = new Date();
+            if(today>this.date)
+            {
+                var inputi = document.getElementsByClassName("mx-input")[0];
+                inputi.style.borderColor = "rgba(0, 0, 0, 0.2);";   
+                this.showDateError = true;
+                return false;
+            }
+            else
+            {
+                var inputi = document.getElementsByClassName("mx-input")[0];
+                inputi.style.borderColor = "rgba(0, 0, 0, 0.2);"; 
+                this.showDateError = false;
+                return true;
+            }
+        },
+
+		async save(){
+
+            this.liveValidation = true;
+            if (this.check_messageTitle(this.messageTitle) == false) this.invalid = true;
+            if (this.check_date(this.date) == false) this.invalid = true;
+            if (this.check_channelName(this.channelName) == false) this.invalid = true;
+            if (this.invalid == true) 
+            {
+                this.invalid = false;
+                return;
+            }
+
             if(this.$route.params.id != null)
-                alert(this.$route.params.id);
+            {
+                var cr = this.$router.currentRoute.fullPath;
+                var path = cr.substring(0, 31);
+
+                if(path == "/dashboard/messages/newSchedule")
+                {
+                    try
+                    {
+                        await axios.post("http://localhost:8080/api/schedules", {active: this.active, channel: this.channelName, repeat: this.repeat, messageId: this.$route.params.id, runAt: this.date})
+                        this.$emit("show-notification");
+                    }
+                    catch(err)
+                    {
+                        this.$emit("show-notification", -1);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        await axios.put("http://localhost:8080/api/schedules/" + this.$route.params.id, {active: this.active, channel: this.channelName, messageId:     this.messId, repeat: this.repeat, runAt: this.date});
+                        this.$emit("show-notification");
+                    }
+                    catch(err)
+                    {
+                        this.$emit("show-notification", -1);
+                    }
+                }
+            }
+            else
+            {
+                try
+                {
+                    await axios.post("http://localhost:8080/api/schedules", {active: this.active, channel: this.channelName, messageId: this.messId, repeat: this.repeat, runAt: this.date})
+                    this.$emit("show-notification")
+                }
+                catch(err)
+                {
+                    this.$emit("show-notification", -1);
+                }
+            }
+            this.$emit("reload-schedules");
             this.$router.go(-1);
-		}
+        },
+        getMessageID()
+        {   
+            if(this.messagesData.length > 1)
+            {
+                this.targetMess = this.messagesData.filter( mess => mess.title == this.messageTitle);
+                this.messId = this.targetMess[0].messageId;
+            }
+        }
     }
 }
 </script>
@@ -71,6 +328,36 @@ export default {
 
 *{
     font-family: 'Roboto', sans-serif;
+}
+
+*[data-v-f2ae3234] {
+    width: 100%;
+    height:13px;
+    font-family: 'Roboto', sans-serif;
+}
+#check{
+    margin-top:15px;
+}
+
+#check,#active{
+    width:10%;
+}
+
+#cancel,#submit{
+    width:30%;
+    height:auto;
+}
+
+.mx-input{
+    overflow: visible;
+}
+
+.mx-input-append{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    margin-right: 10px;
 }
 
 #formaS{
@@ -92,12 +379,9 @@ export default {
 	left:50%;
 	transform:translateX(-50%) translateY(-50%);
 	background: #FFF;
-    overflow:hidden;
     box-sizing:border-box;
     display:block;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     z-index: 99;
 }
 
@@ -107,12 +391,13 @@ export default {
 	background: #fff;
 	border-radius: 6px;
 	margin-bottom: 15px;
+    margin-top: 20px;
 }
 
 .form-style-10 label{
 	font: 13px Arial, Helvetica, sans-serif;
 	color: #888;
-	margin-bottom: 15px;
+	margin-bottom: 10px;
 }
 
 .form-style-10 select{
@@ -144,10 +429,6 @@ export default {
 	border-radius: 6px;
 	-webkit-border-radius:6px;
 	-moz-border-radius:6px;
-	border: 1px inset rgba(0, 0, 0, 0.2);
-	/*box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, 0.33);
-	-moz-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.33);
-	-webkit-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.33);*/
 }
 
 .form-style-10 .section{
@@ -168,7 +449,6 @@ export default {
     float:right;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     width:20%;
-    height:30%;
     overflow: hidden;
     background: #0080ff;
 	padding: 8px 20px 8px 20px;
@@ -240,8 +520,8 @@ export default {
     font-size: 25px;
     display:inline;
     text-align:right;
-    float:right;
-    margin: 0 20px 10px 0px;
+    position: relative;
+    left: 60%;
 }
 
 #close-icon:hover{
@@ -252,11 +532,49 @@ export default {
     margin-bottom: 50px;
 }
 
-#field1, #field2{
-    margin-bottom: 25px;
-    height: 40px;
+#field1, #field2, #field3{
+    margin-bottom: 10px;
+    height: 37px;
     margin-top: 10px;
     font-size: 15px;
+}
+
+.checkBox{
+    position: relative;
+    top: 10px;
+    right: 15px;
+}
+
+.bottomOption{
+    position: relative;
+    bottom: 45px;
+}
+
+.errorBorder {
+    border: 1px inset rgb(253, 38, 38);
+}
+
+.noErrorBorder{
+    border: 1px inset rgba(0, 0, 0, 0.2);
+}
+
+span {
+  color: rgb(253, 38, 38);
+  font-weight: 400;
+}
+
+.checkBox:hover{
+    cursor: pointer;
+}
+
+.la{
+    display: inline;
+    background-color: white;
+    position: relative;
+    top: 15px;
+    left: 10px;
+    z-index: 99;
+    padding: 0px 5px;
 }
 
 </style>

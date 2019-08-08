@@ -1,406 +1,802 @@
 <template>
-
-<div id="messages">
-    <router-view></router-view>
-
+  <div id="messages">
+    <router-view @reload-messages="reloadMessages()" @show-notification="showNotification($event)"></router-view>
+<div id="header">
+        <h1>Messages</h1>
+        <v-menu open-on-hover bottom offset-y>
+          <template v-slot:activator="{ on }">
+            <div id="usersdata" v-on="on">
+              <i id="ikona" class="material-icons">arrow_drop_down</i>
+              <button id="slika">
+                <img id="pic" class="img-circle" width="80" height="70" />
+              </button>
+              <div id="credentials">
+                <h3 id="ime">Amina Fajić</h3>
+                <br />
+                <p id="email">aminafajic879@gmail.com</p>
+              </div>
+            </div>
+          </template>
+          <ul id="settings">
+            <li class="listaopcijauser" v-for="(item, index) in items" :key="index" @click="prikazi(index)">
+              <p id="opcijauser">  {{ item.title }} </p>            </li>
+          </ul>
+        </v-menu>
+      </div>
+      <div id="lista">
     <ul id="list">
-             <li id="title-li">
-                 <div class="column1 column"> <h5>Title</h5> <p> <i class="material-icons">arrow_drop_down</i> </p> </div>
-                 <div class="column2 column"> <h5>Text</h5> <p> <i class="material-icons">arrow_drop_down</i> </p> </div>
-                 <div class="column3 column"> <h5>Created At</h5> <p> <i class="material-icons">arrow_drop_down</i> </p> </div>
-                 <div class="column4 column"> <p> <i class="material-icons">filter_list</i> </p> </div>
-             </li>
+      <li id="title-li">
+        <div class="column1 column">
+          <h5>Title</h5>
+          <p>
+            <i class="material-icons" @click="sortBy('title')">arrow_drop_down</i>
+          </p>
+        </div>
+        <div class="column2 column">
+          <h5>Text</h5>
+          <p>
+            <i class="material-icons" @click="sortBy('text')">arrow_drop_down</i>
+          </p>
+        </div>
+        <div class="column3 column">
+          <h5>Created At</h5>
+          <p>
+            <i class="tooltip, material-icons" @click="sortBy('createdAt')">arrow_drop_down</i>
+          </p>
+        </div>
+        <div class="column4 column">
+          <p>
+            <i class="material-icons">filter_list</i>
+          </p>
+        </div>
+      </li>
 
-        <li v-for="message in messagesData" :key="message.id">
-            <div class='linear2'></div>
-            <div class='linear1'></div>
-            <div class='column1 column'>
-                <p> {{message.title}}</p> 
-            </div> 
-            <div class='column2 column'> 
-                <p>{{message.text}}</p>
-            </div>
-            <div class='column3 column'> 
-                <p>{{message.created_at | shortDate }}</p>
-            </div>
-            <div class='column4 column'> 
-                <i class='material-icons' @click="showScheduleForm(message.id)">assignment_turned_in</i> 
-                <i class='material-icons' @click="showTriggerForm(message.id)">assistant</i> 
-                <i class="material-icons" @click="editMessage(message.id)">create</i>
-                <i class="material-icons" @click="deleteMessage(message.id)">delete</i>
-            </div>
-            
-        </li>
-
+      <li v-for="message in messagesData" :key="message.messageId">
+        <div class="linear2"></div>
+        <div class="linear1"></div>
+        <div class="column1 column">
+          <p>{{message.title}}</p>
+        </div>
+        <div class="column2 column">
+          <p>{{message.text}}</p>
+        </div>
+        <div class="column3 column">
+          <p>{{message.createdAt | shortDate }}</p>
+        </div>
+        <div class="column4 column">
+          <i class="material-icons tooltip" @click="showScheduleForm(message.messageId)" data-tooltip="Neki tekst">assignment_turned_in</i>
+          <i class="material-icons" @click="showTriggerForm(message.messageId)">assistant</i>
+          <i class="material-icons" @click="editMessage(message.messageId)">create</i>
+          <i class="material-icons" @click="deleteMessage(message.messageId)">delete</i>
+        </div>
+      </li>
+      
     </ul>
-
-    <div id="footer">
-        <button id="footer-btn" @click="toggleMenu" v-click-outside="hideMenu"> {{ this.rowSize }} Rows </button>
-        <div id="menu" v-show="menu">
-            <!--<div class="menu-article" @click="setRows(rowSizesValue[0])"> {{ rowSizesValue[0] }} </div>
-            <div class="menu-article" @click="setRows(rowSizesValue[1])"> {{ rowSizesValue[1] }} </div>
-            <div class="menu-article" @click="setRows(rowSizesValue[2])"> {{ rowSizesValue[2] }}</div> -->
-            <div class="menu-article" v-for="rowValue in rowSizesValue" :key="rowValue" @click="setRows(rowValue)">{{ rowValue }}</div>
-        </div>
-
-        <div class="text-xs-center">
-            <v-pagination
-                v-model="page"
-                :length="pagesSize"
-                :total-visible="5"
-                @input="changePage"
-            ></v-pagination>
-        </div>
-
-    </div>    
-
-    <button @click="showMessageForm" id="btn"> + </button>
 </div>
+    <div id="footer">
+      <button id="footer-btn" @click="toggleMenu" v-click-outside="hideMenu">{{ this.rowSize }} Rows</button>
+      <div id="menu" v-show="menu">
+        <div class="menu-article" v-for="rowValue in rowSizesValue" :key="rowValue" @click="setRows(rowValue)">{{ rowValue }}</div>
+      </div>
 
+      <div class="text-xs-center">
+        <v-pagination v-model="page" :length="pagesSize" :total-visible="5" @input="changePage"></v-pagination>
+      </div>
+    </div>
+
+    <button @click="showMessageForm" id="btn">+</button>
+
+    <div id="notification" v-show="showNoti" :class="{redBorder: errorOccured, greenBorder: !errorOccured}">
+      <input type="text" v-model="textNoti" readonly :class="{redText: errorOccured, greenText: !errorOccured}" />
+      <button @click="showNotification" :class="{redBackground: errorOccured, greenBackground: !errorOccured}">OK</button>
+    </div>
+  </div>
 </template>
 
 
 <script>
+/* eslint-disable */
+import {Current_User_Role, THEME_ID, THEME} from "../constants/index.js";
+import {User_Email} from "../constants/index.js";
+import {ACCESS_TOKEN} from "../constants/index.js";
+import navigation from "./navigation.vue"
 import axios from "axios";
-import ClickOutside from "vue-click-outside"
-//import { async } from 'q';
-
+import ClickOutside from "vue-click-outside";
+import { setTimeout } from 'timers';
+const headers = {
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
+} 
 export default {
-    name: "messages",
-    data(){
-        return{
-            messagesData: [],
-            rowSize: 20, //Number of rows
-            pagesSize: 2, //Number of pages
-            page: 1, //curren active page
-            menu: false,
-            rowSizesValue: [5, 10, 20]
-        }
-    },
-    mounted: function(){
-        //onload funkcija
-        this.create();
-    },
-    filters: {
-        shortDate(value){
-            let dateVar = new Date(value);
-            let dataVar2 = dateVar.toDateString();   
-            let data = dataVar2.substring(4);
-            return data;
-        }
-    },
-    methods: {
-        showMessageForm(){
-            this.$router.push("/messages/newMessage");
-        },
-
-        showTriggerForm(id){
-            this.$router.push("/messages/newTrigger/" + id);
-        },
-
-        showScheduleForm(id){
-            this.$router.push("/messages/newSchedule/" + id);
-        },
-
-        async editMessage(id)
-        {
-            this.$router.push("/messages/updateMessage/" + id);
-        },
-
-        deleteMessage(id)
-        {
-            console.log("Izbrisi poruku sa id: " + id);
-        },
-
-        toggleMenu(){
-            this.menu = !this.menu;
-        },
-
-        hideMenu(){
-            this.menu = false;
-        },
-
-        setRows(value)
-        {
-            if(value != this.rowSize)
-            {
-                this.rowSize = value;
-                console.log("Pozovi api sa parametrom: " + value);
-            }
-            this.menu = !this.menu;
-        },
-
-        changePage(nextPage){
-            console.log("Pozovi api sa parametrom: " + nextPage);
-        },
-
-        async create(){
-            try{
-                const res = await axios.get("../json.txt");
-                this.messagesData = res.data.content;
-                this.pagesSize = res.data.totalPages;
-            }
-            catch(err){
-                alert(err);
-            }
-        },
-    },
-    directives: {
-        ClickOutside
-    }
+  name: "messages",
+  data() {
+    return {
+       items: [
+        { title: "Profile" },
+        { title: "Settings" },
+        { title: "Terms and Conditions" },
+        { title: "Log Out" }
+      ],
+      messagesData: [],
+      rowSize: 20, //Number of rows
+      pagesSize: 1, //Number of pages
+      page: 1, //current active page
+      menu: false,
+      rowSizesValue: [5, 10, 20],
+      sortType: "desc",
+      dateSort: true,
+      sortByValue: "createdAt",
+      textNoti: "",
+      errorOccured: false,
+      showNoti: false
+    };
+  },
+  mounted: function() {
+    var xhr = new XMLHttpRequest();
+         xhr.open('GET', 'http://localhost:8080/user/me');
+         
+xhr.setRequestHeader('Content-Type', 'application/json');
+if(localStorage.getItem(ACCESS_TOKEN)) {
+xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN));
+//console.log("dohvati ga");
 }
+xhr.send();
+      xhr.onload = function() {
+  console.log('Signed in as: ' + xhr.responseText);
+ var obj=JSON.parse(xhr.responseText);
+ document.getElementById("email").innerHTML=obj.email;
+localStorage.setItem(User_Email,obj.email);
+ document.getElementById("ime").innerHTML=obj.name;
+ document.getElementById("pic").src=obj.imageUrl;
+ localStorage.setItem(Current_User_Role, obj.role);
+ localStorage.setItem(THEME,obj.userSettings.theme);
+};
+if(localStorage.getItem(THEME)=="light"){
+document.getElementById("header").style.backgroundColor="white";
+document.getElementById("lista").style.backgroundColor="white";
+}else if(localStorage.getItem(THEME)=="dark") {
+document.getElementById("header").style.backgroundColor="black";
+document.getElementById("lista").style.backgroundColor="black";
+}
+    //onload funkcija
+    //this.create();
+  },
+  filters: {
+    shortDate(value) {
+      let dateVar = new Date(value);
+      let dataVar2 = dateVar.toDateString();
+      let data = dataVar2.substring(4);
+      return data;
+    }
+  },
+  methods: {
+    async reloadMessages() {
+      var pg = this.page - 1;
+      try 
+      {
+        const res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
+
+        if (res.data.totalPages < this.page)
+          this.changePage(res.data.totalPages);
+
+        this.messagesData = res.data.content;
+        this.pagesSize = res.data.totalPages;
+      } 
+      catch (err) 
+      {
+        this.showNotification(-1);
+      }
+    },
+
+    showNotification(value) {
+       if(value == -1)
+       {
+           this.textNoti = "Some error have occured";
+           this.errorOccured = true;
+       }
+       else
+       {
+          this.errorOccured = false;
+          this.textNoti = "Succes"; 
+       }
+       this.showNoti = !this.showNoti;
+       setTimeout(this.closeNoti, 1500)
+       {}
+    },
+
+    closeNoti(){
+        this.showNoti = false;
+    },
+
+    showMessageForm() {
+      this.$router.push("/dashboard/messages/newMessage");
+    },
+
+    showTriggerForm(id) {
+      this.$router.push("/dashboard/messages/newTrigger/" + id);
+    },
+
+    showScheduleForm(id) {
+      this.$router.push("/dashboard/messages/newSchedule/" + id);
+    },
+
+    async editMessage(id) {
+      this.$router.push("/dashboard/messages/updateMessage/" + id);
+    },
+
+    async deleteMessage(id) {
+      await axios.delete("http://localhost:8080/api/messages/" + id);
+      var pg = this.page - 1;
+      try 
+      {
+        var res;
+        if(this.titleSort == true)
+          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=title," + this.sortType);
+        else if(this.textSort == true)
+          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=text," + this.sortType);
+        else
+          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
+        
+        if (res.data.numberOfElements == 0) 
+        {
+          if (this.page != 1) 
+            this.changePage(this.page - 1);
+        }
+        this.messagesData = res.data.content;
+        if (res.data.totalPages == 0) 
+            this.pagesSize = 1;
+        else 
+            this.pagesSize = res.data.totalPages;
+        this.showNotification(200);
+      } 
+      catch (err) 
+      {
+        this.showNotification(-1);
+      }
+    },
+
+    toggleMenu() {
+      this.menu = !this.menu;
+    },
+
+    hideMenu() {
+      this.menu = false;
+    },
+
+    setRows(value) {
+      if (value != this.rowSize) {
+        this.rowSize = value;
+        this.reloadMessages();
+      }
+      this.menu = !this.menu;
+    },
+
+    changePage(nextPage) {
+      this.page = nextPage;
+      this.reloadMessages(nextPage - 1);
+    },
+
+    async create() {
+      try 
+      {
+        const res = await axios.get("http://localhost:8080/api/messages?page=0&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
+        this.messagesData = res.data.content;
+        if (res.data.totalPages == 0) 
+            this.pagesSize = 1;
+        else 
+            this.pagesSize = res.data.totalPages;
+        this.rowSize = res.data.size;
+      }
+      catch (err) {
+        //alert(err);
+         console.log(err);
+      }
+    },
+    prikazi(index) {
+        if(index==0){
+          this.$router.push("/profile");
+        }
+        else if(index==1){
+        this.$router.push("/settings");
+        }
+        else if(index==2){
+this.$router.push("/terms");
+        }
+        else if(index==3){
+        localStorage.removeItem(ACCESS_TOKEN);
+        localStorage.removeItem(Current_User_Role);
+          alert("You're safely logged out!");
+          this.$router.push("/login");
+        }
+    }
+  },
+
+    sortBy(value) {
+      if (this.sortType == "desc") 
+        this.sortType = "asc";
+      else 
+        this.sortType = "desc";
+      
+      this.sortByValue = value;
+      this.reloadMessages();
+    },
+
+  directives: {
+    ClickOutside
+  }
+};
 </script>
 
 <style>
+#settings{
+    background-color:  #006BF5;
+    border-collapse: collapse;
+}
 
-    *{
-        box-sizing: border-box;
-        margin: 0px;
-        font-family: 'Roboto', sans-serif;
-        font-weight: 500;
-    }
+.listaopcijauser{
+    width:100%;
+    height:30px;
+    text-align: center;
+     border-collapse: collapse;
+     border-width: 0 0 1px 1px;
+     border-radius: 1px;
+     background-color:#f1f1f1;
+}
+#opcijauser{
+    padding-top:5px;
+    box-sizing:border-box;
+    width:100%;
+    height: 100%;
+    text-align:center;
+     font-family: "Roboto", sans-serif;
+  font-weight: 500;
+    text-decoration:bold;
+    
+   border-collapse: collapse;
 
-    *:focus{
-        outline: none;
-    }
+}
+#opcijauser:hover{
+  color:white;
+  background-color:#006BF5;
+}
+#usersdata {
+  float: right;
+  height: 72px;
+  margin-top: 0px;
+}
+#usersdata:hover {
+  background-color: #f1f1f1;
+}
+#credentials {
+  height: inherit;
+  float: right;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+#ikona {
+  float: right;
+  margin-top: 25px;
+  margin-right: 10px;
+}
+h1 {
+  margin-top: 15px;
+  margin-left: 20px;
+  width: 200px;
+  float: left;
+}
+#ime {
+  margin-right: 10px;
+  margin-top: 10px;
+  float: right;
+}
+#email {
+  margin-left: 10px;
+  margin-top: 10px;
+  float: right;
+}
+#header {
+  margin-left: 15px;
+  margin-right: 10px;
+  display: block;
+  width: 99%;
+  float: right;
+  background-color: white;
+  height: 72px;
+}
+#pic {
+  border-radius: 50%;
+  float: right;
+  margin-top: 0px;
+}
+#slika {
+  margin-top: 0px;
+  float: right;
+}
+#lista {
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 100%;
+  height: 100vh;
+}
 
-    #menu{
-        width: 105px;
-        position: absolute;
-        float: left;
-        bottom: 69%;
-    }
+* {
+  box-sizing: border-box;
+  margin: 0px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+}
 
-    .text-xs-center{
-         width: 400px;
-        float: right;
-        position: relative;
-        right: 50%;
-        transform: translateX(50%);
-     }
+*:focus {
+  outline: none;
+}
 
-    .menu-article{
-        border: 1px solid white;
-        width: 100%;
-        display: flex;
-        background-color: rgb(192, 188, 188);
-        justify-content: center;
-        align-items: center;
-        border-radius: 4px;
-        z-index: 99;
-        padding: 10px 0px;
-    }
+#menu {
+  width: 105px;
+  position: absolute;
+  float: left;
+  bottom: 69%;
+}
 
-    .menu-article:hover{
-        cursor: pointer;
-        background-color: lightgray;
-    }
+.text-xs-center {
+  width: 400px;
+  float: right;
+  position: relative;
+  right: 50%;
+  transform: translateX(50%);
+}
 
-    #messages{
-        padding: 20px;
-        padding-bottom: 0px;
-        height: 100vh;
-     }
+.menu-article {
+  border: 1px solid white;
+  width: 100%;
+  display: flex;
+  background-color: rgb(192, 188, 188);
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  z-index: 99;
+  padding: 10px 0px;
+}
 
-    #list{
-        height: 80%;
-    }
+.menu-article:hover {
+  cursor: pointer;
+  background-color: lightgray;
+}
 
-    html, body{
-        height: 100%;
-        overflow: hidden;
-    }
+#messages {
+  padding: 20px;
+  padding-bottom: 0px;
+  height: 100vh;
+}
 
-    #btn{
-        position: absolute;
-        bottom: 100px;
-        right: 50px;
-    }
+#list {
+  height: 95%;
+  overflow: auto;
+}
 
-    ul{
-        width: 100%;
-        height: 100%;
-        padding: 0px;
-    }
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
 
-    #title-li{
-        border-radius: 3px 3px 0px 0px;
-        background-color: #F1F1F1;
-    }
+#btn {
+  position: absolute;
+  bottom: 100px;
+  right: 50px;
+}
 
-    #title-li .material-icons{
-        display: block;
-    }
+ul {
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+}
 
-    li{
-        display: flex;
-        height: 48px;
-        width: 100%;
-        background-color: white;
-        border: 0.5px solid lightgray;
-        border-bottom: 0px;
-        overflow: hidden;
-    }
+#title-li {
+  border-radius: 3px 3px 0px 0px;
+  background-color: #f1f1f1;
+}
 
-    li:last-child{
-        border-bottom: 0.5px solid lightgray;
-    }
+#title-li .column {
+  overflow: unset;
+}
 
-    li p{
-        font-size: 13px;
-    }
+#title-li .material-icons {
+  display: block;
+}
 
-    .column{
-        margin-left: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        overflow: hidden;
-        white-space: nowrap;
-        font-size: 14px;
-        font-weight: 300;
-    }
+li {
+  display: flex;
+  height: 48px;
+  width: 100%;
+  background-color: white;
+  border: 0.5px solid lightgray;
+  border-bottom: 0px;
+  overflow: hidden;
+}
 
-    #title-li .column h5{
-        font-size: 14px;
-    }
+li:last-child {
+  border-bottom: 0.5px solid lightgray;
+}
 
-    #title-li .column{
-        margin-left: 20px;
-        color: black;
-    }
+li p {
+  font-size: 13px;
+}
 
-    li p{
-        margin: 0px;
-        color: rgb(70, 67, 67);
-    }
+.column {
+  margin-left: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 300;
+}
 
-    .column1{
-        width: 13%;
-    }
+#title-li .column h5 {
+  font-size: 14px;
+}
 
-    .column2{
-        width: 35%;
-    }
+#title-li .column {
+  margin-left: 20px;
+  color: black;
+}
 
-    .column3{
-        width: 7%;
-        margin-left: 30px;
-    }
+#title-li .column4{
+  padding-right: 20px;
+}
 
-    .column4{
-        width: 45%;
-    }
+li p {
+  margin: 0px;
+  color: rgb(70, 67, 67);
+}
 
-    .column4 p{
-        margin-left: 20px;
-    }
+.column1 {
+  width: 13%;
+}
 
-    .column4{
-        justify-content: flex-end;
-        padding-right: 20px;
-    }
+.column2 {
+  width: 35%;
+}
 
-    li:hover{
-        background-color: #F1F1F1;
-    }
+.column3 {
+  width: 7%;
+  margin-left: 30px;
+}
 
-    .linear1{
-        background-image: linear-gradient(90deg, rgba(236, 236, 236, 0) 0%, white 100%);
-        width: 60px;
-        height: 40px;
-        margin-top: 5px;
-        position: absolute;
-        left: 16%;
-    }
+.column4 {
+  width: 45%;
+}
 
-    .linear2{
-        background-image: linear-gradient(90deg, rgba(236, 236, 236, 0) 0%, white 100%);
-        width: 60px;
-        height: 40px;
-        margin-top: 5px;
-        z-index: 5;
-        position: absolute;
-        left: 48%;
-    }
+.column4 p {
+  margin-left: 20px;
+}
 
-    #btn {
-        float:right;
-        height: 60px;
-        width: 60px;
-        border-radius: 50%;
-        font-size: 30px;
-        position: absolute;
-        bottom: 50px;
-        right: 13px;
-        background-color:  #006BF5;;
-        color: white;
-        border: 1px solid white;
-        font-family: 'Courier New', Courier, monospace;
-        line-height: 60px;
-        z-index: 99;
-    }
+.column4 {
+  justify-content: flex-end;
+  padding-right: 55px;
+}
 
-    #btn:hover{
-      cursor: pointer;
-    }
+li:hover {
+  background-color: #f1f1f1;
+}
 
-    #footer{
-      width: 92%;
-      height: 7vh;
-      background-color: white;
-      float: left;
-      z-index: 0;
-      position: absolute;
-      border: 1px solid lightgray;
-      bottom: 0px;
-      margin: 0px;
-      padding: 0px 20px;
-    }
+li:hover .linear1 {
+  background-image: linear-gradient(
+    90deg,
+    rgba(236, 236, 236, 0) 0%,
+    rgb(241, 238, 238) 100%
+  );
+}
 
-    #footer-btn{
-        border: 1px solid grey;
-        padding: 5px 5px;
-        width: 105px;
-        position: relative;
-        top: 50%;
-        transform: translateY(-50%);
-        border-radius: 4px;
-    }
+li:hover .linear2 {
+  background-image: linear-gradient(
+    90deg,
+    rgba(236, 236, 236, 0) 0%,
+    rgb(241, 238, 238) 100%
+  );
+}
 
-    #footer ul li{
-        display: block;
-        border: 0px;
-    }
+.linear1 {
+  background-image: linear-gradient(
+    90deg,
+    rgba(236, 236, 236, 0) 0%,
+    white 100%
+  );
+  width: 60px;
+  height: 40px;
+  margin-top: 5px;
+  position: absolute;
+  left: 17%;
+}
 
-    #footer ul li:hover{
-        background-color: white;
-    }
+.linear2 {
+  background-image: linear-gradient(
+    90deg,
+    rgba(236, 236, 236, 0) 0%,
+    white 100%
+  );
+  width: 60px;
+  height: 39px;
+  margin-top: 5px;
+  z-index: 5;
+  position: absolute;
+  left: 48%;
+}
 
-    #footer ul li button{
-        height: 100%;
-    }
+#btn {
+  float: right;
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  font-size: 30px;
+  position: absolute;
+  bottom: 50px;
+  right: 13px;
+  background-color: #006bf5;
+  color: white;
+  border: 1px solid white;
+  font-family: "Courier New", Courier, monospace;
+  line-height: 60px;
+  z-index: 95;
+}
 
-    #footer li .material-icons{
-        /* for right and left nav icons */
-        display: block;
-    }
+#btn:hover {
+  cursor: pointer;
+}
 
-    .theme--light.v-pagination .v-pagination__item--active{
-        /* for active page */
-        color: lightgray;
-    }
-    .text-xs-center{
-        height: 100%;
-    }
+#footer {
+  height: 7%;
+  position: relative;
+  bottom: 2%;
+  background-color: white;
+  z-index: 0;
+  border: 1px solid lightgray;
+  padding: 0px 20px;
+}
 
-    .v-pagination__item{
-        -webkit-box-shadow: none;
-        box-shadow: none;
-    }
+#footer-btn {
+  border: 1px solid grey;
+  padding: 5px 5px;
+  width: 105px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 4px;
+}
 
-    .v-pagination__navigation{
-        -webkit-box-shadow: none;
-        box-shadow: none;
-    }
+#footer ul li {
+  display: block;
+  border: 0px;
+}
+
+#footer ul li:hover {
+  background-color: white;
+}
+
+#footer ul li button {
+  height: 100%;
+}
+
+#footer li .material-icons {
+  /* for right and left nav icons */
+  display: block;
+}
+
+.theme--light.v-pagination .v-pagination__item--active {
+  /* for active page */
+  color: lightgray;
+}
+.text-xs-center {
+  height: 100%;
+}
+
+.v-pagination__item {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.v-pagination__navigation {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.greenBorder{
+    border: 1px solid rgb(85, 235, 85);
+}
+
+.redBorder{
+    border: 1px solid rgb(248, 74, 74);
+}
+
+.redText{
+    color: rgb(248, 74, 74);
+}
+
+.greenText{
+    color: rgb(85, 235, 85);
+}
+
+.redBackground{
+  background-color: rgb(248, 74, 74);
+}
+
+.redBackground:hover{
+  background-color: rgb(241, 101, 101);
+}
+
+.greenBackground{
+  background-color: rgb(85, 235, 85);
+}
+
+.greenBackground:hover{
+  background-color: rgb(140, 231, 140);
+}
+
+#notification {
+  height: 10vh;
+  width: 400px;
+  position: absolute;
+  right: 100px;
+  bottom: 10px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+#notification input{
+  height: 60%;
+  width: 100%;
+  text-align: center;
+  font-size: 25px;
+}
+
+#notification button{
+  width: 100%;
+  height: 40%;
+  text-align: center;
+  font-size: 20px;
+  color: white;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+/*
+.tooltip{
+  position: relative;
+}
+
+.tooltip::before, .tooltip::after{
+  position: absolute;
+  left: 20%;
+  opacity: 0;
+  transition: all ease 0.3s;
+}
+
+.tooltip::before{
+  content: "";
+  border-width: 10px 8px 0px 8px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.3) transparent;
+  top: -10px;
+}
+
+.tooltip::after{
+  content: attr(data-tooltip);
+  background: rgba(0, 0, 0, 0.3);
+  top: -10px;
+  width: 155px;
+  font-size: 16px;
+  margin-left: -100px;
+  padding: 14px;
+  border-radius: 10px;
+  color: #eee;
+  transform: translateY(-100%);
+  color: white;
+  text-align: center;
+}
+
+.tooltip:hover::before, .tooltip:hover::after{
+  opacity: 1;
+}
+*/
 </style>
