@@ -154,7 +154,7 @@ export default {
       } 
       catch (err) 
       {
-        alert(err);
+        this.showNotification(-1);
       }
     },
 

@@ -144,7 +144,7 @@ export default {
       } 
       catch (err) 
       {
-        alert(err);
+        this.showNotification(-1);
       }
     },
 
@@ -222,7 +222,7 @@ export default {
     async create() {
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/triggers?page=0&size=" + this.rowSize);
+        const res = await axios.get("http://localhost:8080/api/triggers?page=0&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
         this.triggersData = res.data.content;
         if (res.data.totalPages == 0) 
             this.pagesSize = 1;

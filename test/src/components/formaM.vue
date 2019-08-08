@@ -1,5 +1,5 @@
 <template>
-  <div id="formaM">
+  <div id="formaM" >
     <div id="form-style-10">
       <form id="forma">
         <div id="section">
@@ -19,7 +19,8 @@
             id="field1"
             :class="{errorBorder: showTitleError}"
           />
-          <span v-show="showTitleError">Title size should be between 5 and 30 characters</span>
+          <br>
+          <span v-show="showTitleError">Title size must be between 5 and 30 characters</span>
 
           <label :class="{errorText: showMessageError}">Text</label>
           <textarea
@@ -31,8 +32,10 @@
             rows="8"
             :class="{errorBorder: showMessageError}"
           ></textarea>
-          <span v-show="showMessageError">Text size should be more then 20 characters</span>
+          <br>
+          <span v-show="showMessageError">Text size must be more then 20 characters</span>
 
+          <br>
           <input type="button" value="Save" @click="save" id="submit" />
           <input type="button" value="Cancel" @click="exit" id="cancle" />
         </div>
@@ -216,7 +219,6 @@ export default {
 #form-style-10 select {
   padding-top: 10px;
   overflow: none;
-  margin-bottom: 20px;
   display: block;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -343,4 +345,5 @@ label {
 .errorBorder {
   border-color: red;
 }
+
 </style>
