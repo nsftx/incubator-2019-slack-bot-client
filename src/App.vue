@@ -5,12 +5,10 @@
 </template>
 
 <script>
-import navigation from "./components/navigation.vue"
 
 export default {
   name: 'app',
   components: {
-    navigation,
   },
   data () {
     return {

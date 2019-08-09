@@ -17,7 +17,7 @@ import {ACCESS_TOKEN} from "../constants/index.js";
 export default {
     name: "error",
    mounted: function() {
-       localStorage.setItem(ACCESS_TOKEN,"");
+       localStorage.removeItem(ACCESS_TOKEN);
    },
 methods:{
     goBack(){
