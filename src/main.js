@@ -16,15 +16,30 @@ import Profil from "./components/Profil.vue"
 import terms from "./components/terms.vue"
 import settings from "./components/settings.vue"
 import OAuth2RedirectHandler from "./components/OAuth2RedirectHandler.vue"
+import Error from "./components/Error.vue"
 
 Vue.config.productionTip = false;
 
 const router = new VueRouter({
   routes: [
-  {path: "/", component: login, redirect: "/login"},
-  {path: "/login", component: login},
-{path: "/oauth2/redirect", component: OAuth2RedirectHandler},
-
+  {
+    path: "/",
+    component: login,
+    redirect: "/login"
+  },
+  {
+      path: "/login",
+      component: login
+  },
+  {
+  path: "/oauth2/redirect",
+  component: OAuth2RedirectHandler
+  },
+  {
+    path: "/error",
+    component: Error
+    
+  },
   {
     path: "/dashboard",
     component: Dashboard,
