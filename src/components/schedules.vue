@@ -3,25 +3,6 @@
 <router-view @reload-schedules="reloadSchedules()" @show-notification="showNotification($event)"></router-view>
 <div id="header">
         <h1>Schedules</h1>
-        <v-menu open-on-hover bottom offset-y>
-          <template v-slot:activator="{ on }">
-            <div id="usersdata" v-on="on">
-              <i id="ikona" class="material-icons">arrow_drop_down</i>
-              <button id="slika">
-                <img id="pic" class="img-circle" width="80" height="70" />
-              </button>
-              <div id="credentials">
-                <h3 id="ime">Amina Fajić</h3>
-                <br />
-                <p id="email">aminafajic879@gmail.com</p>
-              </div>
-            </div>
-          </template>
-          <ul>
-            <li class="listaopcijauser" v-for="(item, index) in items" :key="index" @click="prikazi()">
-              <p id="opcijauser">  {{ item.title }} </p>            </li>
-          </ul>
-        </v-menu>
       </div>
    <div id="lista">
     <ul id="list">
@@ -121,12 +102,6 @@ export default {
 
   data(){
        return {
-      items: [
-        { title: "Profile" },
-        { title: "Settings" },
-        { title: "Terms" },
-        { title: "Log Out" }
-      ],
       schedulesData: [],
       rowSize: 20, //Number of rows
       pagesSize: 1, //Number of pages
@@ -141,32 +116,7 @@ export default {
     }  
   },
 
-  mounted: function() { var xhr = new XMLHttpRequest();
-         xhr.open('GET', 'http://localhost:8080/user/me');
-         
-xhr.setRequestHeader('Content-Type', 'application/json');
-if(localStorage.getItem(ACCESS_TOKEN)) {
-xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN));
-//console.log("dohvati ga");
-}
-
-      xhr.onload = function() {
-  console.log('Signed in as: ' + xhr.responseText);
- var obj=JSON.parse(xhr.responseText);
- document.getElementById("email").innerHTML=obj.email;
- document.getElementById("ime").innerHTML=obj.name;
- document.getElementById("pic").src=obj.imageUrl;
-  localStorage.setItem(Current_User_Role, obj.role);
- localStorage.setItem(THEME,obj.userSettings.theme);
-
-};
-xhr.send();
-if(localStorage.getItem(THEME)=="light"){
-document.getElementById("header").style.backgroundColor="white";
-}else if(localStorage.getItem(THEME)=="dark") {
-document.getElementById("header").style.backgroundColor="black";
-document.getElementById("lista").style.backgroundColor="black";
-}
+  mounted: function() { 
     //onload funkcija
     //this.create();
   },
@@ -302,15 +252,6 @@ document.getElementById("lista").style.backgroundColor="black";
         console.log(err);
       }
     },
-     prikazi(index) {
-      if(index==0){
-          this.$router.push("/profile");
-        }
-        else if(index==1){
-        this.$router.push("/settings");
-        }
-    }
-  },
 
     sortBy(value)
     {
@@ -321,7 +262,8 @@ document.getElementById("lista").style.backgroundColor="black";
       
       this.sortByValue = value;
       this.reloadSchedules();
-    },
+    }
+  },
   directives: {
     ClickOutside
   }

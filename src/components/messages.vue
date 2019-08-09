@@ -3,25 +3,7 @@
     <router-view @reload-messages="reloadMessages()" @show-notification="showNotification($event)"></router-view>
 <div id="header">
         <h1>Messages</h1>
-        <v-menu open-on-hover bottom offset-y>
-          <template v-slot:activator="{ on }">
-            <div id="usersdata" v-on="on">
-              <i id="ikona" class="material-icons">arrow_drop_down</i>
-              <button id="slika">
-                <img id="pic" class="img-circle" width="80" height="70" />
-              </button>
-              <div id="credentials">
-                <h3 id="ime">Amina Fajić</h3>
-                <br />
-                <p id="email">aminafajic879@gmail.com</p>
-              </div>
-            </div>
-          </template>
-          <ul id="settings">
-            <li class="listaopcijauser" v-for="(item, index) in items" :key="index" @click="prikazi(index)">
-              <p id="opcijauser">  {{ item.title }} </p>            </li>
-          </ul>
-        </v-menu>
+        
       </div>
       <div id="lista">
     <ul id="list">
@@ -111,12 +93,6 @@ export default {
   name: "messages",
   data() {
     return {
-       items: [
-        { title: "Profile" },
-        { title: "Settings" },
-        { title: "Terms and Conditions" },
-        { title: "Log Out" }
-      ],
       messagesData: [],
       rowSize: 20, //Number of rows
       pagesSize: 1, //Number of pages
@@ -132,32 +108,6 @@ export default {
     };
   },
   mounted: function() {
-    var xhr = new XMLHttpRequest();
-         xhr.open('GET', 'http://localhost:8080/user/me');
-         
-xhr.setRequestHeader('Content-Type', 'application/json');
-if(localStorage.getItem(ACCESS_TOKEN)) {
-xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN));
-//console.log("dohvati ga");
-}
-xhr.send();
-      xhr.onload = function() {
-  console.log('Signed in as: ' + xhr.responseText);
- var obj=JSON.parse(xhr.responseText);
- document.getElementById("email").innerHTML=obj.email;
-localStorage.setItem(User_Email,obj.email);
- document.getElementById("ime").innerHTML=obj.name;
- document.getElementById("pic").src=obj.imageUrl;
- localStorage.setItem(Current_User_Role, obj.role);
- localStorage.setItem(THEME,obj.userSettings.theme);
-};
-if(localStorage.getItem(THEME)=="light"){
-document.getElementById("header").style.backgroundColor="white";
-document.getElementById("lista").style.backgroundColor="white";
-}else if(localStorage.getItem(THEME)=="dark") {
-document.getElementById("header").style.backgroundColor="black";
-document.getElementById("lista").style.backgroundColor="black";
-}
     //onload funkcija
     //this.create();
   },
@@ -292,24 +242,7 @@ document.getElementById("lista").style.backgroundColor="black";
          console.log(err);
       }
     },
-    prikazi(index) {
-        if(index==0){
-          this.$router.push("/profile");
-        }
-        else if(index==1){
-        this.$router.push("/settings");
-        }
-        else if(index==2){
-this.$router.push("/terms");
-        }
-        else if(index==3){
-        localStorage.removeItem(ACCESS_TOKEN);
-        localStorage.removeItem(Current_User_Role);
-          alert("You're safely logged out!");
-          this.$router.push("/login");
-        }
-    }
-  },
+    
 
     sortBy(value) {
       if (this.sortType == "desc") 
@@ -319,12 +252,13 @@ this.$router.push("/terms");
       
       this.sortByValue = value;
       this.reloadMessages();
+    }
     },
 
   directives: {
     ClickOutside
   }
-};
+}
 </script>
 
 <style>
