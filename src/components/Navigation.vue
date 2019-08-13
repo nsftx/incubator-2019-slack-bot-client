@@ -22,8 +22,8 @@
       </router-link>
 
       <router-link to="/dashboard/user" class="router-link">
-        <button>
-          <v-icon color="white" size="32" style="margin-bottom: 10px">person</v-icon> <br> User
+        <button id="user">
+          <v-icon  color="white" size="32" style="margin-bottom: 10px">person</v-icon> <br> User
         </button>
       </router-link>
 
@@ -31,14 +31,18 @@
 </template>
 
 <script>
-
+import {CURRENT_USER_ROLE} from "../constants/index.js";
 export default {
     name: "navigation",
+     mounted: function() {
+     if(localStorage.getItem(CURRENT_USER_ROLE)!="ADMIN"){
+       document.getElementById("user").style.display="none";
+     }
+     },
 }
 </script>
 
 <style>
-
 #logo{
   margin-top: 10px;
   height: 50px;

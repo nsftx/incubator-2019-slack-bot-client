@@ -83,7 +83,7 @@ document.getElementById("dropdown").style.backgroundColor="white";
 document.getElementById("dropdown").style.backgroundColor="black";
 //document.getElementById("divlist").style.backgroundColor="black";
 }
-  },
+},
   methods:{
     showDropdown(index) {
         if(index==0){
