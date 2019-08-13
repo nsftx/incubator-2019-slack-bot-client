@@ -1,8 +1,8 @@
-export const API_BASE_URL = 'http://localhost:8080';
+export const API_BASE_URL ='http://welcome-bot.tk:9090';
 export const ACCESS_TOKEN = 'accessToken';
 export const CURRENT_USER_ROLE="currentUserRole";
 export const USER_EMAIL="user-email";
-export const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect'
+export const OAUTH2_REDIRECT_URI ='http://welcome-bot.tk:80/oauth2/redirect'
 export const THEME="theme";
 export const COLOR="color";
 export const SAVE="save";
