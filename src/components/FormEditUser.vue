@@ -19,6 +19,7 @@
 
 <script>
 import axios from "axios"
+import { API_BASE_URL } from '../constants';
 
 /*
 window.addEventListener("mouseup", function(event){
@@ -53,7 +54,7 @@ export default {
 		},
 		save(){
 			axios.post(
-            'http://localhost:8080/user/edit',
+            API_BASE_URL+'/user/edit',
   { email: document.getElementById("field1").nodeValue.toString(), role: document.getElementById("field2").nodeValue.toString()  }
 ).then((response) => {
   console.log(response);

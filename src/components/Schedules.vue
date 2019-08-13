@@ -92,6 +92,7 @@
 </template>
 
 <script>
+import {API_BASE_URL} from  "../constants/index.js";
 import {CURRENT_USER_ROLE, THEME} from "../constants/index.js";
 import {ACCESS_TOKEN} from "../constants/index.js";
 import axios from "axios";
@@ -154,7 +155,7 @@ document.getElementById("Schedules").style.backgroundColor="black";
       var pg = this.page - 1;
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/schedules?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
+        const res = await axios.get(API_BASE_URL+"/api/schedules?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
 
         if (res.data.totalPages < this.page)
           this.changePage(res.data.totalPages);
@@ -197,11 +198,11 @@ document.getElementById("Schedules").style.backgroundColor="black";
     },
 
     async deleteSchedule(id) {
-      await axios.delete("http://localhost:8080/api/schedules/" + id);
+      await axios.delete(API_BASE_URL+"/api/schedules/" + id);
       var pg = this.page - 1;
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/schedules?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
+        const res = await axios.get(API_BASE_URL+"/api/schedules?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
         
         if (res.data.numberOfElements == 0) 
         {
@@ -246,7 +247,7 @@ document.getElementById("Schedules").style.backgroundColor="black";
     async create() {
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/schedules?page=0&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
+        const res = await axios.get(API_BASE_URL+"/api/schedules?page=0&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
         this.schedulesData = res.data.content;
         if (res.data.totalPages == 0) 
             this.pagesSize = 1;

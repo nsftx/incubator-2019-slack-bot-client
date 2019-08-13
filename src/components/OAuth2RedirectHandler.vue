@@ -1,15 +1,15 @@
 <template>
-<div class="OAuth2RedirectHandler">
+<div id="OAuth2RedirectHandler">
 </div>
 </template>
 
 <script>
 import {ACCESS_TOKEN} from "../constants/index.js";
 
-export default { name: "o-auth2-redirect-handler",
+export default {
+     name: "o-auth2-redirect-handler",
 mounted:function(){
    const token = this.getUrlParameter('token');
-                //const error = this.getUrlParameter('error');
         
                 if(token) {
                     localStorage.setItem(ACCESS_TOKEN, token);

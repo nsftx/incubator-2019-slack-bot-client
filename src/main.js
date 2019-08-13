@@ -13,7 +13,6 @@ import user from "./components/Users.vue"
 import login from "./components/Login.vue"
 import Dashboard from "./components/Dashboard.vue"
 import Profil from "./components/Profile.vue"
-import terms from "./components/Terms.vue"
 import settings from "./components/Settings.vue"
 import OAuth2RedirectHandler from "./components/OAuth2RedirectHandler.vue"
 import Error from "./components/Error.vue"
@@ -112,10 +111,6 @@ const router = new VueRouter({
             component: formaU
           }
         ]
-      },
-      {
-        path:"/terms",
-        component: terms
       },
       {
         path:"/settings",

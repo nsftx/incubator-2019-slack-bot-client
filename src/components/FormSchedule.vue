@@ -55,6 +55,7 @@
 <script>
 import axios from "axios"
 import DatePicker from 'vue2-datepicker'
+import { API_BASE_URL } from '../constants';
 
 
 /*
@@ -115,7 +116,7 @@ export default {
         {
             try 
             {
-                const res = await axios.get("http://localhost:8080/api/messages");
+                const res = await axios.get(API_BASE_URL+"/api/messages");
                     this.messagesData = res.data.content;             
             }
             catch (err) {
@@ -131,7 +132,7 @@ export default {
             {
                 try
                 {
-                    const res = await axios.get("http://localhost:8080/api/messages/" + this.$route.params.id);
+                    const res = await axios.get(API_BASE_URL+"/api/messages/" + this.$route.params.id);
                     this.messagesData = res.data;
                     this.messageTitle = this.messagesData.title;
                     this.showMessageOption = false;
@@ -147,7 +148,7 @@ export default {
                 var res;
                 try
                 {
-                    res = await axios.get("http://localhost:8080/api/schedules/" + this.$route.params.id);
+                    res = await axios.get(API_BASE_URL+"/api/schedules/" + this.$route.params.id);
                     this.active = res.data.active;
                     this.repeat = res.data.repeat;
                     this.channelName = res.data.channel;
@@ -161,7 +162,7 @@ export default {
                 }
                 try
                 {
-                    const resM = await axios.get("http://localhost:8080/api/messages");
+                    const resM = await axios.get(API_BASE_URL+"/api/messages");
                     this.messagesData = resM.data.content;
                 }
                 catch(err)
@@ -173,7 +174,7 @@ export default {
         try
         {
             //Aplikacija nije povezana sa listom kanala
-            const res = await axios.get("http://localhost:8080/api/channels");
+            const res = await axios.get(API_BASE_URL+"/api/channels");
             this.channelsData = [{name: "#general"}, {name: "#incubator"}];
         }
         catch(err)
@@ -276,7 +277,7 @@ export default {
                 {
                     try
                     {
-                        await axios.post("http://localhost:8080/api/schedules", {active: this.active, channel: this.channelName, repeat: this.repeat, messageId: this.$route.params.id, runAt: this.date})
+                        await axios.post(API_BASE_URL+"/api/schedules", {active: this.active, channel: this.channelName, repeat: this.repeat, messageId: this.$route.params.id, runAt: this.date})
                         this.$emit("show-notification");
                     }
                     catch(err)
@@ -288,7 +289,7 @@ export default {
                 {
                     try
                     {
-                        await axios.put("http://localhost:8080/api/schedules/" + this.$route.params.id, {active: this.active, channel: this.channelName, messageId:     this.messId, repeat: this.repeat, runAt: this.date});
+                        await axios.put(API_BASE_URL+"/api/schedules/" + this.$route.params.id, {active: this.active, channel: this.channelName, messageId:     this.messId, repeat: this.repeat, runAt: this.date});
                         this.$emit("show-notification");
                     }
                     catch(err)
@@ -301,7 +302,7 @@ export default {
             {
                 try
                 {
-                    await axios.post("http://localhost:8080/api/schedules", {active: this.active, channel: this.channelName, messageId: this.messId, repeat: this.repeat, runAt: this.date})
+                    await axios.post(API_BASE_URL+"/api/schedules", {active: this.active, channel: this.channelName, messageId: this.messId, repeat: this.repeat, runAt: this.date})
                     this.$emit("show-notification")
                 }
                 catch(err)

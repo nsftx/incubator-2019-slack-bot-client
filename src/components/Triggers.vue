@@ -92,6 +92,7 @@
 </template>
 
 <script>
+import {API_BASE_URL} from  "../constants/index.js";
 import axios from "axios"
 import ClickOutside from "vue-click-outside";
 import {Current_User_Role, THEME_ID, THEME} from "../constants/index.js";
@@ -155,7 +156,7 @@ document.getElementById("Triggers").style.backgroundColor="black";
       var pg = this.page - 1;
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/triggers?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
+        const res = await axios.get(API_BASE_URL+"/api/triggers?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
 
         if (res.data.totalPages < this.page)
           this.changePage(res.data.totalPages);
@@ -195,11 +196,11 @@ document.getElementById("Triggers").style.backgroundColor="black";
     },
 
     async deleteTrigger(id) {
-      await axios.delete("http://localhost:8080/api/triggers/" + id);
+      await axios.delete(API_BASE_URL+"/api/triggers/" + id);
       var pg = this.page - 1;
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/triggers?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
+        const res = await axios.get(API_BASE_URL+"/api/triggers?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
         
         if (res.data.numberOfElements == 0) 
         {
@@ -244,7 +245,7 @@ document.getElementById("Triggers").style.backgroundColor="black";
     async create() {
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/triggers?page=0&size=" + this.rowSize);
+        const res = await axios.get(API_BASE_URL+"/api/triggers?page=0&size=" + this.rowSize);
         this.triggersData = res.data.content;
         if (res.data.totalPages == 0) 
             this.pagesSize = 1;

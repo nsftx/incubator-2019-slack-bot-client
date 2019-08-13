@@ -41,6 +41,7 @@
 </template>
 <script>
 import axios from "axios";
+import {API_BASE_URL} from  "../constants/index.js";
 import {USER_EMAIL, THEME, SETTTINGS, COLOR, LANGUAGE, THEMEPARAGRAPH, LANGUAGEPARAGRAPH, USER_LANGUAGE} from "../constants/index.js";
 import {ACCESS_TOKEN} from "../constants/index.js";
 import {SAVE} from "../constants/index.js";
@@ -80,7 +81,7 @@ document.getElementById("settings2").style.backgroundColor="white";
           document.getElementById("theme").style.color="black";
 }
 
-axios.get('http://localhost:8080/user/translation', {
+axios.get(API_BASE_URL+'/user/translation', {
     params: {
         language: localStorage.getItem(USER_LANGUAGE)
     },
@@ -122,64 +123,12 @@ axios.get('http://localhost:8080/user/translation', {
     },
     showLanguageSettings(index) {
       this.items3Value=this.items3[index].value;
-      console.log(this.items3Value);
-        if(index==0){
-          axios.get('http://localhost:8080/user/translation', {
-    params: {
-        language: "en"
-    },
-    headers: headers
-}).then((response) => {
-  localStorage.setItem(SETTTINGS,response.data.title);
-   localStorage.setItem(COLOR,response.data.theme);
-  localStorage.setItem(LANGUAGE,response.data.language);
-  localStorage.setItem(THEMEPARAGRAPH,response.data.selectColor);
-  localStorage.setItem(LANGUAGEPARAGRAPH,response.data.selectLanguage);
-   localStorage.setItem(SAVE,response.data.save);
-  document.getElementById("color").innerHTML=localStorage.getItem(COLOR);
-  document.getElementById("language").innerHTML=localStorage.getItem(LANGUAGE);
-  document.getElementById("theme").innerHTML=localStorage.getItem(THEMEPARAGRAPH);
-  document.getElementById("languageparagraph").innerHTML=localStorage.getItem(LANGUAGEPARAGRAPH);
-  document.getElementById("naslov").innerHTML=localStorage.getItem(SETTTINGS);
-  document.getElementById("submit").value=localStorage.getItem(SAVE);
-  console.log(response);
-}, (error) => {
-  console.log(error);
-});
-
-        }
-        else if(index==1){
-         axios.get('http://localhost:8080/user/translation', {
-    params: {
-        language: "fr"
-    },
-    headers: headers
-}).then((response) => {
-  localStorage.setItem(SETTTINGS,response.data.title);
-   localStorage.setItem(COLOR,response.data.theme);
-  localStorage.setItem(LANGUAGE,response.data.language);
-  localStorage.setItem(THEMEPARAGRAPH,response.data.selectColor);
-  localStorage.setItem(LANGUAGEPARAGRAPH,response.data.selectLanguage);
-  localStorage.setItem(SAVE,response.data.save);
-  document.getElementById("color").innerHTML=localStorage.getItem(COLOR);
-  document.getElementById("language").innerHTML=localStorage.getItem(LANGUAGE);
-  document.getElementById("theme").innerHTML=localStorage.getItem(THEMEPARAGRAPH);
-  document.getElementById("languageparagraph").innerHTML=localStorage.getItem(LANGUAGEPARAGRAPH);
-  document.getElementById("naslov").innerHTML=localStorage.getItem(SETTTINGS);
-   document.getElementById("submit").value=localStorage.getItem(SAVE);
-  
-  console.log(response);
-}, (error) => {
-  console.log(error);
-});
-
-console.log(localStorage.getItem(SETTTINGS));
-        }
+     
        
     },
     Save(){
       axios.post(
-            'http://localhost:8080/user/userSettings',
+            API_BASE_URL+'/user/userSettings',
   { theme: this.items2Value,language:this.items3Value}, {
   headers: headers
 }).then((response) => {

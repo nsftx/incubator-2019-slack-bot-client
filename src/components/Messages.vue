@@ -78,7 +78,7 @@
 
 <script>
 /* eslint-disable */
-import { THEME_ID, THEME} from "../constants/index.js";
+import { THEME_ID, THEME, API_BASE_URL} from "../constants/index.js";
 import {USER_EMAIL} from "../constants/index.js";
 import {ACCESS_TOKEN} from "../constants/index.js";
 import axios from "axios";
@@ -130,7 +130,7 @@ document.getElementById("messages").style.backgroundColor="black";
       var pg = this.page - 1;
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
+        const res = await axios.get(API_BASE_URL+"/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
 
         if (res.data.totalPages < this.page)
           this.changePage(res.data.totalPages);
@@ -181,17 +181,17 @@ document.getElementById("messages").style.backgroundColor="black";
     },
 
     async deleteMessage(id) {
-      await axios.delete("http://localhost:8080/api/messages/" + id);
+      await axios.delete(API_BASE_URL+"/api/messages/" + id);
       var pg = this.page - 1;
       try 
       {
         var res;
         if(this.titleSort == true)
-          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=title," + this.sortType);
+          res = await axios.get(API_BASE_URL+"/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=title," + this.sortType);
         else if(this.textSort == true)
-          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=text," + this.sortType);
+          res = await axios.get(API_BASE_URL+"/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=text," + this.sortType);
         else
-          res = await axios.get("http://localhost:8080/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
+          res = await axios.get(API_BASE_URL+"/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
         
         if (res.data.numberOfElements == 0) 
         {
@@ -235,7 +235,7 @@ document.getElementById("messages").style.backgroundColor="black";
     async create() {
       try 
       {
-        const res = await axios.get("http://localhost:8080/api/messages?page=0&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
+        const res = await axios.get(API_BASE_URL+"/api/messages?page=0&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
         this.messagesData = res.data.content;
         if (res.data.totalPages == 0) 
             this.pagesSize = 1;

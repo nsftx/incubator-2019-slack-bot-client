@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import {API_BASE_URL} from  "../constants/index.js";
 import {USER_EMAIL} from "../constants/index.js";
 import {CURRENT_USER_ROLE, THEME_ID, THEME} from "../constants/index.js";
 import {ACCESS_TOKEN} from "../constants/index.js";
@@ -53,13 +54,12 @@ export default {
        items: [
         { title: "Profile" },
         { title: "Settings" },
-        { title: "Terms and Conditions" },
         { title: "Log Out" }
       ]
     }
   },
   mounted: function() {
-    axios.get('http://localhost:8080/user/me', {
+    axios.get(API_BASE_URL + "/user/me", {
   headers:headers
 }).then((response) => {
   console.log(response);
@@ -93,9 +93,6 @@ document.getElementById("dropdown").style.backgroundColor="black";
         this.$router.push("/settings");
         }
         else if(index==2){
-this.$router.push("/terms");
-        }
-        else if(index==3){
         localStorage.removeItem(ACCESS_TOKEN);
         localStorage.removeItem(CURRENT_USER_ROLE);
           alert("You're safely logged out!");

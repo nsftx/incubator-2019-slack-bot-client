@@ -1,8 +1,9 @@
+
 <template>
     <div id="login">
         <div id="right">        
             <div id="right-content">
-<a href="http://localhost:8080/oauth2/authorize/google?redirect_uri=http://localhost:3000/oauth2/redirect">
+<a id="btn btn-block social-btn google" href="">
                 <i class="fab fa-google"></i>
   </a>
                 <h1  id="loginTekst">Log in</h1>
@@ -20,11 +21,15 @@
 </template>
 
 <script>
-
+import {GOOGLE_AUTH_URL} from  "../constants/index.js";
 export default {
     name: "login",
     methods: {
     
+  },
+  mounted(){
+      document.getElementById("btn btn-block social-btn google").href=GOOGLE_AUTH_URL;
+
   }
 }
 </script>

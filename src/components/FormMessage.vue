@@ -43,6 +43,7 @@
 
 <script>
 import axios from "axios";
+import { API_BASE_URL } from '../constants';
 
 /*
 window.addEventListener("mouseup", function(event){
@@ -125,7 +126,7 @@ export default {
       } else {
         if (this.$route.params.id == null) {
           try {
-            await axios.post("http://localhost:8080/api/messages", {
+            await axios.post(API_BASE_URL+"/api/messages", {
               title: this.title,
               text: this.text
             });
@@ -137,7 +138,7 @@ export default {
         } else {
 		  try 
 		  {
-            await axios.put("http://localhost:8080/api/messages/" + this.$route.params.id, { title: this.title, text: this.text });
+            await axios.put(API_BASE_URL+"/api/messages/" + this.$route.params.id, { title: this.title, text: this.text });
 		  } 
 		  catch (err) 
 		  {
@@ -155,7 +156,7 @@ export default {
     async create() {
       try
       {
-		    const res = await axios.get("http://localhost:8080/api/messages/" + this.$route.params.id);
+		    const res = await axios.get(API_BASE_URL+"/api/messages/" + this.$route.params.id);
       	this.title = res.data.title;
         this.text = res.data.text;
       }
