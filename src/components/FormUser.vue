@@ -19,6 +19,7 @@
 
 <script>
 import {ACCESS_TOKEN} from "../constants/index.js";
+import {API_BASE_URL} from "../constants/index.js";
 import axios from "axios"
 const headers = {
   'Content-Type': 'application/json',
@@ -49,7 +50,7 @@ export default {
 		else
 		{
 			console.log(this.$route.params.id)
-			this.create();
+			//this.create();
 		}*/
 	},
     methods: {
