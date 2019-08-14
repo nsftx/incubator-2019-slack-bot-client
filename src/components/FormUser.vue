@@ -58,7 +58,7 @@ export default {
 		},
 		save(){
 			axios.post(
-            'http://localhost:8080/user/create',
+            API_BASE_URL+'/user/create',
   { email:this.title, role: this.text  }, {
   headers: headers
 }).then((response) => {
