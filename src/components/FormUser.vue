@@ -39,6 +39,11 @@ export default {
 	name: "formaU",
 	data(){
 		return{
+			invalid: false,
+      liveValidation: false,
+      regexTitle: /^.{5,30}$/,
+	  regexText: /^.{20,}$/,
+	  formType: "Create",
 			title: "",
 			text: ""
 		}
@@ -53,29 +58,84 @@ export default {
 		}*/
 	},
     methods: {
-		exit(){
-			this.$router.go(-1);
-		},
-		save(){
-			axios.post(
-            'http://localhost:8080/user/create',
-  { email:this.title, role: this.text  }, {
-  headers: headers
-}).then((response) => {
-  console.log(response);
-}, (error) => {
-  console.log(error);
-});
-			/*if(this.$route.params.id == null)
-			{
-				alert("Sacuvaj");
-			}
-			else
-			{
-				alert("Update -> " + this.$route.params.id);
-			}*/
-			this.$router.go(-1);
-		},
+		exit() {
+      this.$emit("reload-users");
+      this.$router.go(-1);
+    },
+
+    check_title(value) {
+      if (!this.regexTitle.test(value)) {
+        this.showTitleError = true;
+        return false;
+      } else {
+        this.showTitleError = false;
+        return true;
+      }
+    },
+
+    check_text(value) {
+      if (!this.regexText.test(value)) {
+        this.showMessageError = true;
+        return false;
+      } else {
+        this.showMessageError = false;
+        return true;
+      }
+    },
+
+    async save() {
+      this.liveValidation = true;
+      if (this.check_text(this.text) == false) this.invalid = true;
+      if (this.check_title(this.title) == false) this.invalid = true;
+      if (this.invalid == true) {
+        this.invalid = false;
+        return;
+      } else {
+        if (this.$route.params.id == null) {
+          try {
+            await axios.post(API_BASE_URL+"/user/create", {
+              title: this.title,
+              text: this.text
+            });
+          } catch (err) {
+            this.$emit("show-notification", -1);
+            this.$router.go(-1);
+            return;
+          }
+        } else {
+		  try 
+		  {
+            await axios.put(API_BASE_URL+"/user/getAllUsers/" + this.$route.params.id, { title: this.title, text: this.text });
+		  } 
+		  catch (err) 
+		  {
+            this.$emit("show-notification", -1);
+            this.$router.go(-1);
+            return;
+          }
+        }
+        this.$emit("reload-users");
+        this.$emit("show-notification");
+        this.$router.go(-1);
+      }
+    },
+
+    async create() {
+      try
+      {
+		    const res = await axios.get(API_BASE_URL+"/user/getAllUsers/" + this.$route.params.id);
+      	this.title = res.data.title;
+        this.text = res.data.text;
+      }
+      catch(err)
+      {
+        this.$emit("show-notification", -1);
+      }
+    },
+  }
+};
+		
+	
 		/*async create(){
 			const res = await axios.get("../../jsonM.txt");
 			this.title = res.data.title;
@@ -86,8 +146,8 @@ export default {
 			this.text = ""
 		}
 	},*/
-}
-}
+
+
 
 </script>
 

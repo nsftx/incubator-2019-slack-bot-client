@@ -115,7 +115,7 @@ document.getElementById("header").style.backgroundColor="black";
 document.getElementById("messages").style.backgroundColor="black";
 }
     //onload funkcija
-    //this.create();
+    this.create();
   },
   filters: {
     shortDate(value) {

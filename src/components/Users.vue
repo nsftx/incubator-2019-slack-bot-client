@@ -1,7 +1,8 @@
 <template>
 
 <div id="user">
-    <router-view></router-view>
+    <router-view @reload-users="reloadUsers()" @show-notification="showNotification($event)"></router-view>
+   
  <div id="header">
         <h1>Users</h1>
       </div>
@@ -10,7 +11,7 @@
              <li id="title-li">
                  <div class="column1 column"> <h5>Name</h5> <p> <i class="material-icons">arrow_drop_down</i> </p> </div>
                  <div class="column2 column"> <h5>Email</h5> <p> <i class="material-icons">arrow_drop_down</i> </p> </div>
-                 <div class="column3 column"> <h5>ID</h5> <p> <i class="material-icons">arrow_drop_down</i> </p> </div>
+                 <div class="column3 column"> <h5>Role</h5> <p> <i class="material-icons">arrow_drop_down</i> </p> </div>
              </li>
 
         <li v-for="user in usersData" :key="user.id">
@@ -20,10 +21,14 @@
                 <p> {{user.name}}</p> 
             </div> 
             <div class='column2 column'> 
-                <p>{{user.Email}}</p>
+                <p>{{user.email}}</p>
             </div>
             <div class='column3 column'> 
-                <p>{{user.ID}}</p>
+                <p>{{user.role}}</p>
+                 <div class="column4 column">
+          <i class="material-icons" @click="editUser(user.userId)">create</i>
+          <i class="material-icons" @click="deleteUser(user.userId)">delete</i>
+        </div>
             </div>
         </li>
 
@@ -68,6 +73,14 @@ export default {
     data(){
         return{
             usersData:[],
+      rowSize: 20, //Number of rows
+      pagesSize: 1, //Number of pages
+      page: 1, //current active page
+      menu: false,
+      rowSizesValue: [5, 10, 20],
+      sortType: "desc",
+      dateSort: true,
+      sortByValue: "createdAt",
             
         }
     },
@@ -84,12 +97,103 @@ document.getElementById("divlist").style.backgroundColor="black";
   }
 ,
     methods: {
+        async editUser(id) {
+      this.$router.push("/dashboard/messages/updateUser/" + id);
+    },
+    async deleteUser(id) {
+      await axios.delete(API_BASE_URL+"/user/delete/" + id);
+      var pg = this.page - 1;
+      try 
+      {
+        var res;
+        if(this.titleSort == true)
+          res = await axios.get(API_BASE_URL+"/user/getAllUsers?page=" + pg + "&size=" + this.rowSize + "&sort=title," + this.sortType);
+        else if(this.textSort == true)
+          res = await axios.get(API_BASE_URL+"/user/getAllUsers?page=" + pg + "&size=" + this.rowSize + "&sort=text," + this.sortType);
+        else
+          res = await axios.get(API_BASE_URL+"/user/getAllUsers?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
+        
+        if (res.data.numberOfElements == 0) 
+        {
+          if (this.page != 1) 
+            this.changePage(this.page - 1);
+        }
+        this.usersData = res.data.content;
+        if (res.data.totalPages == 0) 
+            this.pagesSize = 1;
+        else 
+            this.pagesSize = res.data.totalPages;
+        this.showNotification(200);
+      } 
+      catch (err) 
+      {
+        this.showNotification(-1);
+      }
+    },
+        async reloadUsers() {
+      var pg = this.page - 1;
+      try 
+      {
+        const res = await axios.get(API_BASE_URL+"/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
+
+        if (res.data.totalPages < this.page)
+          this.changePage(res.data.totalPages);
+
+        this.messagesData = res.data.content;
+        this.pagesSize = res.data.totalPages;
+      } 
+      catch (err) 
+      {
+        this.showNotification(-1);
+      }
+    },
         showUserForm(){
             this.$router.push("/dashboard/user/newUser");
         },
-        
+        async reloadMessages() {
+      var pg = this.page - 1;
+      try 
+      {
+        const res = await axios.get(API_BASE_URL+"/user/getAllUsers?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
+
+        if (res.data.totalPages < this.page)
+          this.changePage(res.data.totalPages);
+
+        this.usersData = res.data.content;
+        this.pagesSize = res.data.totalPages;
+      } 
+      catch (err) 
+      {
+        this.showNotification(-1);
+      }
+    },
+    async create() {
+      try 
+      {
+        const res = await axios.get(API_BASE_URL+"/user/getAllUsers?page=0&size=" + this.rowSize + "&sort=name," + this.sortType);
+        this.usersData = res.data.content;
+        if (res.data.totalPages == 0) 
+            this.pagesSize = 1;
+        else 
+            this.pagesSize = res.data.totalPages;
+        this.rowSize = res.data.size;
+      }
+      catch (err) {
+        //alert(err);
+         console.log(err);
+      }
+    },
+    sortBy(value) {
+      if (this.sortType == "desc") 
+        this.sortType = "asc";
+      else 
+        this.sortType = "desc";
+      
+      this.sortByValue = value;
+      this.reloadMessages();
     }
-  }
+    },
+    }
 
 </script>
 

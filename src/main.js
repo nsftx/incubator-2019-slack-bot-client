@@ -109,6 +109,10 @@ const router = new VueRouter({
           {
             path:"newUser",
             component: formaU
+          },
+          {
+            path: "updateUser/:id",
+            component: formaU
           }
         ]
       },

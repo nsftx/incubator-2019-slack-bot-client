@@ -26,7 +26,7 @@
         </div>
     <div id="dashboard">
         <div id="table">
-          <router-view></router-view>
+          <router-view @change-light="changeLight()" @change-dark="changeDark()"></router-view>
         </div>
     </div>
 
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {API_BASE_URL} from  "../constants/index.js";
+import {API_BASE_URL, LANGUAGE} from  "../constants/index.js";
 import {USER_EMAIL} from "../constants/index.js";
 import {CURRENT_USER_ROLE, THEME_ID, THEME} from "../constants/index.js";
 import {ACCESS_TOKEN} from "../constants/index.js";
@@ -51,6 +51,7 @@ export default {
   },
   data () {
     return {
+      color:"",
        items: [
         { title: "Profile" },
         { title: "Settings" },
@@ -69,6 +70,7 @@ localStorage.setItem(USER_EMAIL,response.data.email);
  document.getElementById("pic").src=response.data.imageUrl;
  localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
  localStorage.setItem(THEME,response.data.userSettings.theme);
+ localStorage.setItem(LANGUAGE,response.data.userSettings.language);
 
       })
       .catch((err) => {
@@ -85,6 +87,12 @@ document.getElementById("dropdown").style.backgroundColor="black";
 }
 },
   methods:{
+    changeLight(){
+document.getElementById("dropdown").style.backgroundColor="white";
+    },
+    changeDark(){
+document.getElementById("dropdown").style.backgroundColor="black";
+    },
     showDropdown(index) {
         if(index==0){
           this.$router.push("/profile");
@@ -93,8 +101,13 @@ document.getElementById("dropdown").style.backgroundColor="black";
         this.$router.push("/settings");
         }
         else if(index==2){
-        localStorage.removeItem(ACCESS_TOKEN);
-        localStorage.removeItem(CURRENT_USER_ROLE);
+        localStorage.setItem(ACCESS_TOKEN,"");
+        localStorage.setItem(CURRENT_USER_ROLE,"");
+        localStorage.setItem(THEME,"");
+        localStorage.setItem(CURRENT_USER_ROLE,"");
+        localStorage.setItem(USER_EMAIL,"");
+        localStorage.setItem(LANGUAGE,"");
+        localStorage.setItem(USER_EMAIL,"");
           alert("You're safely logged out!");
           this.$router.push("/login");
         }

@@ -31,7 +31,7 @@ export default {
 
 html, body{
   height: 100%;
-  background-color: #F1F1F1;
+  background-color: white;
 }
 
 #app {font-family: 'Avenir', Helvetica, Arial, sans-serif;
