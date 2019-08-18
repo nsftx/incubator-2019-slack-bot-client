@@ -31,12 +31,34 @@
 </template>
 
 <script>
-import {CURRENT_USER_ROLE} from "../constants/index.js";
+import {CURRENT_USER_ROLE, LANGUAGE} from "../constants/index.js";
 export default {
     name: "navigation",
      mounted: function() {
+       axios.get(API_BASE_URL + "/user/me", {
+  headers:headers
+}).then((response) => {
+  console.log(response);
+  
+localStorage.setItem(USER_EMAIL,response.data.email);
+localStorage.setItem(USER_NAME,response.data.name);
+localStorage.setItem(USER_PIC,response.data.imageUrl);
+ localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
+ localStorage.setItem(THEME,response.data.userSettings.theme);
+ localStorage.setItem(LANGUAGE,response.data.userSettings.language);
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
      if(localStorage.getItem(CURRENT_USER_ROLE)!="ADMIN"){
        document.getElementById("user").style.display="none";
+     }
+     if(localStorage.getItem(LANGUAGE)!="en"){
+       document.getElementsByTagName("button")[0].innerHTML="Poruke";
+       document.getElementsByTagName("button")[1].innerHTML="Podsjetnici";
+       document.getElementsByTagName("button")[2].innerHTML="Okidaci";
+       document.getElementsByTagName("button")[3].innerHTML="Korisnici";
      }
      },
 }

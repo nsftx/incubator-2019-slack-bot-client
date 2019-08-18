@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import {API_BASE_URL} from  "../constants/index.js";
+import {API_BASE_URL, NAME, ROLE} from  "../constants/index.js";
 import {Current_User_Role, THEME_ID, THEME} from "../constants/index.js";
 import {User_Email} from "../constants/index.js";
 import {ACCESS_TOKEN} from "../constants/index.js";
@@ -92,6 +92,11 @@ document.getElementById("divlist").style.backgroundColor="white";
 document.getElementById("header").style.backgroundColor="black";
 document.getElementById("divlist").style.backgroundColor="black";
 }
+if(localStorage.getItem(LANGUAGE)!="en"){
+       document.getElementsByTagName("H1")[0].innerHTML=localStorage.getItem(USERS);
+       document.getElementsByTagName("H5")[0].innerHTML=localStorage.getItem(NAME);
+       document.getElementsByTagName("H5")[2].innerHTML=localStorage.getItem(ROLE);
+        }
     //onload funkcija
     this.create();
   }

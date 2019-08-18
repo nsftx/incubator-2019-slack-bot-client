@@ -48,7 +48,7 @@
 </template>
 <script>
 import axios from "axios";
-import {API_BASE_URL} from  "../constants/index.js";
+import {API_BASE_URL, MESSAGES, SCHEDULES, USERS, TITLE, TEXT, MESSAGE, NEXTRUN, REPEAT, CHANNEL, TRIGGER, ACTIVE, NAME, ROLE} from  "../constants/index.js";
 import {USER_EMAIL, THEME, SETTTINGS, COLOR, LANGUAGE, THEMEPARAGRAPH, LANGUAGEPARAGRAPH, USER_LANGUAGE} from "../constants/index.js";
 import {ACCESS_TOKEN} from "../constants/index.js";
 import {SAVE} from "../constants/index.js";
@@ -99,11 +99,26 @@ axios.get(API_BASE_URL+'/user/translation', {
     },
     headers: headers
 }).then((response) => {
-  localStorage.setItem(SETTTINGS,response.data.title);
+  localStorage.setItem(SETTTINGS,response.data.settings);
    localStorage.setItem(COLOR,response.data.theme);
   localStorage.setItem(LANGUAGE,response.data.language);
   localStorage.setItem(THEMEPARAGRAPH,response.data.selectColor);
   localStorage.setItem(LANGUAGEPARAGRAPH,response.data.selectLanguage);
+  localStorage.setItem(MESSAGES,response.data.messages);
+  localStorage.setItem(SCHEDULES,response.data.schedules);
+  localStorage.setItem(USERS,response.data.users);
+  localStorage.setItem(TRIGGERS,response.data.triggers);
+  localStorage.setItem(TITLE,response.data.title);
+  localStorage.setItem(TEXT,response.data.text);
+  localStorage.setItem(MESSAGE,response.data.message);
+  localStorage.setItem(NEXTRUN,response.data.nextRun);
+  localStorage.setItem(ACTIVEAT,response.data.activeAt);
+  localStorage.setItem(REPEAT,response.data.repeat);
+  localStorage.setItem(CHANNEL,response.data.channel);
+  localStorage.setItem(TRIGGER,response.data.trigger);
+  localStorage.setItem(ACTIVE,response.data.active);
+  localStorage.setItem(NAME,response.data.name);
+  localStorage.setItem(ROLE,response.data.role);
   document.getElementById("color").innerHTML=localStorage.getItem(COLOR);
   document.getElementById("language").innerHTML=localStorage.getItem(LANGUAGE);
   document.getElementById("theme").innerHTML=localStorage.getItem(THEMEPARAGRAPH);

@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {ACCESS_TOKEN} from "../constants/index.js";
+import {ACCESS_TOKEN, ROLE, SAVE} from "../constants/index.js";
 import axios from "axios"
 const headers = {
   'Content-Type': 'application/json',
@@ -49,6 +49,19 @@ export default {
 		}
 	},
 	mounted: function(){
+		 if(localStorage.getItem(THEME)=="light"){
+document.getElementById("form-style-10").style.backgroundColor="white";
+//document.getElementById("messages").style.backgroundColor="white";
+}else if(localStorage.getItem(THEME)=="dark") {
+document.getElementById("form-style-10").style.backgroundColor="black";
+//document.getElementById("messages").style.backgroundColor="black";
+}
+if(localStorage.getItem(LANGUAGE)!="en"){
+       document.getElementsByTagName("p")[0].innerHTML="Kreiraj Korisnika";
+       document.getElementsByTagName("LABEL")[2].innerHTML=localStorage.getItem(ROLE);
+       document.getElementsByTagName("INPUT")[0].value="Otkazi";
+       document.getElementsByTagName("INPUT")[1].value=localStorage.getItem(SAVE);
+        }
 		/*if(this.$route.params.id == null)
 			console.log("Nije prosljedjen parametar");
 		else

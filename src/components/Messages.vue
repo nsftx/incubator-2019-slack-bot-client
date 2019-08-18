@@ -78,7 +78,7 @@
 
 <script>
 /* eslint-disable */
-import { THEME_ID, THEME, API_BASE_URL} from "../constants/index.js";
+import { THEME_ID, THEME, API_BASE_URL, TITLE, TEXT, CREATEDAT} from "../constants/index.js";
 import {USER_EMAIL} from "../constants/index.js";
 import {ACCESS_TOKEN} from "../constants/index.js";
 import axios from "axios";
@@ -114,6 +114,12 @@ document.getElementById("messages").style.backgroundColor="white";
 document.getElementById("header").style.backgroundColor="black";
 document.getElementById("messages").style.backgroundColor="black";
 }
+if(localStorage.getItem(LANGUAGE)!="en"){
+       document.getElementsByTagName("H1")[0].innerHTML=localStorage.getItem(MESSAGES);
+       document.getElementsByTagName("H5")[0].innerHTML=localStorage.getItem(TITLE);
+       document.getElementsByTagName("H5")[1].innerHTML=localStorage.getItem(TEXT);
+       document.getElementsByTagName("H5")[2].innerHTML=localStorage.getItem(CREATEDAT);
+        }
     //onload funkcija
     this.create();
   },

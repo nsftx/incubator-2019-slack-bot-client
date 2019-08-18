@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import {API_BASE_URL} from  "../constants/index.js";
+import {API_BASE_URL, TRIGGERS, TRIGGER, CHANNEL, ACTIVE} from  "../constants/index.js";
 import axios from "axios"
 import ClickOutside from "vue-click-outside";
 import {Current_User_Role, THEME_ID, THEME} from "../constants/index.js";
@@ -143,8 +143,15 @@ document.getElementById("Triggers").style.backgroundColor="white";
 document.getElementById("header").style.backgroundColor="black";
 document.getElementById("Triggers").style.backgroundColor="black";
 }
+if(localStorage.getItem(LANGUAGE)!="en"){
+       document.getElementsByTagName("H1")[0].innerHTML=localStorage.getItem(TRIGGERS);
+       document.getElementsByTagName("H5")[0].innerHTML=localStorage.getItem(MESSAGE);
+       document.getElementsByTagName("H5")[1].innerHTML=localStorage.getItem(TRIGGER);
+       document.getElementsByTagName("H5")[2].innerHTML=localStorage.getItem(CHANNEL);
+       document.getElementsByTagName("H5")[3].innerHTML=localStorage.getItem(ACTIVE);
+        }
     //onload funkcija
-    //this.create();
+    this.create();
   },
 
   methods: {

@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import {API_BASE_URL} from  "../constants/index.js";
+import {API_BASE_URL, SCHEDULES, MESSAGE, NEXTRUN, ACTIVEAT, REPEAT, CHANNEL} from  "../constants/index.js";
 import {CURRENT_USER_ROLE, THEME} from "../constants/index.js";
 import {ACCESS_TOKEN} from "../constants/index.js";
 import axios from "axios";
@@ -125,6 +125,14 @@ document.getElementById("Schedules").style.backgroundColor="white";
 document.getElementById("header").style.backgroundColor="black";
 document.getElementById("Schedules").style.backgroundColor="black";
 }
+if(localStorage.getItem(LANGUAGE)!="en"){
+       document.getElementsByTagName("H1")[0].innerHTML=localStorage.getItem(SCHEDULES);
+       document.getElementsByTagName("H5")[0].innerHTML=localStorage.getItem(MESSAGE);
+       document.getElementsByTagName("H5")[1].innerHTML=localStorage.getItem(NEXTRUN);
+       document.getElementsByTagName("H5")[2].innerHTML=localStorage.getItem(ACTIVEAT);
+       document.getElementsByTagName("H5")[3].innerHTML=localStorage.getItem(REPEAT);
+       document.getElementsByTagName("H5")[4].innerHTML=localStorage.getItem(CHANNEL);
+        }
     //onload funkcija
     //this.create();
   },

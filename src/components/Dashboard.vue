@@ -60,24 +60,12 @@ export default {
     }
   },
   mounted: function() {
-    axios.get(API_BASE_URL + "/user/me", {
-  headers:headers
-}).then((response) => {
-  console.log(response);
-  document.getElementById("email").innerHTML=response.data.email;
-localStorage.setItem(USER_EMAIL,response.data.email);
- document.getElementById("name").innerHTML=response.data.name;
- document.getElementById("pic").src=response.data.imageUrl;
- localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
- localStorage.setItem(THEME,response.data.userSettings.theme);
- localStorage.setItem(LANGUAGE,response.data.userSettings.language);
+   
+  document.getElementById("email").innerHTML=localStorage.getItem(USER_EMAIL);
+ document.getElementById("name").innerHTML=localStorage.getItem(USER_NAME);
+ document.getElementById("pic").src=localStorage.getItem(USER_PIC);
 
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    //onload funkcija
-    //this.create();
+     
     if(localStorage.getItem(THEME)=="light"){
 document.getElementById("dropdown").style.backgroundColor="white";
 //document.getElementById("divlist").style.backgroundColor="white";
@@ -85,6 +73,7 @@ document.getElementById("dropdown").style.backgroundColor="white";
 document.getElementById("dropdown").style.backgroundColor="black";
 //document.getElementById("divlist").style.backgroundColor="black";
 }
+
 },
   methods:{
     changeLight(){

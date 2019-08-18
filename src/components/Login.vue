@@ -3,25 +3,28 @@
     <div id="login">
         <div id="right">        
             <div id="right-content">
+               
 <a id="btn btn-block social-btn google" href="">
-                <i class="fab fa-google"></i>
+    <i class="fab fa-google">  | Sign In With Google</i>
   </a>
-                <h1  id="loginTekst">Log in</h1>
+               
                
             
                 
             </div>
+            
         </div>
     <div id="left">
         <div id="logo"></div>
-        <h1>Nsoft <br>
-        Welcome bot</h1>
+        <br>
+        <br>
+        <h1>Welcome Bot</h1>
     </div>
   </div>
 </template>
-
 <script>
 import {GOOGLE_AUTH_URL} from  "../constants/index.js";
+import GSignInButton from 'vue-google-signin-button'
 export default {
     name: "login",
     methods: {
@@ -52,9 +55,9 @@ export default {
 
 #right-content{
     position: absolute;
-    font-size: 100px;
+    font-size: 20px;
     right: 15%;
-    top: 20%;
+    top: 40%;
     display: flex;
     text-align: center;
     flex-direction: column;
@@ -62,7 +65,7 @@ export default {
 }
 
 #right-content h1{
-    font-size: 65px;
+    font-size: 30px;
     margin-top: 20px;
     transition: 0.3s;
     border: 1px solid white;
@@ -73,14 +76,18 @@ export default {
 #right-content h1:hover{
     cursor: pointer;
     color: rgb(233, 224, 224);
-    font-size: 70px;
+    font-size: 40px;
     background-color: white;
     color: rgb(70, 142, 235);
 }
 
 a{
-    color: unset;
-    text-decoration: none;
+    color:rgb(70, 142, 235);
+    text-decoration: underline;
+    display:block;
+    width:auto;
+    border:1px solid white;
+    background-color:white;
 }
 
 i{
@@ -90,7 +97,7 @@ i{
 i:hover{
     cursor: pointer;
     color: rgb(233, 224, 224);
-    font-size: 120px
+    font-size: 50px;
 }
 
 #left{
@@ -100,29 +107,33 @@ i:hover{
     left: 0px;
     right: 0px;
     bottom: 0px;
-    display: flex;
+   
     background-color: white;
 }
 
 #left h1{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     position: absolute;
-    font-size: 50px;
-    top: 65%;
-    left: 10%;
+    font-size: 68px;
+    font-weight: 200;
+    top: 66%;
+    left: 9%;
     color: rgb(70, 142, 235);
+    width:420px;
+    height:auto;
 }
 
 #logo{
-    background-image: url("../assets/logo.png");
+    background-image: url("../assets/nsoft-logo.png");
     background-position: center;
     background-size: cover;
     height: 120px;
-    width: 120px;
+    width: 220px;
     top: 50%;
-    left: 10%;
+    left:9%;
     position: absolute;
+    display:block;
 }
-
 @media only screen and (max-width: 600px)
 {
     #login{
