@@ -1,26 +1,23 @@
 <template>
-    <div id="app">
-      <router-view></router-view>
-    </div>
+  <div id="app">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-
 export default {
-  name: 'app',
-  components: {
-  },
-  data () {
+  name: "app",
+  components: {},
+  data() {
     return {
-      rowSizesValue: [5, 10, 20],
-    }
+      rowSizesValue: [5, 10, 20]
+    };
   }
-}
+};
 </script>
 
 <style>
-
-*{
+* {
   box-sizing: border-box;
   margin: 0px;
 }
@@ -29,22 +26,24 @@ export default {
   outline: none;
 }
 
-html, body{
+html,
+body {
   height: 100%;
-  background-color: #F1F1F1;
+  /*background-color: #F1F1F1;*/
+  background-color: white;
 }
 
-#app {font-family: 'Avenir', Helvetica, Arial, sans-serif;
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
+  color: #2c3e50;
 }
 
-#footer{
+#footer {
   background-color: white;
   z-index: 2;
   border-top: 2px solid grey;
   bottom: 0px;
 }
-
 </style>
