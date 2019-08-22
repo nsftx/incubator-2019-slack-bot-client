@@ -1,20 +1,34 @@
 <template>
-  <div id="formaEU">
+  <div id="pollView">
     <div id="form-style-10">
       <form id="forma">
         <div id="section">
           <p>
-            Edit User
+            Poll
             <label id="close-icon" @click="exit" style="font-size: 20px">X</label>
           </p>
         </div>
         <div id="inner-wrap">
-          <label>Email</label>
-          <input type="text" name="field1" placeholder="New user email" v-model="title" id="field1" />
-          <label>Role</label>
-          <input type="text" name="field1" placeholder="New user role" v-model="title" id="field2" />
-          <input type="button" value="Save" @click="save" id="submit" />
-          <input type="button" value="Cancel" @click="exit" id="cancle" />
+          <label class="la">Title</label>
+          <input
+            type="text"
+            name="field1"
+            id="field1"
+            v-model="title"
+            placeholder="New poll title"
+          />
+
+          <label>Option</label>
+          <label style="float: right">Vote number</label>
+
+          <ul>
+            <li v-for="choice in choiceList" :key="choice.choiceId">
+              <h5 style="width: 70%">{{ choice.choiceValue }}</h5>
+              <h5>{{ choice.counter }}</h5>
+            </li>
+          </ul>
+
+          <input type="button" value="Cancel" @click="exit" id="cancle" class="input-options" />
         </div>
       </form>
     </div>
@@ -22,58 +36,46 @@
 </template>
 
 <script>
-import axios from "axios";
-import { API_BASE_URL } from "../constants";
+import axios from 'axios';
+import { API_BASE_URL } from "../constants/index.js";
+import { Current_User_Role, THEME_ID, THEME } from "../constants/index.js";
+import { User_Email } from "../constants/index.js";
+import { ACCESS_TOKEN } from "../constants/index.js";
+import ClickOutside from "vue-click-outside";
+import { setTimeout } from "timers";
+const headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
 
 export default {
-  name: "formaEU",
+  name: "pollView",
   data() {
     return {
       title: "",
-      text: ""
-    };
+      choiceList: [],
+    }
   },
-  mounted: function() {
-    /*if(this.$route.params.id == null)
-			console.log("Nije prosljedjen parametar");
-		else
-		{
-			console.log(this.$route.params.id)
-			this.create();
-		}*/
+
+  mounted: function(){
+    this.create();
   },
   methods: {
     exit() {
       this.$router.go(-1);
     },
-    save() {
-      axios
-        .post(API_BASE_URL + "/user/edit", {
-          email: document.getElementById("field1").nodeValue.toString(),
-          role: document.getElementById("field2").nodeValue.toString()
-        })
-        .then(
-          response => {
-            console.log(response);
-          },
-          error => {
-            console.log(error);
-          }
-        );
-      /*if(this.$route.params.id == null)
-			{
-				alert("Sacuvaj");
-			}
-			else
-			{
-				alert("Update -> " + this.$route.params.id);
-			}*/
-      this.$router.go(-1);
-    },
-    async create() {
-      const res = await axios.get("../../jsonM.txt");
-      this.title = res.data.title;
-      this.text = res.data.text;
+    async create()
+    {
+      try
+      {
+        const res = await axios.get(API_BASE_URL + "/api/polls/" + this.$route.params.id)
+        this.title = res.data.title;
+        this.choiceList = res.data.choiceList;
+      }
+      catch(err)
+      {
+        this.$emit("show-notification", -1);
+      }
     }
   }
 };
@@ -86,7 +88,7 @@ export default {
 
 #form-style-10 {
   width: 640px;
-  height: 480px;
+  height: auto;
   padding: 20px;
   position: absolute;
   top: 50%;
@@ -96,28 +98,26 @@ export default {
   overflow: hidden;
   box-sizing: border-box;
   display: block;
-  -webkit-border-radius: 1px;
-  -moz-border-radius: 1px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-  -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-  z-index: 99;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  z-index: 120;
+  padding-bottom: 50px;
 }
 
 #form-style-10 #inner-wrap {
   display: block;
   padding: 20px;
+  padding-top: 0px;
   background: #fff;
   border-radius: 6px;
   margin-bottom: 15px;
 }
 
 #form-style-10 label {
-  display: block;
   font: 13px Arial, Helvetica, sans-serif;
   color: #888;
   margin-bottom: 15px;
 }
+
 #form-style-10 input[type="text"],
 #form-style-10 input[type="date"],
 #form-style-10 input[type="datetime"],
@@ -144,6 +144,25 @@ export default {
   -moz-border-radius: 6px;
   border: 1px inset rgba(0, 0, 0, 0.2);
   font-size: 15px;
+}
+
+ul li {
+  padding-top: 10px;
+  margin-bottom: 20px;
+  display: block;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 40%;
+  padding: 10px;
+  border-radius: 6px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border: 1px inset rgba(0, 0, 0, 0.2);
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #form-style-10 #section {
@@ -211,6 +230,7 @@ export default {
   margin-top: 10px;
   text-align: right;
 }
+
 #textarea {
   display: block;
   overflow: none;
@@ -229,5 +249,30 @@ export default {
 #submit,
 #cancle:hover {
   cursor: pointer;
+}
+
+.la {
+  display: inline-block;
+  background-color: white;
+  position: relative;
+  top: 23px;
+  left: 13px;
+  padding: 0px 7px;
+}
+
+.input-options {
+  position: relative;
+  top: 10px;
+}
+
+#form-style-10 #choiceButton {
+  float: right;
+  height: 30px;
+  width: 30px;
+  background-color: #0080ff;
+  color: white;
+  border-radius: 50%;
+  font-size: 25px;
+  line-height: 10px;
 }
 </style>

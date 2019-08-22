@@ -9,9 +9,31 @@
           </p>
         </div>
 
+        <div id="style-options">
+          <div
+            class="style-option"
+            style="font-weight: bold"
+            :class="{styleOptionSelected: boldSelected}"
+            @click="select('bold')"
+          >Bold</div>
+          <div
+            class="style-option"
+            style="font-style: italic"
+            :class="{styleOptionSelected: italicSelected}"
+            @click="select('italic')"
+          >Italic</div>
+          <div
+          style="text-decoration: underline"
+            class="style-option"
+            :class="{styleOptionSelected: urlSelected}"
+            @click="select('url')"
+          >Url</div>
+        </div>
+
         <div id="inner-wrap">
           <label :class="{errorText: showTitleError}">Title</label>
           <input
+            autocomplete="off"
             type="text"
             name="field1"
             placeholder="New message"
@@ -20,6 +42,15 @@
             :class="{errorBorder: showTitleError}"
           />
           <span v-show="showTitleError">Title size should be between 5 and 30 characters</span>
+          <br />
+          <span
+            v-show="boldSelected || italicSelected"
+            style="color: grey"
+          >Please input text between {{ styleCharacters }}</span>
+          <span
+            v-show="urlSelected"
+            style="color: grey"
+          >Please input your url instead url and your text instead text</span>
 
           <label :class="{errorText: showMessageError}">Text</label>
           <textarea
@@ -32,8 +63,9 @@
             :class="{errorBorder: showMessageError}"
           ></textarea>
           <span v-show="showMessageError">Text size should be more then 20 characters</span>
-
-          <input type="button" value="Save" @click="save" id="submit" />
+          <br />
+          <br />
+          <input type="button" :value="formType" @click="save" id="submit" />
           <input type="button" value="Cancel" @click="exit" id="cancle" />
         </div>
       </form>
@@ -42,18 +74,13 @@
 </template>
 
 <script>
+import { ACCESS_TOKEN } from "../constants/index.js";
 import axios from "axios";
-import { API_BASE_URL } from '../constants';
-
-/*
-window.addEventListener("mouseup", function(event){
-	if(event.target != document.getElementById("formaM") && event.target.parentNode != document.getElementById("formaM") && 
-	event.target.parentNode !=  document.getElementById("forma") && event.target.parentNode != document.getElementById("inner-wrap")
-	&& event.target != document.getElementById("section") && event.target.parentNode != document.getElementById("section"))
-	{
-		this.exit;
-	}
-});*/
+import { API_BASE_URL } from "../constants";
+const headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
 
 export default {
   name: "formaM",
@@ -66,15 +93,19 @@ export default {
       showMessageError: false,
       invalid: false,
       liveValidation: false,
+      boldSelected: false,
+      italicSelected: false,
+      urlSelected: false,
       regexTitle: /^.{5,30}$/,
-      regexText: /^.{20,}$/
+      regexText: /^.{20,}$/,
+      styleCharacters: ""
     };
   },
 
   mounted: function() {
     if (this.$route.params.id != null) {
       this.create();
-      (this.formType = "Update");
+      this.formType = "Update";
     }
   },
 
@@ -116,6 +147,51 @@ export default {
       }
     },
 
+    select(value) {
+      if (value == "bold") {
+        if (this.boldSelected == false) {
+          this.boldSelected = true;
+          this.urlSelected = false;
+        } else {
+          if (this.italicSelected == true) {
+            this.text += " _ _";
+            this.styleCharacters = "_ _";
+          }
+          this.boldSelected = false;
+          return;
+        }
+      } else if (value == "italic") {
+        if (this.italicSelected == false) {
+          this.italicSelected = true;
+          this.urlSelected = false;
+        } else {
+          if (this.boldSelected == true) {
+            this.text += " **";
+            this.styleCharacters = "**";
+          }
+          this.italicSelected = false;
+          return;
+        }
+      } else if (value == "url") {
+        if (this.urlSelected == false) this.urlSelected = true;
+        else this.urlSelected = false;
+
+        this.italicSelected = false;
+        this.boldSelected = false;
+      }
+
+      if (this.italicSelected == true && this.boldSelected == true) {
+        this.text += " _**_";
+        this.styleCharacters = "_**_";
+      } else if (this.boldSelected == true) {
+        this.text += " **";
+        this.styleCharacters = "**";
+      } else if (this.italicSelected == true) {
+        this.text += " _ _";
+        this.styleCharacters = "_ _";
+      } else if (this.urlSelected == true) this.text += " <http://url|text>";
+    },
+
     async save() {
       this.liveValidation = true;
       if (this.check_text(this.text) == false) this.invalid = true;
@@ -126,22 +202,24 @@ export default {
       } else {
         if (this.$route.params.id == null) {
           try {
-            await axios.post(API_BASE_URL+"/api/messages", {
+            await axios.post("http://localhost:8080/api/messages",
+            
+            {
               title: this.title,
               text: this.text
-            });
+            },{ headers: headers });
           } catch (err) {
             this.$emit("show-notification", -1);
             this.$router.go(-1);
             return;
           }
         } else {
-		  try 
-		  {
-            await axios.put(API_BASE_URL+"/api/messages/" + this.$route.params.id, { title: this.title, text: this.text });
-		  } 
-		  catch (err) 
-		  {
+          try {
+            await axios.put(
+              API_BASE_URL + "/api/messages/" + this.$route.params.id,
+              { title: this.title, text: this.text }
+            );
+          } catch (err) {
             this.$emit("show-notification", -1);
             this.$router.go(-1);
             return;
@@ -154,17 +232,16 @@ export default {
     },
 
     async create() {
-      try
-      {
-		    const res = await axios.get(API_BASE_URL+"/api/messages/" + this.$route.params.id);
-      	this.title = res.data.title;
+      try {
+        const res = await axios.get(
+          API_BASE_URL + "/api/messages/" + this.$route.params.id
+        );
+        this.title = res.data.title;
         this.text = res.data.text;
-      }
-      catch(err)
-      {
+      } catch (err) {
         this.$emit("show-notification", -1);
       }
-    },
+    }
   }
 };
 </script>
@@ -176,7 +253,7 @@ export default {
 
 #form-style-10 {
   width: 640px;
-  height: 480px;
+  height: 530px;
   padding: 20px;
   position: absolute;
   top: 50%;
@@ -193,9 +270,38 @@ export default {
 #form-style-10 #inner-wrap {
   display: block;
   padding: 20px;
+  padding-top: 0px;
   background: #fff;
   border-radius: 6px;
   margin-bottom: 15px;
+}
+
+#style-options {
+  display: flex;
+  padding-left: 20px;
+  margin-top: 15px;
+}
+
+.style-option {
+  width: 50px;
+  height: 35px;
+  border: 1px inset rgba(0, 0, 0, 0.2);
+  text-align: center;
+  margin-right: 15px;
+  line-height: 35px;
+  border-radius: 7px;
+}
+
+.style-option:hover {
+  cursor: pointer;
+  background-color: rgb(226, 217, 217);
+  border: none;
+}
+
+.styleOptionSelected {
+  cursor: pointer;
+  background-color: rgb(226, 217, 217);
+  border: none;
 }
 
 #form-style-10 label {
@@ -217,7 +323,7 @@ export default {
 #form-style-10 select {
   padding-top: 10px;
   overflow: none;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   display: block;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -228,7 +334,6 @@ export default {
   border-radius: 6px;
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
-  /*border: 1px inset rgba(0, 0, 0, 0.2);*/
   font-size: 15px;
 }
 
@@ -249,7 +354,7 @@ textarea {
   font-weight: bold;
   color: black;
   margin-top: 18px;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
 }
 
 #form-style-10 input[type="button"] {

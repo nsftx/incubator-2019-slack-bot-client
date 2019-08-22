@@ -1,64 +1,71 @@
 <template>
   <div id="messages">
     <router-view @reload-messages="reloadMessages()" @show-notification="showNotification($event)"></router-view>
-<div id="header">
-        <h1>Messages</h1>
-        
-      </div>
-      <div id="divlist">
-    <ul id="list">
-      <li id="title-li">
-        <div class="column1 column">
-          <h5>Title</h5>
-          <p>
-            <i class="material-icons" @click="sortBy('title')">arrow_drop_down</i>
-          </p>
-        </div>
-        <div class="column2 column">
-          <h5>Text</h5>
-          <p>
-            <i class="material-icons" @click="sortBy('text')">arrow_drop_down</i>
-          </p>
-        </div>
-        <div class="column3 column">
-          <h5>Created At</h5>
-          <p>
-            <i class="tooltip, material-icons" @click="sortBy('createdAt')">arrow_drop_down</i>
-          </p>
-        </div>
-        <div class="column4 column">
-          <p>
-            <i class="material-icons">filter_list</i>
-          </p>
-        </div>
-      </li>
+    <div id="header">
+      <h1>Messages</h1>
+    </div>
+    <div id="divlist">
+      <ul id="list">
+        <li id="title-li">
+          <div class="column1 column">
+            <h5>Title</h5>
+            <p>
+              <i class="material-icons" @click="sortBy('title')">arrow_drop_down</i>
+            </p>
+          </div>
+          <div class="column2 column">
+            <h5>Text</h5>
+            <p>
+              <i class="material-icons" @click="sortBy('text')">arrow_drop_down</i>
+            </p>
+          </div>
+          <div class="column3 column">
+            <h5>Created At</h5>
+            <p>
+              <i class="tooltip, material-icons" @click="sortBy('createdAt')">arrow_drop_down</i>
+            </p>
+          </div>
+          <div class="column4 column">
+            <p>
+              <i class="material-icons">filter_list</i>
+            </p>
+          </div>
+        </li>
 
-      <li v-for="message in messagesData" :key="message.messageId">
-        <div class="linear2"></div>
-        <div class="linear1"></div>
-        <div class="column1 column">
-          <p>{{message.title}}</p>
-        </div>
-        <div class="column2 column">
-          <p>{{message.text}}</p>
-        </div>
-        <div class="column3 column">
-          <p>{{message.createdAt | shortDate }}</p>
-        </div>
-        <div class="column4 column">
-          <i class="material-icons tooltip" @click="showScheduleForm(message.messageId)" data-tooltip="Neki tekst">assignment_turned_in</i>
-          <i class="material-icons" @click="showTriggerForm(message.messageId)">assistant</i>
-          <i class="material-icons" @click="editMessage(message.messageId)">create</i>
-          <i class="material-icons" @click="deleteMessage(message.messageId)">delete</i>
-        </div>
-      </li>
-      
-    </ul>
-</div>
+        <li v-for="message in messagesData" :key="message.messageId">
+          <div class="linear2"></div>
+          <div class="linear1"></div>
+          <div class="column1 column">
+            <p>{{message.title}}</p>
+          </div>
+          <div class="column2 column">
+            <p>{{message.text}}</p>
+          </div>
+          <div class="column3 column">
+            <p>{{message.createdAt | shortDate }}</p>
+          </div>
+          <div class="column4 column">
+            <i
+              class="material-icons tooltip"
+              @click="showScheduleForm(message.messageId)"
+              data-tooltip="Neki tekst"
+            >assignment_turned_in</i>
+            <i class="material-icons" @click="showTriggerForm(message.messageId)">assistant</i>
+            <i class="material-icons" @click="editMessage(message.messageId)">create</i>
+            <i class="material-icons" @click="deleteMessage(message.messageId)">delete</i>
+          </div>
+        </li>
+      </ul>
+    </div>
     <div id="footer">
       <button id="footer-btn" @click="toggleMenu" v-click-outside="hideMenu">{{ this.rowSize }} Rows</button>
       <div id="menu" v-show="menu">
-        <div class="menu-article" v-for="rowValue in rowSizesValue" :key="rowValue" @click="setRows(rowValue)">{{ rowValue }}</div>
+        <div
+          class="menu-article"
+          v-for="rowValue in rowSizesValue"
+          :key="rowValue"
+          @click="setRows(rowValue)"
+        >{{ rowValue }}</div>
       </div>
 
       <div class="text-xs-center">
@@ -68,9 +75,21 @@
 
     <button @click="showMessageForm" id="btn">+</button>
 
-    <div id="notification" v-show="showNoti" :class="{redBorder: errorOccured, greenBorder: !errorOccured}">
-      <input type="text" v-model="textNoti" readonly :class="{redText: errorOccured, greenText: !errorOccured}" />
-      <button @click="showNotification" :class="{redBackground: errorOccured, greenBackground: !errorOccured}">OK</button>
+    <div
+      id="notification"
+      v-show="showNoti"
+      :class="{redBorder: errorOccured, greenBorder: !errorOccured}"
+    >
+      <input
+        type="text"
+        v-model="textNoti"
+        readonly
+        :class="{redText: errorOccured, greenText: !errorOccured}"
+      />
+      <button
+        @click="showNotification"
+        :class="{redBackground: errorOccured, greenBackground: !errorOccured}"
+      >OK</button>
     </div>
   </div>
 </template>
@@ -78,16 +97,23 @@
 
 <script>
 /* eslint-disable */
-import { THEME_ID, THEME, API_BASE_URL} from "../constants/index.js";
-import {USER_EMAIL} from "../constants/index.js";
-import {ACCESS_TOKEN} from "../constants/index.js";
+import {
+  THEME_ID,
+  THEME,
+  API_BASE_URL,
+  TITLE,
+  TEXT,
+  CREATEDAT
+} from "../constants/index.js";
+import { USER_EMAIL, LANGUAGE } from "../constants/index.js";
+import { ACCESS_TOKEN, MESSAGES } from "../constants/index.js";
 import axios from "axios";
 import ClickOutside from "vue-click-outside";
-import { setTimeout } from 'timers';
+import { setTimeout } from "timers";
 const headers = {
-  'Content-Type': 'application/json',
-  'Authorization': 'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
-} 
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
 export default {
   name: "messages",
   data() {
@@ -107,15 +133,28 @@ export default {
     };
   },
   mounted: function() {
-    if(localStorage.getItem(THEME)=="light"){
-document.getElementById("header").style.backgroundColor="white";
-document.getElementById("messages").style.backgroundColor="white";
-}else if(localStorage.getItem(THEME)=="dark") {
-document.getElementById("header").style.backgroundColor="black";
-document.getElementById("messages").style.backgroundColor="black";
-}
-    //onload funkcija
-    //this.create();
+    if (localStorage.getItem(THEME) == "light") {
+      document.getElementById("header").style.backgroundColor = "white";
+      document.getElementById("messages").style.backgroundColor = "white";
+    } else if (localStorage.getItem(THEME) == "dark") {
+      document.getElementById("header").style.backgroundColor = "black";
+      document.getElementById("messages").style.backgroundColor = "black";
+    }
+    if (localStorage.getItem(LANGUAGE) != "en") {
+      document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
+        MESSAGES
+      );
+      document.getElementsByTagName("H5")[0].innerHTML = localStorage.getItem(
+        TITLE
+      );
+      document.getElementsByTagName("H5")[1].innerHTML = localStorage.getItem(
+        TEXT
+      );
+      document.getElementsByTagName("H5")[2].innerHTML = localStorage.getItem(
+        CREATEDAT
+      );
+    }
+    this.create();
   },
   filters: {
     shortDate(value) {
@@ -128,40 +167,45 @@ document.getElementById("messages").style.backgroundColor="black";
   methods: {
     async reloadMessages() {
       var pg = this.page - 1;
-      try 
-      {
-        const res = await axios.get(API_BASE_URL+"/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=" + this.sortByValue + "," + this.sortType);
+      try {
+        const res = await axios.get(
+          API_BASE_URL +
+            "/api/messages?page=" +
+            pg +
+            "&size=" +
+            this.rowSize +
+            "&sort=" +
+            this.sortByValue +
+            "," +
+            this.sortType, { headers: headers }
+        );
 
         if (res.data.totalPages < this.page)
           this.changePage(res.data.totalPages);
 
         this.messagesData = res.data.content;
         this.pagesSize = res.data.totalPages;
-      } 
-      catch (err) 
-      {
+      } catch (err) {
         this.showNotification(-1);
       }
     },
 
     showNotification(value) {
-       if(value == -1)
-       {
-           this.textNoti = "Some error have occured";
-           this.errorOccured = true;
-       }
-       else
-       {
-          this.errorOccured = false;
-          this.textNoti = "Succes"; 
-       }
-       this.showNoti = !this.showNoti;
-       setTimeout(this.closeNoti, 1500)
-       {}
+      if (value == -1) {
+        this.textNoti = "Some error have occured";
+        this.errorOccured = true;
+      } else {
+        this.errorOccured = false;
+        this.textNoti = "Succes";
+      }
+      this.showNoti = !this.showNoti;
+      setTimeout(this.closeNoti, 1500);
+      {
+      }
     },
 
-    closeNoti(){
-        this.showNoti = false;
+    closeNoti() {
+      this.showNoti = false;
     },
 
     showMessageForm() {
@@ -181,32 +225,28 @@ document.getElementById("messages").style.backgroundColor="black";
     },
 
     async deleteMessage(id) {
-      await axios.delete(API_BASE_URL+"/api/messages/" + id);
+      await axios.delete(API_BASE_URL + "/api/messages/" + id);
       var pg = this.page - 1;
-      try 
-      {
-        var res;
-        if(this.titleSort == true)
-          res = await axios.get(API_BASE_URL+"/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=title," + this.sortType);
-        else if(this.textSort == true)
-          res = await axios.get(API_BASE_URL+"/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=text," + this.sortType);
-        else
-          res = await axios.get(API_BASE_URL+"/api/messages?page=" + pg + "&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
-        
-        if (res.data.numberOfElements == 0) 
-        {
-          if (this.page != 1) 
-            this.changePage(this.page - 1);
+
+      try {
+        const  res = await axios.get(
+            API_BASE_URL +
+              "/api/messages?page=" +
+              pg +
+              "&size=" +
+              this.rowSize +
+              "&sort=" + this.sortByValue + "," +
+              this.sortType, { headers: headers }
+          );
+
+        if (res.data.numberOfElements == 0) {
+          if (this.page != 1) this.changePage(this.page - 1);
         }
         this.messagesData = res.data.content;
-        if (res.data.totalPages == 0) 
-            this.pagesSize = 1;
-        else 
-            this.pagesSize = res.data.totalPages;
+        if (res.data.totalPages == 0) this.pagesSize = 1;
+        else this.pagesSize = res.data.totalPages;
         this.showNotification(200);
-      } 
-      catch (err) 
-      {
+      } catch (err) {
         this.showNotification(-1);
       }
     },
@@ -233,47 +273,45 @@ document.getElementById("messages").style.backgroundColor="black";
     },
 
     async create() {
-      try 
-      {
-        const res = await axios.get(API_BASE_URL+"/api/messages?page=0&size=" + this.rowSize + "&sort=createdAt," + this.sortType);
+      try {
+        const res = await axios.get(
+          API_BASE_URL +
+            "/api/messages?page=0&size=" +
+            this.rowSize +
+            "&sort=createdAt," +
+            this.sortType, { headers: headers }
+        );
         this.messagesData = res.data.content;
-        if (res.data.totalPages == 0) 
-            this.pagesSize = 1;
-        else 
-            this.pagesSize = res.data.totalPages;
+        if (res.data.totalPages == 0) this.pagesSize = 1;
+        else this.pagesSize = res.data.totalPages;
         this.rowSize = res.data.size;
-      }
-      catch (err) {
-        //alert(err);
-         console.log(err);
+      } catch (err) {
+        this.showNotification(-1);
       }
     },
-    
 
     sortBy(value) {
-      if (this.sortType == "desc") 
-        this.sortType = "asc";
-      else 
-        this.sortType = "desc";
-      
+      if (this.sortType == "desc") this.sortType = "asc";
+      else this.sortType = "desc";
+
       this.sortByValue = value;
       this.reloadMessages();
     }
-    },
+  },
 
   directives: {
     ClickOutside
   }
-}
+};
 </script>
 
 <style>
 h1 {
   margin-top: 0px;
-  margin-left: 20px;
   width: 200px;
   float: left;
 }
+
 #header {
   margin-left: 15px;
   margin-right: 10px;
@@ -281,11 +319,9 @@ h1 {
   width: 99%;
   float: right;
   background-color: white;
-  height: 72px;
 }
+
 #divlist {
-  padding-left: 10px;
-  padding-right: 10px;
   width: 100%;
   height: 100vh;
 }
@@ -340,7 +376,7 @@ h1 {
 }
 
 #list {
-  height: 95%;
+  height: 83%;
   overflow: auto;
 }
 
@@ -365,6 +401,8 @@ ul {
 #title-li {
   border-radius: 3px 3px 0px 0px;
   background-color: #f1f1f1;
+  position: sticky;
+  top: 0;
 }
 
 #title-li .column {
@@ -413,7 +451,7 @@ li p {
   color: black;
 }
 
-#title-li .column4{
+#title-li .column4 {
   padding-right: 20px;
 }
 
@@ -490,7 +528,6 @@ li:hover .linear2 {
   width: 60px;
   height: 39px;
   margin-top: 5px;
-  z-index: 5;
   position: absolute;
   left: 48%;
 }
@@ -519,11 +556,18 @@ li:hover .linear2 {
 #footer {
   height: 7%;
   position: relative;
-  bottom: 2%;
+  bottom: 15%;
   background-color: white;
   z-index: 0;
   border: 1px solid lightgray;
   padding: 0px 20px;
+}
+
+#footer {
+  position: absolute;
+  bottom: -10px;
+  width: calc(93% - 20px);
+  margin-right: 20px;
 }
 
 #footer-btn {
@@ -572,35 +616,35 @@ li:hover .linear2 {
   box-shadow: none;
 }
 
-.greenBorder{
-    border: 1px solid rgb(85, 235, 85);
+.greenBorder {
+  border: 1px solid rgb(85, 235, 85);
 }
 
-.redBorder{
-    border: 1px solid rgb(248, 74, 74);
+.redBorder {
+  border: 1px solid rgb(248, 74, 74);
 }
 
-.redText{
-    color: rgb(248, 74, 74);
+.redText {
+  color: rgb(248, 74, 74);
 }
 
-.greenText{
-    color: rgb(85, 235, 85);
+.greenText {
+  color: rgb(85, 235, 85);
 }
 
-.redBackground{
+.redBackground {
   background-color: rgb(248, 74, 74);
 }
 
-.redBackground:hover{
+.redBackground:hover {
   background-color: rgb(241, 101, 101);
 }
 
-.greenBackground{
+.greenBackground {
   background-color: rgb(85, 235, 85);
 }
 
-.greenBackground:hover{
+.greenBackground:hover {
   background-color: rgb(140, 231, 140);
 }
 
@@ -612,16 +656,17 @@ li:hover .linear2 {
   bottom: 10px;
   background-color: white;
   border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-#notification input{
+#notification input {
   height: 60%;
   width: 100%;
   text-align: center;
   font-size: 25px;
 }
 
-#notification button{
+#notification button {
   width: 100%;
   height: 40%;
   text-align: center;
@@ -630,44 +675,4 @@ li:hover .linear2 {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
-
-/*
-.tooltip{
-  position: relative;
-}
-
-.tooltip::before, .tooltip::after{
-  position: absolute;
-  left: 20%;
-  opacity: 0;
-  transition: all ease 0.3s;
-}
-
-.tooltip::before{
-  content: "";
-  border-width: 10px 8px 0px 8px;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.3) transparent;
-  top: -10px;
-}
-
-.tooltip::after{
-  content: attr(data-tooltip);
-  background: rgba(0, 0, 0, 0.3);
-  top: -10px;
-  width: 155px;
-  font-size: 16px;
-  margin-left: -100px;
-  padding: 14px;
-  border-radius: 10px;
-  color: #eee;
-  transform: translateY(-100%);
-  color: white;
-  text-align: center;
-}
-
-.tooltip:hover::before, .tooltip:hover::after{
-  opacity: 1;
-}
-*/
 </style>

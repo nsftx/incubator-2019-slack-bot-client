@@ -1,118 +1,169 @@
 <template>
-    <div id="Dashboard">
-     <div id="nav-bar">
-       <navigation />
+  <div id="Dashboard">
+    <div id="nav-bar">
+      <navigation />
     </div>
     <div id="dropdown">
-<v-menu open-on-hover bottom offset-y>
-          <template v-slot:activator="{ on }">
-            <div id="usersdata" v-on="on">
-              <i id="icon" class="material-icons">arrow_drop_down</i>
-              <button id="picture">
-                <img id="pic" class="img-circle" width="80" height="70" />
-              </button>
-              <div id="credentials">
-                <h3 id="name"></h3>
-                <br />
-                <p id="email"></p>
-              </div>
+      <v-menu open-on-hover bottom offset-y>
+        <template v-slot:activator="{ on }">
+          <div id="usersdata" v-on="on">
+            <i id="icon" class="material-icons">arrow_drop_down</i>
+            <button id="picture">
+              <img id="pic" class="img-circle" width="80" height="70" />
+            </button>
+            <div id="credentials">
+              <h3 id="name"></h3>
+              <br />
+              <p id="email"></p>
             </div>
-          </template>
-          <ul id="settings">
-            <li class="options" v-for="(item, index) in items" :key="index" @click="showDropdown(index)">
-              <p class="option">  {{ item.title }} </p>            </li>
-          </ul>
-        </v-menu>
-        </div>
+          </div>
+        </template>
+        <ul id="settings">
+          <li
+            class="options"
+            v-for="(item, index) in items"
+            :key="index"
+            @click="showDropdown(index)"
+          >
+            <p class="option">{{ item.title }}</p>
+          </li>
+        </ul>
+      </v-menu>
+    </div>
     <div id="dashboard">
-        <div id="table">
-          <router-view></router-view>
-        </div>
+      <div id="table">
+        <router-view
+          @change-light="changeLight()"
+          @change-dark="changeDark()"
+          @change-language="Translate()"
+        ></router-view>
+      </div>
     </div>
-
-    </div>
+  </div>
 </template>
 
 <script>
-import {API_BASE_URL} from  "../constants/index.js";
-import {USER_EMAIL} from "../constants/index.js";
-import {CURRENT_USER_ROLE, THEME_ID, THEME} from "../constants/index.js";
-import {ACCESS_TOKEN} from "../constants/index.js";
-import navigation from "./Navigation.vue"
+import { API_BASE_URL, USER_LANGUAGE, SETTINGS } from "../constants/index.js";
+import { USER_EMAIL } from "../constants/index.js";
+import {
+  CURRENT_USER_ROLE,
+  THEME_ID,
+  THEME,
+  USER_NAME,
+  USER_PIC
+} from "../constants/index.js";
+import { ACCESS_TOKEN } from "../constants/index.js";
+import navigation from "./Navigation.vue";
 import axios from "axios";
 const headers = {
-  'Content-Type': 'application/json',
-  'Authorization': 'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
-} 
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
 export default {
-  name: 'Dashboard',
+  name: "Dashboard",
   components: {
-    navigation,
+    navigation
   },
-  data () {
+  data() {
     return {
-       items: [
-        { title: "Profile" },
-        { title: "Settings" },
-        { title: "Log Out" }
-      ]
-    }
+      items: [{ title: "Profile" }, { title: "Settings" }, { title: "Log Out" }]
+    };
   },
   mounted: function() {
-    axios.get(API_BASE_URL + "/user/me", {
-  headers:headers
-}).then((response) => {
-  console.log(response);
-  document.getElementById("email").innerHTML=response.data.email;
-localStorage.setItem(USER_EMAIL,response.data.email);
- document.getElementById("name").innerHTML=response.data.name;
- document.getElementById("pic").src=response.data.imageUrl;
- localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
- localStorage.setItem(THEME,response.data.userSettings.theme);
-
+    axios
+      .get(API_BASE_URL + "/user/me", {
+        headers: headers
       })
-      .catch((err) => {
+      .then(response => {
+        console.log(response);
+        document.getElementById("email").innerHTML = response.data.email;
+        localStorage.setItem(USER_EMAIL, response.data.email);
+        document.getElementById("name").innerHTML = response.data.name;
+        document.getElementById("pic").src = response.data.imageUrl;
+        localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
+        localStorage.setItem(THEME, response.data.userSettings.theme);
+      })
+      .catch(err => {
         console.log(err);
       });
     //onload funkcija
     //this.create();
-    if(localStorage.getItem(THEME)=="light"){
-document.getElementById("dropdown").style.backgroundColor="white";
-//document.getElementById("divlist").style.backgroundColor="white";
-}else if(localStorage.getItem(THEME)=="dark") {
-document.getElementById("dropdown").style.backgroundColor="black";
-//document.getElementById("divlist").style.backgroundColor="black";
-}
-},
-  methods:{
-    showDropdown(index) {
-        if(index==0){
-          this.$router.push("/profile");
-        }
-        else if(index==1){
-        this.$router.push("/settings");
-        }
-        else if(index==2){
-        localStorage.removeItem(ACCESS_TOKEN);
-        localStorage.removeItem(CURRENT_USER_ROLE);
-          alert("You're safely logged out!");
-          this.$router.push("/login");
-        }
+    if (localStorage.getItem(THEME) == "light") {
+      document.getElementById("dropdown").style.backgroundColor = "white";
+      //document.getElementById("divlist").style.backgroundColor="white";
+    } else if (localStorage.getItem(THEME) == "dark") {
+      document.getElementById("dropdown").style.backgroundColor = "black";
+      //document.getElementById("divlist").style.backgroundColor="black";
+    }
+
+    document.getElementById("email").innerHTML = localStorage.getItem(
+      USER_EMAIL
+    );
+    document.getElementById("name").innerHTML = localStorage.getItem(USER_NAME);
+    document.getElementById("pic").src = localStorage.getItem(USER_PIC);
+
+    if (localStorage.getItem(THEME) == "light") {
+      document.getElementById("dropdown").style.backgroundColor = "white";
+      //document.getElementById("divlist").style.backgroundColor="white";
+    } else if (localStorage.getItem(THEME) == "dark") {
+      document.getElementById("dropdown").style.backgroundColor = "black";
+      //document.getElementById("divlist").style.backgroundColor="black";
+    }
+    if (localStorage.getItem(USER_LANGUAGE) != "en") {
+      document.getElementsByClassName("option")[0].innerHTML = "Profil";
+      document.getElementsByClassName(
+        "option"
+      )[1].innerHTML = localStorage.getItem(SETTINGS);
+      document.getElementsByClassName("option")[2].innerHTML = "Odjavi se";
     }
   },
+  methods: {
+    changeLight() {
+      document.getElementById("dropdown").style.backgroundColor = "white";
+    },
+    changeDark() {
+      document.getElementById("dropdown").style.backgroundColor = "black";
+    },
+   showDropdown(index) {
+      if (index == 0) {
+        this.$router.push("/profile");
+      } else if (index == 1) {
+        this.$router.push("/settings");
+      } else if (index == 2) {
+        localStorage.setItem(ACCESS_TOKEN, "");
+        localStorage.setItem(CURRENT_USER_ROLE, "");
+        localStorage.setItem(THEME, "");
+        localStorage.setItem(CURRENT_USER_ROLE, "");
+        localStorage.setItem(USER_EMAIL, "");
+        localStorage.setItem(USER_LANGUAGE, "");
+        localStorage.setItem(USER_NAME, "");
+        localStorage.setItem(USER_PIC, "");
+        alert("You're safely logged out!");
+        this.$router.push("/login");
+      }
+    },
+    Translate() {
+    if (localStorage.getItem(USER_LANGUAGE) != "en") {
+      this.data.items[0].title = "Profil";
+      this.data.items[1].title = localStorage.getItem(SETTINGS);
+      this.data.items[2].title = "Odjavi se";
+    }
+    navigation.Translate();
   }
+  }
+};
 </script>
 
 <style scoped>
-#dropdown{
-  width:94%;
-  height:72px;
-  margin-bottom:0px;
-  float:right;
+#dropdown {
+  width: 94%;
+  height: 72px;
+  margin-bottom: 0px;
+  float: right;
 }
-#settings{
-    background-color:  #006BF5;
-    border-collapse: collapse;
+#settings {
+  background-color: #006bf5;
+  border-collapse: collapse;
 }
 
 #name {
@@ -130,31 +181,29 @@ document.getElementById("dropdown").style.backgroundColor="black";
   float: right;
   margin-top: 0px;
 }
-.options{
-    width:100%;
-    height:30px;
-    text-align: center;
-     border-collapse: collapse;
-     border-width: 0 0 1px 1px;
-     border-radius: 1px;
-     background-color:#f1f1f1;
+.options {
+  width: 100%;
+  height: 30px;
+  text-align: center;
+  border-collapse: collapse;
+  border-width: 0 0 1px 1px;
+  border-radius: 1px;
+  background-color: #f1f1f1;
 }
-.option{
-    padding-top:5px;
-    box-sizing:border-box;
-    width:100%;
-    height: 100%;
-    text-align:center;
-     font-family: "Roboto", sans-serif;
+.option {
+  padding-top: 5px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
   font-weight: 500;
-    text-decoration:bold;
-    
-   border-collapse: collapse;
-
+  text-decoration: bold;
+  border-collapse: collapse;
 }
-.option:hover{
-  color:white;
-  background-color:#006BF5;
+.option:hover {
+  color: white;
+  background-color: #006bf5;
 }
 #usersdata {
   float: right;
@@ -175,45 +224,47 @@ document.getElementById("dropdown").style.backgroundColor="black";
   margin-top: 25px;
   margin-right: 10px;
 }
-*{
+* {
   box-sizing: border-box;
   margin: 0px;
 }
 
-html, body{
+html,
+body {
   height: 100%;
-  background-color: #F1F1F1;
+  background-color: #f1f1f1;
 }
 
-#app {font-family: 'Avenir', Helvetica, Arial, sans-serif;
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
+  color: #2c3e50;
 }
 
-#nav-bar{
+#nav-bar {
   height: 100%;
   width: 6%;
   float: left;
 }
 
-#dashboard{
+#dashboard {
   width: 94%;
   height: 100%;
   float: left;
 }
 
-#table{
+#table {
   height: 90vh;
 }
 
-#footer{
+#footer {
   background-color: white;
   z-index: 2;
   border-top: 2px solid grey;
   bottom: 0px;
 }
-#picture{
+#picture {
   margin-top: 0px;
   float: right;
 }
