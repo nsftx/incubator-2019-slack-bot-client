@@ -8,8 +8,10 @@
             <label id="close-icon" @click="exit" style="font-size: 20px">X</label>
           </p>
         </div>
-        <label class="la">Title</label>
-        <div id="inner-wrap">
+
+          <label class="la">Title</label>
+          <div id="inner-wrap">
+
           <input
             autocomplete="off"
             type="text"
@@ -20,6 +22,7 @@
             :class="{errorBorder: showTitleError, noErrorBorder: !showTitleError}"
           />
           <span v-show="showTitleError">Title size is minimum 3 characters</span>
+
           <br />
           <br />
 
@@ -90,6 +93,7 @@
           <br />
           <br />
 
+
           <input type="button" value="Save" @click="save" id="submit" class="input-options" />
           <input type="button" value="Cancel" @click="exit" id="cancle" class="input-options" />
         </div>
@@ -101,6 +105,7 @@
 <script>
 import { ACCESS_TOKEN } from "../constants/index.js";
 import axios from "axios";
+
 import DatePicker from "vue2-datepicker";
 import { API_BASE_URL } from "../constants";
 const headers = {
@@ -110,13 +115,16 @@ const headers = {
 
 export default {
   name: "FormPoll",
+
   components: { DatePicker },
+
   data() {
     return {
       title: "",
       choices: [],
       liveValidation: false,
       showTitleError: false,
+
       showChoiceError: false,
       date: null,
       showDateError: false,
@@ -192,6 +200,7 @@ export default {
     channelName(value) {
       this.channelName = value;
       if (this.liveValidation == true) this.check_channelName(value);
+
     }
   },
 
@@ -199,6 +208,7 @@ export default {
     exit() {
       this.$router.go(-1);
     },
+
 
     addBorder() {
       for (var i = 0; i < this.choices.length; i++) {
@@ -230,6 +240,7 @@ export default {
       }
     },
 
+
     check_choices(value) {
       var checkError = false;
       for (var i = 0; i < this.choices.length; i++) {
@@ -243,9 +254,11 @@ export default {
             "rgba(0, 0, 0, 0.2)";
       }
       if (checkError == true) return false;
+
       this.showChoiceError = false;
       return true;
     },
+
 
     check_date(value) {
       var today = new Date();
@@ -315,6 +328,7 @@ export default {
     }
   }
 };
+
 </script>
 
 <style scoped>
@@ -339,6 +353,7 @@ export default {
   padding-bottom: 50px;
 }
 
+
 .mx-input {
   overflow: visible;
 }
@@ -353,6 +368,7 @@ export default {
 .mx-datepicker {
   width: 100%;
 }
+
 
 #form-style-10 #inner-wrap {
   display: block;
@@ -496,6 +512,7 @@ export default {
   top: 10px;
 }
 
+
 #form-style-10 #choiceButton {
   float: right;
   height: 30px;
@@ -530,6 +547,7 @@ span {
   font-weight: 400;
 }
 
+
 .la2 {
   position: relative;
   top: 15px;
@@ -538,4 +556,5 @@ span {
   z-index: 1;
   padding: 0px 4px;
 }
+
 </style>

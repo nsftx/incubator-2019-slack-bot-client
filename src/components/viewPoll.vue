@@ -1,5 +1,7 @@
 <template>
+
   <div id="pollView">
+
     <div id="form-style-10">
       <form id="forma">
         <div id="section">
@@ -10,6 +12,7 @@
         </div>
         <div id="inner-wrap">
           <label class="la">Title</label>
+
           <input
             type="text"
             name="field1"
@@ -18,13 +21,16 @@
             placeholder="New poll title"
           />
 
+
           <label>Option</label>
           <label style="float: right">Vote number</label>
 
           <ul>
+
             <li v-for="choice in choiceList" :key="choice.choiceId">
               <h5 style="width: 70%">{{ choice.choiceValue }}</h5>
               <h5>{{ choice.counter }}</h5>
+
             </li>
           </ul>
 
@@ -36,6 +42,7 @@
 </template>
 
 <script>
+
 import axios from 'axios';
 import { API_BASE_URL } from "../constants/index.js";
 import { Current_User_Role, THEME_ID, THEME } from "../constants/index.js";
@@ -128,6 +135,7 @@ export default {
 #form-style-10 input[type="url"],
 #form-style-10 input[type="password"],
 #form-style-10 textarea,
+
 #form-style-10 select {
   padding-top: 10px;
   overflow: none;
@@ -145,6 +153,7 @@ export default {
   border: 1px inset rgba(0, 0, 0, 0.2);
   font-size: 15px;
 }
+
 
 ul li {
   padding-top: 10px;
@@ -264,6 +273,7 @@ ul li {
   position: relative;
   top: 10px;
 }
+
 
 #form-style-10 #choiceButton {
   float: right;

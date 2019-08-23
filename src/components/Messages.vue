@@ -134,9 +134,13 @@ export default {
   },
   mounted: function() {
     if (localStorage.getItem(THEME) == "light") {
+
+      this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("messages").style.backgroundColor = "white";
     } else if (localStorage.getItem(THEME) == "dark") {
+      this.$emit("change-dark");
+
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("messages").style.backgroundColor = "black";
     }
@@ -177,7 +181,9 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
+
             this.sortType, { headers: headers }
+
         );
 
         if (res.data.totalPages < this.page)
@@ -228,6 +234,7 @@ export default {
       await axios.delete(API_BASE_URL + "/api/messages/" + id);
       var pg = this.page - 1;
 
+
       try {
         const  res = await axios.get(
             API_BASE_URL +
@@ -235,8 +242,10 @@ export default {
               pg +
               "&size=" +
               this.rowSize +
+
               "&sort=" + this.sortByValue + "," +
               this.sortType, { headers: headers }
+
           );
 
         if (res.data.numberOfElements == 0) {
@@ -279,7 +288,9 @@ export default {
             "/api/messages?page=0&size=" +
             this.rowSize +
             "&sort=createdAt," +
+
             this.sortType, { headers: headers }
+
         );
         this.messagesData = res.data.content;
         if (res.data.totalPages == 0) this.pagesSize = 1;

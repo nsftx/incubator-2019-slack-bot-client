@@ -18,7 +18,9 @@
             v-model="messageTitle"
             @click="getMessageID"
             :class="{errorBorder: showTitleError, noErrorBorder: !showTitleError}"
+
             :disabled="formType == 'Update'"
+
           >
             <option disabled selected>{{ messageTitle }}</option>
             <option
@@ -37,7 +39,9 @@
             class="border"
             v-model="triggerType"
             :class="{errorBorder: showTriggerError, noErrorBorder: !showTriggerError}"
+
             :disabled="formType == 'Update'"
+
           >
             <option disabled selected>Some trigger type</option>
             <option>On channel join</option>
@@ -50,6 +54,7 @@
           <select
             id="field3"
             class="border"
+
             @click="getChannelID"
             v-model="channelName"
             :class="{errorBorder: showChannelError, noErrorBorder: !showChannelError}"
@@ -57,6 +62,7 @@
           >
             <option disabled selected>{{channelName}}</option>
             <option v-for="channel in channelsData" :key="channel.channelName">{{ channel.channelName }}</option>
+
           </select>
 
           <span v-show="showChannelError">Channel name is required</span>
@@ -81,6 +87,7 @@
 <script>
 import axios from "axios";
 import { API_BASE_URL } from "../constants";
+
 import { ACCESS_TOKEN } from "../constants/index.js";
 const headers = {
   "Content-Type": "application/json",
@@ -104,16 +111,19 @@ export default {
       showTitleError: false,
       showTriggerError: false,
       showChannelError: false,
+
       showMessageOption: true,
       channelId: "",
       targetChannel: ""
     };
   },
 
+
   mounted: async function() {
     if (this.$route.params.id != null) {
       var currentR = this.$router.currentRoute.fullPath;
       var path = currentR.substring(0, 30);
+
       if (path == "/dashboard/messages/newTrigger") {
 
         try{
@@ -144,6 +154,7 @@ export default {
           const resM = await axios.get(API_BASE_URL + "/api/messages", {
             headers: headers
           });
+
           this.messagesData = resM.data.content;
         } catch (err) {
           this.$emit("show-notification", -1);
@@ -151,17 +162,21 @@ export default {
       }
     } else {
       try {
+
         const res = await axios.get(API_BASE_URL + "/api/messages", {
           headers: headers
         });
+
         this.messagesData = res.data.content;
       } catch (err) {
         this.$emit("show-notification", -1);
       }
     }
     try {
+
       const res = await axios.get(API_BASE_URL + "/api/channels")
       this.channelsData = res.data;
+
     } catch (err) {
       this.$emit("show-notification", -1);
     }
@@ -235,6 +250,7 @@ export default {
       if (this.$route.params.id != null) {
         var cr = this.$router.currentRoute.fullPath;
         var path = cr.substring(0, 30);
+
         if (path == "/dashboard/messages/newTrigger") {
           try {
             await axios.post(
@@ -247,17 +263,20 @@ export default {
               },
               { headers: headers }
             );
+
             this.$emit("show-notification");
           } catch (err) {
             this.$emit("show-notification", -1);
           }
         } else {
           try {
+
             const res = await axios.get(API_BASE_URL + "/api/messages", { headers: headers });
             this.messagesData = res.data.content;
 
             await axios.put(
               API_BASE_URL + "/api/triggers/" + this.$route.params.id + "?active=" + this.active
+
             );
             this.$emit("show-notification");
           } catch (err) {
@@ -266,6 +285,7 @@ export default {
         }
       } else {
         try {
+
           await axios.post(
             API_BASE_URL + "/api/triggers",
             {
@@ -276,6 +296,7 @@ export default {
             },
             { headers: headers }
           );
+
           this.$emit("show-notification");
         } catch (err) {
           this.$emit("show-notification", -1);
@@ -286,11 +307,14 @@ export default {
     },
     getMessageID() {
       if (this.messagesData.length > 1) {
+
        this.targetMess = this.messagesData.filter(
+
           mess => mess.title == this.messageTitle
         );
         this.messId = this.targetMess[0].messageId;
       }
+
       else
         this.messId = this.messagesData[0].messageId;
     },
@@ -301,6 +325,7 @@ export default {
       }
       else
         this.channelId = this.channelsData[0].id;
+
     }
   }
 };
@@ -457,6 +482,7 @@ export default {
   color: #4d4d4d;
   margin-top: 10px;
   text-align: right;
+
 }
 
 #textarea {
@@ -479,6 +505,7 @@ export default {
   cursor: pointer;
 }
 
+
 .la {
   position: relative;
   top: 7px;
@@ -495,6 +522,7 @@ span {
 
 .errorBorder {
   border: 1px inset rgb(253, 38, 38);
+
 }
 
 .noErrorBorder {

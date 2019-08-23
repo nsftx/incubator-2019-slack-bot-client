@@ -122,6 +122,9 @@ import {
 } from "../constants/index.js";
 import { CURRENT_USER_ROLE, THEME } from "../constants/index.js";
 import { ACCESS_TOKEN, LANGUAGE } from "../constants/index.js";
+
+import axios from "axios";
+
 import ClickOutside from "vue-click-outside";
 import axios from "axios";
 const headers = {
@@ -150,9 +153,13 @@ export default {
 
   mounted: function() {
     if (localStorage.getItem(THEME) == "light") {
+
+      this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("Schedules").style.backgroundColor = "white";
     } else if (localStorage.getItem(THEME) == "dark") {
+      this.$emit("change-dark");
+
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("Schedules").style.backgroundColor = "black";
     }
@@ -176,6 +183,7 @@ export default {
         CHANNEL
       );
     }
+
     this.create();
   },
 
@@ -209,7 +217,9 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
+
             this.sortType, { headers: headers }
+
         );
 
         if (res.data.totalPages < this.page)
@@ -261,7 +271,9 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
+
             this.sortType, { headers: headers }
+
         );
 
         if (res.data.numberOfElements == 0) {
@@ -303,6 +315,7 @@ export default {
           API_BASE_URL +
             "/api/schedules?page=0&size=" +
             this.rowSize +
+
             "&sort=createdAt," +
             this.sortType, { headers: headers }
         );
@@ -392,16 +405,20 @@ body {
 }
 
 .column2 {
+
   width: 11%;
+
   margin-right: 25px;
   margin-left: 0px;
   right: 15px;
 }
 
 #title-li .column2 {
+
     position: unset;
     margin-left: 20px;
     padding-left: 15px;
+
 }
 
 #title-li .column4 {
@@ -434,7 +451,9 @@ body {
 }
 
 .linear1 {
+
   left: 32%;
+
 }
 
 .linear2 {

@@ -2,45 +2,55 @@
   <div class="tab">
     <div id="logo" class="tablinks"></div>
 
+  
     <router-link to="/dashboard/messages" class="router-link">
       <button class="active">
         <v-icon color="white" style="margin-bottom: 10px">local_post_office</v-icon>
-        <br />Messages
+        <br /> <span> Messages </span>
+
       </button>
     </router-link>
 
     <router-link to="/dashboard/schedules" class="router-link">
       <button>
         <v-icon color="white" style="margin-bottom: 10px">assignment_turned_in</v-icon>
-        <br />Schedules
+
+        <br /> <span> Schedules </span>
+
       </button>
     </router-link>
 
     <router-link to="/dashboard/triggers" class="router-link">
       <button>
         <v-icon color="white" style="margin-bottom: 10px">assistant</v-icon>
-        <br />Triggers
+
+        <br /> <span>Triggers </span>
+
       </button>
     </router-link>
 
     <router-link to="/dashboard/poll" class="router-link">
       <button>
         <v-icon color="white" size="32" style="margin-bottom: 10px">poll</v-icon>
-        <br />Poll
+
+        <br /> <span> Poll </span>
       </button>
     </router-link>
 
-    <router-link to="/dashboard/activity" class="router-link">
+    <router-link to="/dashboard/audit" class="router-link">
       <button>
         <v-icon color="white" size="32" style="margin-bottom: 10px">track_changes</v-icon>
-        <br />Activity log
+        <br /> <span> Activity log </span>
+
       </button>
     </router-link>
 
     <router-link to="/dashboard/user" class="router-link">
-      <button id="user">
+
+      <button id="usertab">
         <v-icon color="white" size="32" style="margin-bottom: 10px">person</v-icon>
-        <br />User
+        <br /> <span>Users </span>
+
       </button>
     </router-link>
   </div>
@@ -62,34 +72,47 @@ import {
   ACTIVE,
   NAME,
   ROLE,
-  CREATEDAT
+
+  CREATEDAT,
+  ERROR,
+  ACTIVITY_LOG,NEWMESSAGE
+
 } from "../constants/index.js";
 import {
   USER_EMAIL,
   THEME,
+  USER_THEME,
+
   SETTINGS,
   COLOR,
   LANGUAGE,
   THEMEPARAGRAPH,
   LANGUAGEPARAGRAPH,
-  USER_LANGUAGE
+  USER_LANGUAGE,
+  POLL
+
 } from "../constants/index.js";
 import { ACCESS_TOKEN, TRIGGERS, ACTIVEAT } from "../constants/index.js";
 import {
   SAVE,
   USER_NAME,
   USER_PIC,
-  CURRENT_USER_ROLE
+  CURRENT_USER_ROLE,
+  LOGOUT,CANCEL,
+  CAUSE,CONSEQUENCE, PROFILE,NEWUSEREMAIL,CREATEMESSAGE,CREATESCHEDULE,CREATEUSER,RUNAT,SOMECHANNELNAME,SELECTDATE,NEWUSERROLE,TYPEYOURMESSAGE,SOMEMESSAGETITLE
 } from "../constants/index.js";
 import axios from "axios";
+import { async } from 'q';
+
 const headers = {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
 };
 export default {
   name: "navigation",
-  mounted: function() {
-    axios
+  mounted: async function() {
+    await axios
+
       .get(API_BASE_URL + "/user/me", {
         headers: headers
       })
@@ -100,16 +123,15 @@ export default {
         localStorage.setItem(USER_NAME, response.data.name);
         localStorage.setItem(USER_PIC, response.data.imageUrl);
         localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
-        localStorage.setItem(THEME, response.data.userSettings.theme);
-        localStorage.setItem(
-          USER_LANGUAGE,
-          response.data.userSettings.language
-        );
+
+        localStorage.setItem(USER_THEME, response.data.userSettings.theme);
+        localStorage.setItem(USER_LANGUAGE,response.data.userSettings.language);
+
       })
       .catch(err => {
         console.log(err);
       });
-    axios
+    await axios
       .get(API_BASE_URL + "/user/translation", {
         params: {
           language: localStorage.getItem(USER_LANGUAGE)
@@ -118,51 +140,45 @@ export default {
       })
       .then(
         response => {
-          localStorage.setItem(SETTINGS, response.data.settings);
-          localStorage.setItem(COLOR, response.data.theme);
-          localStorage.setItem(LANGUAGE, response.data.language);
-          localStorage.setItem(THEMEPARAGRAPH, response.data.selectColor);
-          localStorage.setItem(LANGUAGEPARAGRAPH, response.data.selectLanguage);
-          localStorage.setItem(MESSAGES, response.data.messages);
-          localStorage.setItem(SCHEDULES, response.data.schedules);
-          localStorage.setItem(USERS, response.data.users);
-          localStorage.setItem(TRIGGERS, response.data.triggers);
-          localStorage.setItem(TITLE, response.data.title);
-          localStorage.setItem(TEXT, response.data.text);
-          localStorage.setItem(MESSAGE, response.data.message);
-          localStorage.setItem(NEXTRUN, response.data.nextRun);
-          localStorage.setItem(ACTIVEAT, response.data.activeAt);
-          localStorage.setItem(REPEAT, response.data.repeat);
-          localStorage.setItem(CHANNEL, response.data.channel);
-          localStorage.setItem(TRIGGER, response.data.trigger);
-          localStorage.setItem(ACTIVE, response.data.active);
-          localStorage.setItem(NAME, response.data.name);
-          localStorage.setItem(ROLE, response.data.role);
-          localStorage.setItem(CREATEDAT, response.data.createdAt);
-          localStorage.setItem(SAVE, response.data.save);
+
+          for (var key in response.data) {
+    if (response.data.hasOwnProperty(key)) {
+        localStorage.setItem(key,response.data[key]);
+    }
+}
+
           console.log(response);
         },
         error => {
           console.log(error);
         }
       );
+
+      console.log(localStorage.getItem(SETTINGS));
     if (localStorage.getItem(CURRENT_USER_ROLE) != "ADMIN") {
-      //document.getElementById("user").style.display = "none";
+      document.getElementById("usertab").style.display = "none";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
-      document.getElementsByTagName("span")[0].innerHTML = "Poruke";
-      document.getElementsByTagName("span")[1].innerHTML = "Podsjetnici";
-      document.getElementsByTagName("span")[2].innerHTML = "Okidaci";
-      document.getElementsByTagName("span")[3].innerHTML = "Korisnici";
+      document.getElementsByTagName("span")[0].innerHTML =localStorage.getItem(MESSAGES);
+      document.getElementsByTagName("span")[1].innerHTML = localStorage.getItem(SCHEDULES);
+      document.getElementsByTagName("span")[2].innerHTML =localStorage.getItem(TRIGGERS);
+        document.getElementsByTagName("span")[3].innerHTML = localStorage.getItem(POLL);
+      document.getElementsByTagName("span")[4].innerHTML = localStorage.getItem(ACTIVITY_LOG);
+      document.getElementsByTagName("span")[5].innerHTML = localStorage.getItem(USERS);
+
     }
   },
   methods: {
     Translate() {
       if (localStorage.getItem(USER_LANGUAGE) != "en") {
-        document.getElementsByTagName("span")[0].innerHTML = "Poruke";
-        document.getElementsByTagName("span")[1].innerHTML = "Podsjetnici";
-        document.getElementsByTagName("span")[2].innerHTML = "Okidaci";
-        document.getElementsByTagName("span")[3].innerHTML = "Korisnici";
+
+        document.getElementsByTagName("span")[0].innerHTML =localStorage.getItem(MESSAGES);
+      document.getElementsByTagName("span")[1].innerHTML = localStorage.getItem(SCHEDULES);
+      document.getElementsByTagName("span")[2].innerHTML =localStorage.getItem(TRIGGERS);
+      document.getElementsByTagName("span")[3].innerHTML = localStorage.getItem(POLL);
+      document.getElementsByTagName("span")[4].innerHTML = localStorage.getItem(ACTIVITY_LOG);
+      document.getElementsByTagName("span")[5].innerHTML = localStorage.getItem(USERS);
+
       }
     }
   }

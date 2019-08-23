@@ -94,7 +94,7 @@ import { API_BASE_URL, NAME, ROLE, LANGUAGE } from "../constants/index.js";
 import {
   Current_User_Role,
   THEME_ID,
-  THEME,
+  USER_THEME,
   USERS
 } from "../constants/index.js";
 import { User_Email } from "../constants/index.js";
@@ -126,12 +126,15 @@ export default {
   },
 
   mounted: function() {
-    /*if (localStorage.getItem(THEME) == "light") {
+    if (localStorage.getItem(USER_THEME) == "light") {
+
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("divlist").style.backgroundColor = "white";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "dark") {
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("divlist").style.backgroundColor = "black";
+      document.getElementById("user").style.backgroundColor = "black";
+
     }
     if (localStorage.getItem(LANGUAGE) != "en") {
       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
@@ -144,7 +147,9 @@ export default {
         ROLE
       );
     }
-    this.create();*/
+
+    this.create();
+
   },
   methods: {
     toggleMenu() {

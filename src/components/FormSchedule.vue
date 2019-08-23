@@ -4,7 +4,9 @@
       <form id="forma">
         <div class="section">
           <p id="section-text">
+
             {{ formType }} Schedule
+
             <label id="close-icon" @click="exit">x</label>
           </p>
         </div>
@@ -17,9 +19,11 @@
             v-model="messageTitle"
             @click="getMessageID"
             :class="{errorBorder: showTitleError, noErrorBorder: !showTitleError}"
+
             :disabled="formType=='Update'"
           >
             <option disabled selected>{{ messageTitle }}</option>
+
             <option
               v-for="message in messagesData"
               :key="message.messageId"
@@ -34,23 +38,27 @@
           <br />
           <div class="input-append date form_datetime">
             <div>
+
               <date-picker v-model="datetime" :lang="lang" style="margin-top: 8px" type="datetime" format="[On] YYYY-MM-DD [at] HH:mm" :minute-step="5" :disabled="formType=='Update'" confirm></date-picker>
             </div>
           </div>
           <br />
           <span v-show="showDateError">Date and time is required and must not be less then current date and time</span>
+
           <br />
 
           <label class="la">Channel name</label>
           <select
             id="field3"
             v-model="channelName"
+
             @click="getChannelID"
             :class="{errorBorder: showChannelError, noErrorBorder: !showChannelError}"
             :disabled="formType=='Update'"
           >
             <option disabled selected> {{channelName}} </option>
             <option v-for="channel in channelsData" :key="channel.channelName">{{ channel.channelName }}</option>
+
           </select>
 
           <span v-show="showChannelError">Channel name is required</span>
@@ -60,7 +68,9 @@
 
           <label class="container">
             <p class="checkText">Repeat</p>
+
             <input type="checkbox" checked="checked" v-model="repeat" :disabled="formType=='Update'" />
+
             <span class="checkmark"></span>
           </label>
           <br />
@@ -78,14 +88,16 @@
 </template>
 
 <script>
+
 import DatePicker from "vue2-datepicker";
 import { ACCESS_TOKEN } from "../constants/index.js";
 import axios from "axios";
-import { API_BASE_URL } from "../constants";
+import { API_BASE_URL,USER_LANGUAGE,CREATESCHEDULE,SAVE,CANCEL,REPEAT,ACTIVE,MESSAGE,RUNAT,SOMECHANNELNAME,SOMEMESSAGETITLE,NEWMESSAGE,TYPEYOURMESSAGE } from "../constants";
 const headers = {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
 };
+
 
 export default {
   name: "formaS",
@@ -94,8 +106,13 @@ export default {
     return {
       messagesData: [],
       channelsData: [],
-      messageTitle: "Some message title",
-      channelName: "Some channel name",
+
+      messageTitle:  localStorage.getItem(
+        SOMEMESSAGETITLE
+      ),
+      channelName: localStorage.getItem(
+        SOMECHANNELNAME),
+
       targetMess: "",
       messId: "",
       showTitleError: false,
@@ -103,6 +120,7 @@ export default {
       showChannelError: false,
       repeat: false,
       active: false,
+
       formType: "Create",
       showMessageOption: true,
       channelId: "",
@@ -128,6 +146,7 @@ export default {
           "Nov",
           "Dec"
         ],
+
       placeholder: {
           date: "Select Date",
           dateRange: "Select Date Range"
@@ -142,7 +161,37 @@ export default {
   },
 
   mounted: async function() {
-
+if (localStorage.getItem(USER_LANGUAGE) != "en") {
+      document.getElementById("formTitle").innerHTML= localStorage.getItem(
+        CREATESCHEDULE
+      );
+       document.getElementById("formTitle").style.color="black";
+       document.getElementById("submit").value= localStorage.getItem(
+        SAVE
+      );
+        document.getElementById("cancel").value= localStorage.getItem(
+        CANCEL
+      );
+        /*document.getElementById("field1").innerHTML= localStorage.getItem(
+        SOMEMESSAGETITLE
+      );*/
+      /* document.getElementById("someChannelName").innerHTML= localStorage.getItem(
+        SOMECHANNELNAME
+      );*/
+      document.getElementsByClassName("checkText")[0].innerHTML = localStorage.getItem(
+       REPEAT
+      );
+      document.getElementsByClassName("la")[0].innerHTML = localStorage.getItem(
+       MESSAGE
+      );
+       document.getElementsByClassName("la")[1].innerHTML = localStorage.getItem(
+       RUNAT
+      );
+      document.getElementsByClassName("la")[2].innerHTML = localStorage.getItem(SOMECHANNELNAME)
+      ;
+      document.getElementsByClassName("checkText")[1].innerHTML = localStorage.getItem(
+        ACTIVE
+      ); }
     if (this.$route.params.id == null) {
       try {
         const res = await axios.get(API_BASE_URL + "/api/messages" ,{ headers: headers });
@@ -274,7 +323,9 @@ export default {
       this.liveValidation = true;
       if (this.check_messageTitle(this.messageTitle) == false)
         this.invalid = true;
+
       if (this.check_date(this.datetime) == false) this.invalid = true;
+
       if (this.check_channelName(this.channelName) == false)
         this.invalid = true;
       if (this.invalid == true) {
@@ -290,12 +341,14 @@ export default {
           try {
             await axios.post(API_BASE_URL + "/api/schedules", {
               active: this.active,
+
               channelId: this.channelId,
               repeat: this.repeat,
               messageId: this.$route.params.id,
               runAt: this.datetime,
               intervalId: "1"
             }, { headers: headers });
+
             this.$emit("show-notification");
           } catch (err) {
             this.$emit("show-notification", -1);
@@ -303,12 +356,15 @@ export default {
         } else {
           try {
             await axios.put(
+
               API_BASE_URL + "/api/schedules/" + this.$route.params.id + "?active=false"
+
             );
             this.$emit("show-notification");
           } catch (err) {
             this.$emit("show-notification", -1);
           }
+
         }
       } else {
         try {
@@ -335,6 +391,7 @@ export default {
         );
         this.messId = this.targetMess[0].messageId;
       }
+
     },
     getChannelID(){
       if(this.channelsData.length>1){
@@ -343,6 +400,7 @@ export default {
       }
       else
         this.channelId = this.channelsData[0].id;
+
     }
   }
 };
@@ -584,6 +642,7 @@ span {
   left: 10px;
   z-index: 99;
   padding: 0px 5px;
+
 }
 
 .checkText {
@@ -641,6 +700,7 @@ span {
   background-color: #2196f3;
   border-color: #2196f3;
 }
+
 
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {

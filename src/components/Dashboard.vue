@@ -48,9 +48,13 @@ import { USER_EMAIL } from "../constants/index.js";
 import {
   CURRENT_USER_ROLE,
   THEME_ID,
+  USER_THEME,
   THEME,
   USER_NAME,
-  USER_PIC
+  USER_PIC,
+  LOGOUT,
+  PROFILE
+
 } from "../constants/index.js";
 import { ACCESS_TOKEN } from "../constants/index.js";
 import navigation from "./Navigation.vue";
@@ -81,19 +85,21 @@ export default {
         document.getElementById("name").innerHTML = response.data.name;
         document.getElementById("pic").src = response.data.imageUrl;
         localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
-        localStorage.setItem(THEME, response.data.userSettings.theme);
+
+        localStorage.setItem(USER_THEME, response.data.userSettings.theme);
+         localStorage.setItem(USER_LANGUAGE, response.data.userSettings.language);
+
       })
       .catch(err => {
         console.log(err);
       });
-    //onload funkcija
-    //this.create();
-    if (localStorage.getItem(THEME) == "light") {
+
+    if (localStorage.getItem(USER_THEME) == "light") {
       document.getElementById("dropdown").style.backgroundColor = "white";
-      //document.getElementById("divlist").style.backgroundColor="white";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "dark") {
       document.getElementById("dropdown").style.backgroundColor = "black";
-      //document.getElementById("divlist").style.backgroundColor="black";
+
+   
     }
 
     document.getElementById("email").innerHTML = localStorage.getItem(
@@ -102,19 +108,20 @@ export default {
     document.getElementById("name").innerHTML = localStorage.getItem(USER_NAME);
     document.getElementById("pic").src = localStorage.getItem(USER_PIC);
 
-    if (localStorage.getItem(THEME) == "light") {
+
+    if (localStorage.getItem(USER_THEME) == "light") {
       document.getElementById("dropdown").style.backgroundColor = "white";
-      //document.getElementById("divlist").style.backgroundColor="white";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "dark") {
       document.getElementById("dropdown").style.backgroundColor = "black";
-      //document.getElementById("divlist").style.backgroundColor="black";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
-      document.getElementsByClassName("option")[0].innerHTML = "Profil";
+      document.getElementsByClassName("option")[0].innerHTML = localStorage.getItem(PROFILE);
       document.getElementsByClassName(
         "option"
       )[1].innerHTML = localStorage.getItem(SETTINGS);
-      document.getElementsByClassName("option")[2].innerHTML = "Odjavi se";
+      document.getElementsByClassName("option")[2].innerHTML = localStorage.getItem(LOGOUT);
+
+
     }
   },
   methods: {
@@ -144,9 +151,11 @@ export default {
     },
     Translate() {
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
-      this.data.items[0].title = "Profil";
+
+      this.data.items[0].title = localStorage.getItem(PROFILE);
       this.data.items[1].title = localStorage.getItem(SETTINGS);
-      this.data.items[2].title = "Odjavi se";
+      this.data.items[2].title = localStorage.getItem(LOGOUT);
+
     }
     navigation.Translate();
   }
