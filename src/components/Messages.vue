@@ -134,9 +134,11 @@ export default {
   },
   mounted: function() {
     if (localStorage.getItem(THEME) == "light") {
+      this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("messages").style.backgroundColor = "white";
     } else if (localStorage.getItem(THEME) == "dark") {
+      this.$emit("change-dark");
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("messages").style.backgroundColor = "black";
     }

@@ -43,7 +43,7 @@ import {
   API_BASE_URL,
   USER_EMAIL,
   LANGUAGE,
-  THEME,
+  USER_THEME,
   CURRENT_USER_ROLE,
   NAME,
   USER_LANGUAGE,
@@ -51,44 +51,37 @@ import {
   ROLE,
   PROFILE,
   COLOR,
-  LOGOUT
+  LOGOUT,
+  THEME,
+  USER_NAME,
+  USER_PIC
 } from "../constants/index.js";
 export default {
   name: "profil",
   mounted: function() {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", API_BASE_URL + "/user/me");
-
-    xhr.setRequestHeader("Content-Type", "application/json");
-    if (localStorage.getItem(ACCESS_TOKEN)) {
-      xhr.setRequestHeader(
-        "Authorization",
-        "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-      );
-      //console.log("dohvati ga");
-    }
-    xhr.send();
-    xhr.onload = function() {
-      console.log("Signed in as: " + xhr.responseText);
-      var obj = JSON.parse(xhr.responseText);
-      console.log(localStorage.getItem(USER_EMAIL));
+    
       document.getElementById("email1").innerHTML = localStorage.getItem(
         USER_EMAIL
       );
-      document.getElementById("name1").innerHTML = obj.name;
-      document.getElementById("pic1").src = obj.imageUrl;
-      document.getElementById("language1").innerHTML = localStorage.getItem(
-        USER_LANGUAGE
+      document.getElementById("name1").innerHTML = localStorage.getItem(
+        USER_NAME
       );
-      document.getElementById("theme1").innerHTML = localStorage.getItem(THEME);
+      document.getElementById("pic1").src = localStorage.getItem(
+        USER_PIC
+      );
+      document.getElementById("language1").innerHTML =localStorage.getItem("language"+localStorage.getItem(
+        USER_LANGUAGE
+      ).toUpperCase());
+      document.getElementById("theme1").innerHTML = localStorage.getItem(USER_THEME);
       document.getElementById("role1").innerHTML = localStorage.getItem(
         CURRENT_USER_ROLE
       );
-    };
-    if (localStorage.getItem(THEME) == "light") {
+    if (localStorage.getItem(USER_THEME) == "light") {
+      this.$emit("change-light");
       document.getElementById("profile1").style.backgroundColor = "white";
       document.getElementById("profile1").style.color = "black";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "dark") {
+      this.$emit("change-dark");
       document.getElementById("profile").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("table").style.backgroundColor = "black";
@@ -100,7 +93,7 @@ export default {
         localStorage.getItem(NAME) + ":";
       document.getElementsByTagName("P")[8].innerHTML =
         localStorage.getItem(LANGUAGE) + ":";
-      document.getElementsByTagName("P")[10].innerHTML =  localStorage.getItem(COLOR);
+      document.getElementsByTagName("P")[10].innerHTML =  localStorage.getItem(THEME);
       document.getElementsByTagName("P")[12].innerHTML =
         localStorage.getItem(ROLE) + ":";
       document.getElementById("submit").innerHTML =localStorage.getItem(LOGOUT);
@@ -125,37 +118,37 @@ export default {
 
 <style scoped>
 .data p[data-v-47aa12d3] {
-  margin-left: 20px;
   text-align: left;
   display: inline;
 }
 
 #profile .data {
-  padding: 20px;
   padding-bottom: 0px;
   height: auto;
   background-color: #f1f1f1;
 }
+p{
+  font-size: 16.8px;;
+  color:#2c3e50;
+}
 #profile1 {
-  margin-left: 20px;
+  padding: 20px;
   height: 100%;
   width: 95%;
 }
 #profile {
+  background-color:#f1f1f1;
   box-sizing: border-box;
-  border: 2px solid grey;
   padding: 20px;
   padding-bottom: 0px;
   height: 60%;
-  background-color: white;
 }
 
 h1 {
   text-align: left;
-  padding-left: 10px;
-  margin-left: 20px;
   color: #2c3e50;
   margin-top: 0px;
+  margin-bottom:0px;
   width: 200px;
   float: left;
 }
@@ -165,7 +158,6 @@ h1 {
   width: 99%;
   float: right;
   background-color: white;
-  height: 72px;
 }
 .data p {
   margin-left: 20px;
@@ -173,8 +165,8 @@ h1 {
   text-align: left;
 }
 .data {
+  margin-left:0px;
   width: 100%;
-  margin-left: 20px;
 }
 #email {
   float: left;
@@ -237,9 +229,10 @@ button {
 }
 .data {
   background-color: #f1f1f1;
-  margin-top: 20px;
   width: 100%;
-  margin-left: 20px;
-  margin-right: 20px;
+}
+#name1,#language1,#role1,#theme1,#email1{
+  font-weight:300;
+
 }
 </style>

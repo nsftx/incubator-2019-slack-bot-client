@@ -48,6 +48,7 @@ import { USER_EMAIL } from "../constants/index.js";
 import {
   CURRENT_USER_ROLE,
   THEME_ID,
+  USER_THEME,
   THEME,
   USER_NAME,
   USER_PIC,
@@ -83,14 +84,15 @@ export default {
         document.getElementById("name").innerHTML = response.data.name;
         document.getElementById("pic").src = response.data.imageUrl;
         localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
-        localStorage.setItem(THEME, response.data.userSettings.theme);
+        localStorage.setItem(USER_THEME, response.data.userSettings.theme);
+         localStorage.setItem(USER_LANGUAGE, response.data.userSettings.language);
       })
       .catch(err => {
         console.log(err);
       });
-    if (localStorage.getItem(THEME) == "light") {
+    if (localStorage.getItem(USER_THEME) == "light") {
       document.getElementById("dropdown").style.backgroundColor = "white";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "dark") {
       document.getElementById("dropdown").style.backgroundColor = "black";
     }
 
@@ -100,9 +102,9 @@ export default {
     document.getElementById("name").innerHTML = localStorage.getItem(USER_NAME);
     document.getElementById("pic").src = localStorage.getItem(USER_PIC);
 
-    if (localStorage.getItem(THEME) == "light") {
+    if (localStorage.getItem(USER_THEME) == "light") {
       document.getElementById("dropdown").style.backgroundColor = "white";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "dark") {
       document.getElementById("dropdown").style.backgroundColor = "black";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {

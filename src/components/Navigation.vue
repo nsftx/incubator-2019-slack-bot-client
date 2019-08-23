@@ -69,6 +69,7 @@ import {
 import {
   USER_EMAIL,
   THEME,
+  USER_THEME,
   SETTINGS,
   COLOR,
   LANGUAGE,
@@ -87,14 +88,15 @@ import {
   CAUSE,CONSEQUENCE, PROFILE,NEWUSEREMAIL,CREATEMESSAGE,CREATESCHEDULE,CREATEUSER,RUNAT,SOMECHANNELNAME,SELECTDATE,NEWUSERROLE,TYPEYOURMESSAGE,SOMEMESSAGETITLE
 } from "../constants/index.js";
 import axios from "axios";
+import { async } from 'q';
 const headers = {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
 };
 export default {
   name: "navigation",
-  mounted: function() {
-    axios
+  mounted: async function() {
+    await axios
       .get(API_BASE_URL + "/user/me", {
         headers: headers
       })
@@ -105,16 +107,13 @@ export default {
         localStorage.setItem(USER_NAME, response.data.name);
         localStorage.setItem(USER_PIC, response.data.imageUrl);
         localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
-        localStorage.setItem(THEME, response.data.userSettings.theme);
-        localStorage.setItem(
-          USER_LANGUAGE,
-          response.data.userSettings.language
-        );
+        localStorage.setItem(USER_THEME, response.data.userSettings.theme);
+        localStorage.setItem(USER_LANGUAGE,response.data.userSettings.language);
       })
       .catch(err => {
         console.log(err);
       });
-    axios
+    await axios
       .get(API_BASE_URL + "/user/translation", {
         params: {
           language: localStorage.getItem(USER_LANGUAGE)
@@ -123,54 +122,18 @@ export default {
       })
       .then(
         response => {
-          localStorage.setItem(SETTINGS, response.data.settings);
-          localStorage.setItem(COLOR, response.data.theme);
-          localStorage.setItem(LANGUAGE, response.data.language);
-          localStorage.setItem(THEMEPARAGRAPH, response.data.selectColor);
-          localStorage.setItem(LANGUAGEPARAGRAPH, response.data.selectLanguage);
-          localStorage.setItem(MESSAGES, response.data.messages);
-          localStorage.setItem(SCHEDULES, response.data.schedules);
-          localStorage.setItem(USERS, response.data.users);
-          localStorage.setItem(TRIGGERS, response.data.triggers);
-          localStorage.setItem(TITLE, response.data.title);
-          localStorage.setItem(TEXT, response.data.text);
-          localStorage.setItem(MESSAGE, response.data.message);
-          localStorage.setItem(NEXTRUN, response.data.nextRun);
-          localStorage.setItem(ACTIVEAT, response.data.activeAt);
-          localStorage.setItem(REPEAT, response.data.repeat);
-          localStorage.setItem(CHANNEL, response.data.channel);
-          localStorage.setItem(TRIGGER, response.data.trigger);
-          localStorage.setItem(ACTIVE, response.data.active);
-          localStorage.setItem(NAME, response.data.name);
-          localStorage.setItem(ROLE, response.data.role);
-          localStorage.setItem(CREATEDAT, response.data.createdAt);
-          localStorage.setItem(SAVE, response.data.save);
-          localStorage.setItem(ERROR, response.data.error);
-          localStorage.setItem(ACTIVITY_LOG, response.data.activityLog);
-          localStorage.setItem(POLL, response.data.poll);
-           localStorage.setItem(LOGOUT, response.data.logOut);
-            localStorage.setItem(CAUSE, response.data.cause);
-             localStorage.setItem(CONSEQUENCE, response.data.consequence);
-             localStorage.setItem(PROFILE, response.data.profile);
-             localStorage.setItem(LOGOUT, response.data.logOut);
-             localStorage.setItem(CREATEMESSAGE, response.data.createMessage);
-             localStorage.setItem(CREATESCHEDULE, response.data.createSchedule);
-             localStorage.setItem(CREATEUSER, response.data.createUser);
-             localStorage.setItem(NEWUSEREMAIL, response.data.newUserEmail);
-             localStorage.setItem(NEWUSERROLE, response.data.newUserRole);
-             localStorage.setItem(SELECTDATE, response.data.selectDate);
-             localStorage.setItem(SOMECHANNELNAME, response.data.someChannelName);
-             localStorage.setItem(RUNAT, response.data.runAt);
-             localStorage.setItem(TYPEYOURMESSAGE, response.data.typeYourMessage);
-              localStorage.setItem(CANCEL, response.data.cancel);
-               localStorage.setItem(NEWMESSAGE, response.data.newMessage);
-                localStorage.setItem(SOMEMESSAGETITLE, response.data.someMessageTitle);
+          for (var key in response.data) {
+    if (response.data.hasOwnProperty(key)) {
+        localStorage.setItem(key,response.data[key]);
+    }
+}
           console.log(response);
         },
         error => {
           console.log(error);
         }
       );
+      console.log(localStorage.getItem(SETTINGS));
     if (localStorage.getItem(CURRENT_USER_ROLE) != "ADMIN") {
       document.getElementById("usertab").style.display = "none";
     }
