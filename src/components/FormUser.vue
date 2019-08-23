@@ -163,7 +163,9 @@ export default {
   },
   watch: {
     email(value) {
-      this.messageTitle = value;
+
+      this.email = value;
+
       if (this.liveValidation == true) this.check_email(value);
     },
 

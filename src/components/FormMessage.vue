@@ -12,7 +12,9 @@
         <div id="style-options">
           <div
             class="style-option"
+
             style="font-style: bold"
+
             :class="{styleOptionSelected: boldSelected}"
             @click="select('bold')"
           >Bold</div>
@@ -23,6 +25,7 @@
             @click="select('italic')"
           >Italic</div>
           <div
+
             class="style-option"
             :class="{styleOptionSelected: urlSelected}"
             @click="select('url')"
@@ -73,8 +76,16 @@
 </template>
 
 <script>
+import { ACCESS_TOKEN } from "../constants/index.js";
 import axios from "axios";
+
 import { API_BASE_URL, MESSAGES,TITLE,TEXT,CREATEMESSAGE,USER_LANGUAGE,TYPEYOURMESSAGE,SAVE,CANCEL,NEWMESSAGE} from "../constants";
+
+const headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
+
 
 export default {
   name: "formaM",
@@ -100,6 +111,7 @@ export default {
     if (this.$route.params.id != null) {
       this.create();
       this.formType = "Update";
+
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementById("formTitle").innerHTML= localStorage.getItem(
@@ -124,6 +136,7 @@ export default {
        document.getElementsByTagName("textarea")[0].placeholder = localStorage.getItem(
         TYPEYOURMESSAGE
       );
+
     }
   },
 
@@ -210,12 +223,14 @@ export default {
       } else if (this.urlSelected == true) this.text += " <http://url|text>";
     },
 
+
     preview() {
       this.text = this.text.replace(/_/g, "");
       this.text = this.text.replace(/\*/g, "");
       var tekst = this.text.bold();
       console.log(tekst);
     },
+
 
     async save() {
       this.liveValidation = true;
@@ -227,10 +242,12 @@ export default {
       } else {
         if (this.$route.params.id == null) {
           try {
+
             await axios.post(API_BASE_URL + "/api/messages", {
+
               title: this.title,
               text: this.text
-            });
+            },{ headers: headers });
           } catch (err) {
             this.$emit("show-notification", -1);
             this.$router.go(-1);

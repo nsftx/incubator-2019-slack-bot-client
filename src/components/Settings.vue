@@ -8,10 +8,12 @@
       <br />
       <br />
       <div id="select">
+
             <button
               id="color"
               v-on="on"
               v-on:input="bgc.backgroundColor = $event.target.value"
+
             >Select Theme</button>
             <br />
             <br />
@@ -28,6 +30,7 @@
       </div>
       <br />
       <div id="select">
+
             <button
               id="language"
               v-on="on"
@@ -35,6 +38,7 @@
             >Select Language</button>
             <br />
             <br />
+
          <input type="radio" id="one" value="English" v-model="picked">
 <label for="one">English</label>
 <br>
@@ -45,6 +49,7 @@
 <br>
 <br>
 <span>Picked: {{ picked }}</span>
+
       </div>
       <input type="button" value="Save" @click="Save()" id="submit" />
     </div>
@@ -71,12 +76,14 @@ import {
 } from "../constants/index.js";
 import {
   USER_EMAIL,
+
   USER_THEME,
   SETTINGS,
   THEME,
   LANGUAGE,
   SELECTCOLOR,
   SELECTLANGUAGE,
+
   USER_LANGUAGE
 } from "../constants/index.js";
 import { ACCESS_TOKEN, TRIGGERS, ACTIVEAT } from "../constants/index.js";
@@ -90,8 +97,11 @@ export default {
   name: "settings2",
   data() {
     return {
+
       picked: " ",
       picked1:" ",
+
+
       items3Value: "",
       items2Value: "",
       items2: [{ title: "dark" }, { title: "light" }],
@@ -102,12 +112,16 @@ export default {
     };
   },
   mounted: function() {
+
     if (localStorage.getItem(USER_THEME) == "light") {
+
       this.$emit("change-light");
       document.getElementById("settings2").style.backgroundColor = "white";
       document.getElementById("settings2").style.color = "black";
       document.getElementById("header").style.backgroundColor = "white";
+
     } else if (localStorage.getItem(USER_THEME) == "dark") {
+
       this.$emit("change-dark");
       document.getElementById("settings2").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
@@ -129,6 +143,7 @@ export default {
       })
       .then(
         response => {
+
           
           document.getElementById("color").innerHTML = localStorage.getItem(
            SELECTCOLOR
@@ -136,6 +151,7 @@ export default {
           document.getElementById("language").innerHTML = localStorage.getItem(
             SELECTLANGUAGE
           );
+
           document.getElementById("title").innerHTML = localStorage.getItem(
             SETTINGS
           );
@@ -152,6 +168,7 @@ export default {
       this.items2Value = this.items2[index].title;
       if (index == 0) {
         this.$emit("change-dark");
+
       document.getElementById("settings2").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("color").style.backgroundColor = "black";
@@ -161,6 +178,7 @@ export default {
       document.getElementById("languageparagraph").style.color = "black";
       document.getElementById("theme").style.color = "black";
       document.getElementById("profile").style.backgroundColor = "#2c3e50";
+
       } else if (index == 1) {
         this.$emit("change-light");
         document.getElementById("header").style.backgroundColor = "white";
@@ -204,10 +222,12 @@ export default {
   height: 100vh;
 }
 #header[data-v-47aa12d3] {
+
   display: block;
   width: 99%;
   float: right;
   background-color: white;
+
 }
 h1[data-v-47aa12d3] {
   margin-left: 0px;
@@ -228,6 +248,7 @@ h1[data-v-47aa12d3] {
   display: inline;
 }
 button[data-v-47aa12d3] {
+
   float: left;
   text-align: center;
 }
@@ -293,6 +314,7 @@ button[data-v-47aa12d3] {
 }
 h1 {
   float: left;
+
 }
 #settings2 {
   width: 100%;
@@ -309,6 +331,7 @@ h1 {
   background-color: #f1f1f1;
   margin-top: 20px;
   width: 100%;
+
   margin-right: 20px;
 }
 #email {
@@ -335,6 +358,7 @@ button {
 }
 #select {
   display: inline;
+
   width: 130px;
   margin-top: 0px;
   margin-left: 20px;
@@ -353,4 +377,5 @@ label{
 span{
   font-weight:100;
 }
+
 </style>

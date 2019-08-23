@@ -134,11 +134,13 @@ export default {
   },
   mounted: function() {
     if (localStorage.getItem(THEME) == "light") {
+
       this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("messages").style.backgroundColor = "white";
     } else if (localStorage.getItem(THEME) == "dark") {
       this.$emit("change-dark");
+
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("messages").style.backgroundColor = "black";
     }
@@ -179,7 +181,9 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
-            this.sortType
+
+            this.sortType, { headers: headers }
+
         );
 
         if (res.data.totalPages < this.page)
@@ -229,37 +233,19 @@ export default {
     async deleteMessage(id) {
       await axios.delete(API_BASE_URL + "/api/messages/" + id);
       var pg = this.page - 1;
+
+
       try {
-        var res;
-        if (this.titleSort == true)
-          res = await axios.get(
+        const  res = await axios.get(
             API_BASE_URL +
               "/api/messages?page=" +
               pg +
               "&size=" +
               this.rowSize +
-              "&sort=title," +
-              this.sortType
-          );
-        else if (this.textSort == true)
-          res = await axios.get(
-            API_BASE_URL +
-              "/api/messages?page=" +
-              pg +
-              "&size=" +
-              this.rowSize +
-              "&sort=text," +
-              this.sortType
-          );
-        else
-          res = await axios.get(
-            API_BASE_URL +
-              "/api/messages?page=" +
-              pg +
-              "&size=" +
-              this.rowSize +
-              "&sort=createdAt," +
-              this.sortType
+
+              "&sort=" + this.sortByValue + "," +
+              this.sortType, { headers: headers }
+
           );
 
         if (res.data.numberOfElements == 0) {
@@ -302,7 +288,9 @@ export default {
             "/api/messages?page=0&size=" +
             this.rowSize +
             "&sort=createdAt," +
-            this.sortType
+
+            this.sortType, { headers: headers }
+
         );
         this.messagesData = res.data.content;
         if (res.data.totalPages == 0) this.pagesSize = 1;

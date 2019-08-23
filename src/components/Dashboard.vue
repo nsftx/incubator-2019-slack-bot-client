@@ -54,6 +54,7 @@ import {
   USER_PIC,
   LOGOUT,
   PROFILE
+
 } from "../constants/index.js";
 import { ACCESS_TOKEN } from "../constants/index.js";
 import navigation from "./Navigation.vue";
@@ -84,16 +85,21 @@ export default {
         document.getElementById("name").innerHTML = response.data.name;
         document.getElementById("pic").src = response.data.imageUrl;
         localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
+
         localStorage.setItem(USER_THEME, response.data.userSettings.theme);
          localStorage.setItem(USER_LANGUAGE, response.data.userSettings.language);
+
       })
       .catch(err => {
         console.log(err);
       });
+
     if (localStorage.getItem(USER_THEME) == "light") {
       document.getElementById("dropdown").style.backgroundColor = "white";
     } else if (localStorage.getItem(USER_THEME) == "dark") {
       document.getElementById("dropdown").style.backgroundColor = "black";
+
+   
     }
 
     document.getElementById("email").innerHTML = localStorage.getItem(
@@ -101,6 +107,7 @@ export default {
     );
     document.getElementById("name").innerHTML = localStorage.getItem(USER_NAME);
     document.getElementById("pic").src = localStorage.getItem(USER_PIC);
+
 
     if (localStorage.getItem(USER_THEME) == "light") {
       document.getElementById("dropdown").style.backgroundColor = "white";
@@ -113,6 +120,8 @@ export default {
         "option"
       )[1].innerHTML = localStorage.getItem(SETTINGS);
       document.getElementsByClassName("option")[2].innerHTML = localStorage.getItem(LOGOUT);
+
+
     }
   },
   methods: {
@@ -142,9 +151,11 @@ export default {
     },
     Translate() {
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
+
       this.data.items[0].title = localStorage.getItem(PROFILE);
       this.data.items[1].title = localStorage.getItem(SETTINGS);
       this.data.items[2].title = localStorage.getItem(LOGOUT);
+
     }
     navigation.Translate();
   }

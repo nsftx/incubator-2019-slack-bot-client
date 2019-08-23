@@ -43,6 +43,7 @@ import {
   API_BASE_URL,
   USER_EMAIL,
   LANGUAGE,
+
   USER_THEME,
   CURRENT_USER_ROLE,
   NAME,
@@ -55,10 +56,12 @@ import {
   THEME,
   USER_NAME,
   USER_PIC
+
 } from "../constants/index.js";
 export default {
   name: "profil",
   mounted: function() {
+
     
       document.getElementById("email1").innerHTML = localStorage.getItem(
         USER_EMAIL
@@ -82,10 +85,12 @@ export default {
       document.getElementById("profile1").style.color = "black";
     } else if (localStorage.getItem(USER_THEME) == "dark") {
       this.$emit("change-dark");
+
       document.getElementById("profile").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("table").style.backgroundColor = "black";
       document.getElementById("profile1").style.color = "white";
+
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(PROFILE);
@@ -112,43 +117,54 @@ export default {
       alert("You're safely logged out!");
       this.$router.push("/login");
     }
+
   }
 };
 </script>
 
 <style scoped>
 .data p[data-v-47aa12d3] {
+
+  margin-left: 20px;
+
   text-align: left;
   display: inline;
 }
 
 #profile .data {
+
   padding-bottom: 0px;
   height: auto;
   background-color: #f1f1f1;
 }
+
 p{
   font-size: 16.8px;;
   color:#2c3e50;
 }
 #profile1 {
   padding: 20px;
+
   height: 100%;
   width: 95%;
 }
 #profile {
+
   background-color:#f1f1f1;
   box-sizing: border-box;
   padding: 20px;
   padding-bottom: 0px;
   height: 60%;
+
 }
 
 h1 {
   text-align: left;
+
   color: #2c3e50;
   margin-top: 0px;
   margin-bottom:0px;
+
   width: 200px;
   float: left;
 }
@@ -158,6 +174,7 @@ h1 {
   width: 99%;
   float: right;
   background-color: white;
+
 }
 .data p {
   margin-left: 20px;
@@ -165,8 +182,10 @@ h1 {
   text-align: left;
 }
 .data {
+
   margin-left:0px;
   width: 100%;
+
 }
 #email {
   float: left;
@@ -229,10 +248,12 @@ button {
 }
 .data {
   background-color: #f1f1f1;
+
   width: 100%;
 }
 #name1,#language1,#role1,#theme1,#email1{
   font-weight:300;
+
 
 }
 </style>

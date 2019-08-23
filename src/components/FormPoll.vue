@@ -8,8 +8,10 @@
             <label id="close-icon" @click="exit" style="font-size: 20px">X</label>
           </p>
         </div>
+
           <label class="la">Title</label>
           <div id="inner-wrap">
+
           <input
             autocomplete="off"
             type="text"
@@ -20,18 +22,77 @@
             :class="{errorBorder: showTitleError, noErrorBorder: !showTitleError}"
           />
           <span v-show="showTitleError">Title size is minimum 3 characters</span>
-          <br> <br>
+
+          <br />
+          <br />
 
           <label>Choices:</label>
-          <input type="text" v-for="(choice, index) in choices" :key="index" v-model="choice.choiceValue" :class="{noErrorBorder: true}" :placeholder="index+1 + '.'"/>
+          <input
+            type="text"
+            v-for="(choice, index) in choices"
+            :key="index"
+            v-model="choice.choiceValue"
+            :class="{noErrorBorder: true}"
+            :placeholder="index+1 + '.'"
+            class="choices"
+          />
 
-		  <input type="button" value="+" @click="addNewChoice" :disabled="choices.length == 5" id="choiceButton" :class="{disabledButton: (choices.length == 5)}">
+          <input
+            type="button"
+            value="+"
+            @click="addNewChoice"
+            :disabled="choices.length == 5"
+            id="choiceButton"
+            :class="{disabledButton: (choices.length == 5)}"
+          />
+          <input
+            type="button"
+            value="-"
+            @click="removeChoice"
+            :disabled="choices.length == 2"
+            id="choiceButton"
+            :class="{disabledButton: (choices.length == 2)}"
+          />
 
+          <span v-show="showChoiceError">Choice can not be empty</span>
+          <br />
+          <span
+            v-show="choices.length==5"
+            style="color: #888"
+          >Maximum number of choices has been reached</span>
 
-      <span v-show="showChoiceError">Choice can not be empty</span> <br>
-		  <span v-show="choices.length==5" style="color: #888"> Maximum number of choices has been reached </span>
+          <br />
+          <br />
 
-		<br> <br> <br>
+          <label class="la">Channel name</label>
+          <select
+            id="field3"
+            v-model="channelName"
+            @click="getChannelID"
+            :class="{errorBorder: showChannelError, noErrorBorder: !showChannelError}"
+            :disabled="formType=='Update'"
+          >
+            <option disabled selected> {{channelName}} </option>
+            <option v-for="channel in channelsData" :key="channel.channelName">{{ channel.channelName }}</option>
+          </select>
+
+          <span v-show="showChannelError">Channel name is required</span>
+          <br>
+
+          <label class="la2">End date</label>
+          <br />
+          <div class="input-append date form_datetime">
+            <div>
+              <date-picker v-model="date" :lang="lang" style="margin-top: 8px"></date-picker>
+            </div>
+          </div>
+          <br />
+          <span v-show="showDateError">Date is required and must not be less then today date</span>
+          <br />
+
+          <br />
+          <br />
+
 
           <input type="button" value="Save" @click="save" id="submit" class="input-options" />
           <input type="button" value="Cancel" @click="exit" id="cancle" class="input-options" />
@@ -44,6 +105,9 @@
 <script>
 import { ACCESS_TOKEN } from "../constants/index.js";
 import axios from "axios";
+
+import DatePicker from "vue2-datepicker";
+import { API_BASE_URL } from "../constants";
 const headers = {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
@@ -51,31 +115,92 @@ const headers = {
 
 export default {
   name: "FormPoll",
+
+  components: { DatePicker },
+
   data() {
     return {
       title: "",
       choices: [],
       liveValidation: false,
       showTitleError: false,
-      showChoiceError: false
+
+      showChoiceError: false,
+      date: null,
+      showDateError: false,
+      active: true,
+      channelsData: [],
+      channelName: "Some channel name",
+      channelId: "",
+      targetChannel: "",
+      showChannelError: false,
+
+      time1: "",
+      time2: "",
+      time3: "",
+      lang: {
+        days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        months: [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec"
+        ],
+        pickers: [
+          "next 7 days",
+          "next 30 days",
+          "previous 7 days",
+          "previous 30 days"
+        ],
+        placeholder: {
+          date: "Select Date",
+          dateRange: "Select Date Range"
+        }
+      }
     };
   },
 
-  mounted: function() 
-  {
-    this.choices.push({choiceValue: ""});
-    this.choices.push({choiceValue: ""});
+  mounted: async function() {
+    this.choices.push({ choiceValue: "" });
+    this.choices.push({ choiceValue: "" });
+    document.getElementsByClassName("mx-input-append")[0].style.padding = "0px";
+
+    try {
+      const res = await axios.get(API_BASE_URL + "/api/channels");
+      this.channelsData = res.data;
+    } catch (err) {
+      this.$emit("show-notification", -1);
+    }
   },
 
   watch: {
-    choices(value){
-      this.choices = value;
-      if(this.liveValidation == true) this.check_choices(value);
+    date(value) {
+      if (this.liveValidation == true) this.check_date(value);
+    },
+
+    choices: {
+      handler: function() {
+        if (this.liveValidation == true) this.check_choices(this.choices);
+      },
+      deep: true
     },
 
     title(value) {
-      this.title = value;
       if (this.liveValidation == true) this.check_title(value);
+    },
+
+    channelName(value) {
+      this.channelName = value;
+      if (this.liveValidation == true) this.check_channelName(value);
+
     }
   },
 
@@ -83,12 +208,30 @@ export default {
     exit() {
       this.$router.go(-1);
     },
+
+
+    addBorder() {
+      for (var i = 0; i < this.choices.length; i++) {
+        if (this.choices[i].choiceValue == "") {
+          document.getElementsByClassName("choices")[i].style.borderColor =
+            "red";
+        } else
+          document.getElementsByClassName("choices")[i].style.borderColor =
+            "rgba(0, 0, 0, 0.2)";
+      }
+    },
+
     addNewChoice() {
-      this.choices.push({choiceValue: ""});
+      this.choices.push({ choiceValue: "" });
+      this.addBorder();
+    },
+
+    removeChoice() {
+      this.choices.pop();
     },
 
     check_title(value) {
-      if (this.title.length<3) {
+      if (this.title.length < 3) {
         this.showTitleError = true;
         return false;
       } else {
@@ -97,69 +240,92 @@ export default {
       }
     },
 
-    check_choices(value)
-    {
-      for(var i=0; i<this.choices.length; i++)
-      {
-        if(this.choices[i].choiceValue == "")
-        {
+
+    check_choices(value) {
+      var checkError = false;
+      for (var i = 0; i < this.choices.length; i++) {
+        if (this.choices[i].choiceValue == "") {
+          document.getElementsByClassName("choices")[i].style.borderColor =
+            "red";
           this.showChoiceError = true;
-          return false;
-        }
+          checkError = true;
+        } else
+          document.getElementsByClassName("choices")[i].style.borderColor =
+            "rgba(0, 0, 0, 0.2)";
       }
+      if (checkError == true) return false;
 
       this.showChoiceError = false;
       return true;
     },
 
-    save() {
-    this.liveValidation = true;
-    if (this.check_title(this.title) == false) this.invalid = true;
-    if(this.check_choices(this.choices) == false) this.invalid = true;
-    if (this.invalid == true) {
+
+    check_date(value) {
+      var today = new Date();
+      if (this.date == null || today >= this.date) {
+        var inputi = document.getElementsByClassName("mx-input")[0];
+        inputi.style.borderColor = "rgb(253, 38, 38)";
+        this.showDateError = true;
+        return false;
+      } else {
+        var inputi = document.getElementsByClassName("mx-input")[0];
+        inputi.style.borderColor = "rgba(0, 0, 0, 0.2)";
+        this.showDateError = false;
+        return true;
+      }
+    },
+
+    check_channelName(value) {
+      if (this.channelName == "Some channel name") {
+        this.showChannelError = true;
+        return false;
+      } else {
+        this.showChannelError = false;
+        return true;
+      }
+    },
+
+    async save() {
+      this.liveValidation = true;
+      if (this.check_title(this.title) == false) this.invalid = true;
+      if (this.check_date(this.date) == false) this.invalid = true;
+      if (this.check_choices(this.choices) == false) this.invalid = true;
+      if (this.check_channelName(this.channelName) == false)
+      if (this.invalid == true) {
         this.invalid = false;
         return;
-    } 
+      }
 
-    console.log(this.choices);
-
-		/*
-      axios
-        .post(
-          "http://localhost:8080/user/create",
-          { email: this.title, role: this.roleType },
-          {
-            headers: headers
-          }
-        )
-        .then(
-          response => {
-            console.log(response);
-          },
-          error => {
-            console.log(error);
-          }
-        );
-      /*if(this.$route.params.id == null)
-			{
-				alert("Sacuvaj");
-			}
-			else
-			{
-				alert("Update -> " + this.$route.params.id);
-			}*/
+      try
+      {
+      await axios.post(
+        API_BASE_URL + "/api/polls",
+        {
+          active: this.active,
+          channel: this.channelId,
+          choiceList: this.choices,
+          title: this.title
+        },
+        { headers: headers }
+      );
+      }catch(err)
+      {
+        this.$emit("show-notification", -1);
+        this.$router.go(-1);        
+      }
+      this.$emit("show-notification");
+      this.$emit("reload-poll");
       this.$router.go(-1);
+    },
+
+    getChannelID(){
+      if(this.channelsData.length>1){
+        this.targetChannel = this.channelsData.filter(obj => obj.channelName == this.channelName);
+        this.channelId = this.targetChannel[0].id;
+      }
+      else
+        this.channelId = this.channelsData[0].id;
     }
-    /*async create(){
-			const res = await axios.get("../../jsonM.txt");
-			this.title = res.data.title;
-			this.text = res.data.text;
-		},
-		async destroyed(){
-			this.title = "",
-			this.text = ""
-		}
-  },*/
   }
 };
 
@@ -186,6 +352,23 @@ export default {
   z-index: 120;
   padding-bottom: 50px;
 }
+
+
+.mx-input {
+  overflow: visible;
+}
+
+.mx-input-append {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+}
+
+.mx-datepicker {
+  width: 100%;
+}
+
 
 #form-style-10 #inner-wrap {
   display: block;
@@ -329,36 +512,49 @@ export default {
   top: 10px;
 }
 
-#form-style-10 #choiceButton{
-	float: right;
-	height: 30px;
-	width: 30px;
-	background-color: #0080ff;
-	color: white;
-	border-radius: 50%;
-	font-size: 25px;
-	line-height: 10px;
+
+#form-style-10 #choiceButton {
+  float: right;
+  height: 30px;
+  width: 30px;
+  background-color: #0080ff;
+  color: white;
+  border-radius: 50%;
+  font-size: 25px;
+  line-height: 10px;
+  margin-right: 0px;
+  margin-left: 10px;
 }
 
-.disabledButton{
-	display: none;
+.disabledButton {
+  display: none;
 }
 
 .errorBorder {
-    border: 1px inset rgb(253, 38, 38);
+  border: 1px inset rgb(253, 38, 38);
 }
 
-.noErrorBorder{
-    border: 1px inset rgba(0, 0, 0, 0.2);
+.noErrorBorder {
+  border: 1px inset rgba(0, 0, 0, 0.2);
 }
 
-#filed1{
+#filed1 {
   border: unset;
 }
 
-span{
+span {
   color: rgb(253, 38, 38);
   font-weight: 400;
+}
+
+
+.la2 {
+  position: relative;
+  top: 15px;
+  left: 15px;
+  background-color: white;
+  z-index: 1;
+  padding: 0px 4px;
 }
 
 </style>

@@ -4,4 +4,5 @@ services:
         ports:
             - '80:80'
         container_name: dockerize-vuejs-app-1
-        image: vuejs-cookbook/dockerize-vuejs-app
+        build: .
+       

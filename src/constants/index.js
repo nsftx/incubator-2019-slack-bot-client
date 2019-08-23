@@ -1,3 +1,4 @@
+
 //urls
 export const API_BASE_URL = 'http://localhost:8080';
 export const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect'
@@ -54,4 +55,5 @@ export const CANCEL="cancel";
 export const SOMEMESSAGETITLE="someMessageTitle";
 export const LANGUAGEEN="languageEN";
 export const LANGUAGEFR="languageFR";
+
 

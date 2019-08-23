@@ -1,11 +1,12 @@
-
 <template>
   <div id="formaS">
     <div class="form-style-10">
       <form id="forma">
         <div class="section">
           <p id="section-text">
-            <span id="formTitle"> {{ formType }} Schedule </span>
+
+            {{ formType }} Schedule
+
             <label id="close-icon" @click="exit">x</label>
           </p>
         </div>
@@ -18,8 +19,11 @@
             v-model="messageTitle"
             @click="getMessageID"
             :class="{errorBorder: showTitleError, noErrorBorder: !showTitleError}"
+
+            :disabled="formType=='Update'"
           >
-            <option id="messageTitle" disabled selected>{{ messageTitle }}</option>
+            <option disabled selected>{{ messageTitle }}</option>
+
             <option
               v-for="message in messagesData"
               :key="message.messageId"
@@ -34,21 +38,27 @@
           <br />
           <div class="input-append date form_datetime">
             <div>
-              <date-picker v-model="date" :lang="lang" style="margin-top: 8px"></date-picker>
+
+              <date-picker v-model="datetime" :lang="lang" style="margin-top: 8px" type="datetime" format="[On] YYYY-MM-DD [at] HH:mm" :minute-step="5" :disabled="formType=='Update'" confirm></date-picker>
             </div>
           </div>
           <br />
-          <span v-show="showDateError">Date is required and must not be less then today date</span>
+          <span v-show="showDateError">Date and time is required and must not be less then current date and time</span>
+
           <br />
 
           <label class="la">Channel name</label>
           <select
             id="field3"
             v-model="channelName"
+
+            @click="getChannelID"
             :class="{errorBorder: showChannelError, noErrorBorder: !showChannelError}"
+            :disabled="formType=='Update'"
           >
-            <option id="someChannelName" disabled selected>Some channel name</option>
-            <option v-for="channel in channelsData" :key="channel.name">{{ channel.name }}</option>
+            <option disabled selected> {{channelName}} </option>
+            <option v-for="channel in channelsData" :key="channel.channelName">{{ channel.channelName }}</option>
+
           </select>
 
           <span v-show="showChannelError">Channel name is required</span>
@@ -58,7 +68,9 @@
 
           <label class="container">
             <p class="checkText">Repeat</p>
-            <input type="checkbox" checked="checked" v-model="repeat" />
+
+            <input type="checkbox" checked="checked" v-model="repeat" :disabled="formType=='Update'" />
+
             <span class="checkmark"></span>
           </label>
           <br />
@@ -76,9 +88,16 @@
 </template>
 
 <script>
-import axios from "axios";
+
 import DatePicker from "vue2-datepicker";
+import { ACCESS_TOKEN } from "../constants/index.js";
+import axios from "axios";
 import { API_BASE_URL,USER_LANGUAGE,CREATESCHEDULE,SAVE,CANCEL,REPEAT,ACTIVE,MESSAGE,RUNAT,SOMECHANNELNAME,SOMEMESSAGETITLE,NEWMESSAGE,TYPEYOURMESSAGE } from "../constants";
+const headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
+
 
 export default {
   name: "formaS",
@@ -87,11 +106,13 @@ export default {
     return {
       messagesData: [],
       channelsData: [],
+
       messageTitle:  localStorage.getItem(
         SOMEMESSAGETITLE
       ),
       channelName: localStorage.getItem(
         SOMECHANNELNAME),
+
       targetMess: "",
       messId: "",
       showTitleError: false,
@@ -99,14 +120,16 @@ export default {
       showChannelError: false,
       repeat: false,
       active: false,
-      date: null,
+
       formType: "Create",
       showMessageOption: true,
+      channelId: "",
+      targetChannel: "",
 
-      time1: "",
-      time2: "",
-      time3: "",
-      // custom lang
+
+      datetime: new Date(),
+      date: "",
+      time: "",
       lang: {
         days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
         months: [
@@ -123,22 +146,22 @@ export default {
           "Nov",
           "Dec"
         ],
-        pickers: [
-          "next 7 days",
-          "next 30 days",
-          "previous 7 days",
-          "previous 30 days"
-        ],
-        placeholder: {
+
+      placeholder: {
           date: "Select Date",
           dateRange: "Select Date Range"
-        }
+      },
+      timePickersOptions: {
+        start: "00:00",
+        step: "00:10",
+        end: "23:50"
+      },
       }
     };
   },
 
   mounted: async function() {
-     if (localStorage.getItem(USER_LANGUAGE) != "en") {
+if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementById("formTitle").innerHTML= localStorage.getItem(
         CREATESCHEDULE
       );
@@ -168,13 +191,10 @@ export default {
       ;
       document.getElementsByClassName("checkText")[1].innerHTML = localStorage.getItem(
         ACTIVE
-      );
-    }
-    document.getElementsByClassName("mx-input-append")[0].style.padding = "0px";
-
+      ); }
     if (this.$route.params.id == null) {
       try {
-        const res = await axios.get(API_BASE_URL + "/api/messages");
+        const res = await axios.get(API_BASE_URL + "/api/messages" ,{ headers: headers });
         this.messagesData = res.data.content;
       } catch (err) {
         this.$emit("show-notification", -1);
@@ -185,12 +205,8 @@ export default {
 
       if (path == "/dashboard/messages/newSchedule") {
         try {
-          const res = await axios.get(
-            API_BASE_URL + "/api/messages/" + this.$route.params.id
-          );
-          this.messagesData = res.data;
-          this.messageTitle = this.messagesData.title;
-          this.showMessageOption = false;
+          const res = await axios.get(API_BASE_URL + "/api/messages/" + this.$route.params.id)
+          this.messageTitle = res.data.title;
         } catch (err) {
           this.$emit("show-notification", -1);
         }
@@ -211,7 +227,7 @@ export default {
           this.$emit("show-notification", -1);
         }
         try {
-          const resM = await axios.get(API_BASE_URL + "/api/messages");
+          const resM = await axios.get(API_BASE_URL + "/api/messages", { headers: headers });
           this.messagesData = resM.data.content;
         } catch (err) {
           this.$emit("show-notification", -1);
@@ -219,13 +235,8 @@ export default {
       }
     }
     try {
-      //Aplikacija nije povezana sa listom kanala
       const res = await axios.get(API_BASE_URL + "/api/channels");
-      this.channelsData = [
-        { name: "#general" },
-        { name: "#incubator" },
-        { name: "kanal 1" }
-      ];
+      this.channelsData = res.data;
     } catch (err) {
       this.$emit("show-notification", -1);
     }
@@ -237,8 +248,8 @@ export default {
       if (this.liveValidation == true) this.check_messageTitle(value);
     },
 
-    date(value) {
-      this.date = value;
+    datetime(value) {
+      this.datetime = value;
       if (this.liveValidation == true) this.check_date(value);
     },
 
@@ -275,13 +286,33 @@ export default {
 
     check_date(value) {
       var today = new Date();
-      if (this.date == null || today >= this.date) {
-        var inputi = document.getElementsByClassName("mx-input")[0];
+      var inputi = document.getElementsByClassName("mx-input")[0];
+      if((this.datetime.getFullYear()==today.getFullYear() && this.datetime.getMonth()==today.getMonth() && this.datetime.getDay() == today.getDay())==true)
+      {
+        if(this.datetime.getHours()>today.getHours())
+        {
+          this.showDateError = false;
+          inputi.style.borderColor = "rgba(0, 0, 0, 0.2)";
+          return true;
+        }
+        else if(this.datetime.getHours()==today.getHours() && this.datetime.getMinutes() > today.getMinutes())
+        {
+          this.showDateError = false;
+          inputi.style.borderColor = "rgba(0, 0, 0, 0.2)";
+          return true;
+        }
+        else
+        {
+          inputi.style.borderColor = "red";
+          this.showDateError = true;
+          return false;
+        }
+      }
+      else if (today > this.datetime) {
         inputi.style.borderColor = "red";
         this.showDateError = true;
         return false;
       } else {
-        var inputi = document.getElementsByClassName("mx-input")[0];
         inputi.style.borderColor = "rgba(0, 0, 0, 0.2)";
         this.showDateError = false;
         return true;
@@ -292,7 +323,9 @@ export default {
       this.liveValidation = true;
       if (this.check_messageTitle(this.messageTitle) == false)
         this.invalid = true;
-      if (this.check_date(this.date) == false) this.invalid = true;
+
+      if (this.check_date(this.datetime) == false) this.invalid = true;
+
       if (this.check_channelName(this.channelName) == false)
         this.invalid = true;
       if (this.invalid == true) {
@@ -308,12 +341,14 @@ export default {
           try {
             await axios.post(API_BASE_URL + "/api/schedules", {
               active: this.active,
-              channelId: this.channelName,
+
+              channelId: this.channelId,
               repeat: this.repeat,
               messageId: this.$route.params.id,
-              runAt: this.date,
+              runAt: this.datetime,
               intervalId: "1"
-            });
+            }, { headers: headers });
+
             this.$emit("show-notification");
           } catch (err) {
             this.$emit("show-notification", -1);
@@ -321,30 +356,26 @@ export default {
         } else {
           try {
             await axios.put(
-              API_BASE_URL + "/api/schedules/" + this.$route.params.id,
-              {
-                active: this.active,
-                channelId: this.channelName,
-                messageId: this.messId,
-                repeat: this.repeat,
-                runAt: this.date
-              }
+
+              API_BASE_URL + "/api/schedules/" + this.$route.params.id + "?active=false"
+
             );
             this.$emit("show-notification");
           } catch (err) {
             this.$emit("show-notification", -1);
           }
+
         }
       } else {
         try {
           await axios.post(API_BASE_URL + "/api/schedules", {
             active: this.active,
-            channelId: this.channelName,
+            channelId: this.channelId,
             messageId: this.messId,
             repeat: this.repeat,
-            runAt: this.date,
+            runAt: this.datetime,
             intervalId: "1"
-          });
+          }, { headers: headers });
           this.$emit("show-notification");
         } catch (err) {
           this.$emit("show-notification", -1);
@@ -360,6 +391,16 @@ export default {
         );
         this.messId = this.targetMess[0].messageId;
       }
+
+    },
+    getChannelID(){
+      if(this.channelsData.length>1){
+        this.targetChannel = this.channelsData.filter(obj => obj.channelName == this.channelName);
+        this.channelId = this.targetChannel[0].id;
+      }
+      else
+        this.channelId = this.channelsData[0].id;
+
     }
   }
 };
@@ -601,6 +642,7 @@ span {
   left: 10px;
   z-index: 99;
   padding: 0px 5px;
+
 }
 
 .checkText {
@@ -658,6 +700,7 @@ span {
   background-color: #2196f3;
   border-color: #2196f3;
 }
+
 
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {

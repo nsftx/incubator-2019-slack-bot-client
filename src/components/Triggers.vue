@@ -198,7 +198,9 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
-            this.sortType
+
+            this.sortType, { headers: headers }
+
         );
 
         if (res.data.totalPages < this.page)
@@ -246,7 +248,10 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
-            this.sortType
+
+            this.sortType, 
+            { headers: headers }
+
         );
 
         if (res.data.numberOfElements == 0) {
@@ -286,7 +291,9 @@ export default {
     async create() {
       try {
         const res = await axios.get(
-          API_BASE_URL + "/api/triggers?page=0&size=" + this.rowSize
+
+          API_BASE_URL + "/api/triggers?page=0&size=" + this.rowSize + "&sort=createdAt," + this.sortType, { headers: headers }
+
         );
         this.triggersData = res.data.content;
         if (res.data.totalPages == 0) this.pagesSize = 1;
@@ -386,7 +393,9 @@ body {
 }
 
 .linear2 {
-  left: 50%;
+
+  left: 52%;
+
 }
 
 #btn {

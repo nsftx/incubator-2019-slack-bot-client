@@ -16,9 +16,13 @@ import Profil from "./components/Profile.vue"
 import settings from "./components/Settings.vue"
 import OAuth2RedirectHandler from "./components/OAuth2RedirectHandler.vue"
 import Error from "./components/Error.vue"
+
 import poll from "./components/Poll.vue"
+//import Audit from "./components/Audit.vue"
+
+//import poll from "./components/poll.vue"
 import FormPoll from "./components/FormPoll.vue"
-import Audit from "./components/Audit.vue"
+import Activity from "./components/Activity.vue"
 import viewPoll from "./components/viewPoll.vue"
 
 Vue.config.productionTip = false;
@@ -132,8 +136,9 @@ const router = new VueRouter({
               ]
           },
           {
-            path: "audit",
-            component: Audit,
+
+            path: "activity",
+            component: Activity,
           },
           {
             path: "/settings",
