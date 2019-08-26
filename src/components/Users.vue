@@ -127,6 +127,7 @@ export default {
 
   mounted: function() {
     if (localStorage.getItem(THEME) == "light") {
+
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("divlist").style.backgroundColor = "white";
     } else if (localStorage.getItem(THEME) == "dark") {

@@ -55,6 +55,7 @@ import {
   THEME,
   USER_NAME,
   USER_PIC
+
 } from "../constants/index.js";
 export default {
   name: "profil",
@@ -82,6 +83,7 @@ export default {
       document.getElementById("profile1").style.color = "black";
     } else if (localStorage.getItem(USER_THEME) == "dark") {
       this.$emit("change-dark");
+
       document.getElementById("profile").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("table").style.backgroundColor = "black";
@@ -142,6 +144,7 @@ p{
   padding: 20px;
   padding-bottom: 0px;
   height: 61%;
+
 }
 
 h1 {
@@ -149,6 +152,7 @@ h1 {
   color: #2c3e50;
   margin-top: 0px;
   margin-bottom:0px;
+
   width: 200px;
   float: left;
 }
@@ -167,6 +171,7 @@ h1 {
 .data {
   margin-left:0px;
   width: 100%;
+
 }
 #email {
   float: left;
@@ -233,6 +238,7 @@ button {
 }
 #name1,#language1,#role1,#theme1,#email1{
   font-weight:300;
+
 
 }
 </style>

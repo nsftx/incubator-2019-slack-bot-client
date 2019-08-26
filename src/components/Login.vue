@@ -4,7 +4,9 @@
     <div id="right">
       <div id="right-content">
         <a id="btn btn-block social-btn google" href>
-          <i class="fab fa-google">| Sign In With Google</i>
+
+          <!--<i class="fab fa-google">| Sign In With Google</i>-->
+          <div id="google-sign"></div>
         </a>
       </div>
     </div>
@@ -19,7 +21,6 @@
 
 <script>
 import { GOOGLE_AUTH_URL } from "../constants/index.js";
-//import GSignInButton from "vue-google-signin-button";
 export default {
   name: "login",
   methods: {},
@@ -35,6 +36,16 @@ export default {
 <style scoped>
 #login {
   height: 100vh;
+
+}
+
+#google-sign{
+  height: 50px;
+  width: 300px;
+
+  background-image: url("../assets/google-signin.png");
+  background-position: center;
+  background-size: cover;
 }
 
 #right {
@@ -50,7 +61,7 @@ export default {
   position: absolute;
   font-size: 20px;
   right: 15%;
-  top: 40%;
+  top: 30%;
   display: flex;
   text-align: center;
   flex-direction: column;
@@ -103,6 +114,11 @@ i:hover {
 
   background-color: white;
 }
+@media only screen and (max-width: 600px) {
+  #login {
+    display: block;
+  }
+
 
 #left h1 {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
@@ -128,6 +144,7 @@ i:hover {
   position: absolute;
   display: block;
 }
+
 @media only screen and (max-width: 600px) {
   #login {
     display: block;
@@ -173,7 +190,6 @@ i:hover {
   #right-content i:hover {
     color: rgb(116, 167, 233);
   }
-
   #left {
     float: none;
     box-sizing: border-box;
@@ -200,7 +216,8 @@ i:hover {
   #logo {
     position: absolute;
     height: 70px;
-    width: 70px;
+
+    width: 220px;
     top: 10%;
     left: 50%;
     transform: translatex(-50%);

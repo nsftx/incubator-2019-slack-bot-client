@@ -5,6 +5,7 @@
         <div id="section">
           <p>
             <span id="createUser"> Create User </span>
+
             <label id="close-icon" @click="exit" style="font-size: 20px">X</label>
           </p>
         </div>
@@ -29,6 +30,7 @@
             :class="{errorBorder: roleError, noErrorBorder: !roleError}"
           >
             <option disabled selected>{{roleType}}</option>
+
             <option v-for="rol in role" :key="rol.name">{{ rol }}</option>
           </select>
           <span v-show="roleError">User role is required</span>
@@ -42,7 +44,9 @@
 </template>
 
 <script>
+
 import { ACCESS_TOKEN,USER_LANGUAGE,USER_THEME,ROLE,CREATEUSER,CANCEL,SAVE, NEWUSERROLE, NEWUSEREMAIL, USER } from "../constants/index.js";
+
 import axios from "axios";
 const headers = {
   "Content-Type": "application/json",
@@ -54,8 +58,10 @@ export default {
   data() {
     return {
       email: "",
+
       role: ["ADMIN", localStorage.getItem(USER)],
       roleType: localStorage.getItem(NEWUSERROLE),
+
       emailError: false,
       roleError: false,
       liveValidation: false,
@@ -86,6 +92,7 @@ export default {
         "LABEL"
       )[2].innerHTML = localStorage.getItem(ROLE);
       document.getElementById("cancle").value=  localStorage.getItem(CANCEL);
+
       document.getElementsByTagName("INPUT")[1].value = localStorage.getItem(
         SAVE
       );
@@ -165,7 +172,8 @@ export default {
   },
   watch: {
     email(value) {
-      this.messageTitle = value;
+
+      this.email = value;
       if (this.liveValidation == true) this.check_email(value);
     },
 

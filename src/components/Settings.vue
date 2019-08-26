@@ -41,7 +41,7 @@
 <br>
 <br>
 <span> <span id="picked2">Picked: </span> {{ picked2 }}</span>
-      </div>
+</div>
       <input type="button" value="Save" @click="Save()" id="submit" />
     </div>
   </div>
@@ -93,6 +93,7 @@ export default {
   },
   mounted: function() {
     if (localStorage.getItem(USER_THEME) == "light") {
+
       this.$emit("change-light");
       document.getElementById("settings2").style.backgroundColor = "white";
       document.getElementById("settings2").style.color = "black";
@@ -114,6 +115,7 @@ export default {
           document.getElementById("language").innerHTML = localStorage.getItem(
             SELECTLANGUAGE
           );
+
           document.getElementById("title").innerHTML = localStorage.getItem(
             SETTINGS
           );
@@ -131,18 +133,21 @@ export default {
        document.getElementById("select2").style.color= "black";
        //document.getElementById("profile").style.color="white";
       } else if (value=="Light") {
+
         this.$emit("change-light");
         document.getElementById("header").style.backgroundColor = "white";
         document.getElementById("settings2").style.backgroundColor = "white";
         document.getElementById("settings2").style.color = "black";
         document.getElementById("profile").style.backgroundColor = "#f1f1f1";
       }
+
     },
     Save() {
       axios
         .post(
           API_BASE_URL + "/user/userSettings",
           { theme: this.picked1, language: this.picked2 },
+
           {
             headers: headers
           }
@@ -150,6 +155,7 @@ export default {
         .then(
           response => {
             localStorage.setItem(USER_THEME, response.data.theme);
+
             localStorage.setItem(USER_LANGUAGE, response.data.language);
             console.log(response);
           },
@@ -288,6 +294,7 @@ h1 {
   display: flex;
   flex-direction: column;
   height: 60%;
+
   text-align: left;
 }
 #pic {
@@ -318,4 +325,5 @@ label{
 span{
   font-weight:100;
 }
+
 </style>

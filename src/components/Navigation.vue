@@ -1,18 +1,22 @@
 <template>
   <div class="tab">
     <div id="logo" class="tablinks"></div>
+
   
     <router-link to="/dashboard/messages" class="router-link">
       <button class="active">
         <v-icon color="white" style="margin-bottom: 10px">local_post_office</v-icon>
         <br /> <span> Messages </span>
+
       </button>
     </router-link>
 
     <router-link to="/dashboard/schedules" class="router-link">
       <button>
         <v-icon color="white" style="margin-bottom: 10px">assignment_turned_in</v-icon>
+
         <br /> <span> Schedules </span>
+
       </button>
     </router-link>
 
@@ -20,12 +24,14 @@
       <button>
         <v-icon color="white" style="margin-bottom: 10px">assistant</v-icon>
         <br /> <span>Triggers </span>
+
       </button>
     </router-link>
 
     <router-link to="/dashboard/poll" class="router-link">
       <button>
         <v-icon color="white" size="32" style="margin-bottom: 10px">poll</v-icon>
+
         <br /> <span> Poll </span>
       </button>
     </router-link>
@@ -34,13 +40,16 @@
       <button>
         <v-icon color="white" size="32" style="margin-bottom: 10px">track_changes</v-icon>
         <br /> <span> Activity log </span>
+
       </button>
     </router-link>
 
     <router-link to="/dashboard/user" class="router-link">
+
       <button id="usertab">
         <v-icon color="white" size="32" style="margin-bottom: 10px">person</v-icon>
         <br /> <span>Users </span>
+
       </button>
     </router-link>
   </div>
@@ -65,6 +74,7 @@ import {
   CREATEDAT,
   ERROR,
   ACTIVITY_LOG,NEWMESSAGE
+
 } from "../constants/index.js";
 import {
   USER_EMAIL,

@@ -123,7 +123,13 @@ import {
 import { CURRENT_USER_ROLE, THEME } from "../constants/index.js";
 import { ACCESS_TOKEN, LANGUAGE } from "../constants/index.js";
 import axios from "axios";
+
 import ClickOutside from "vue-click-outside";
+import axios from "axios";
+const headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
 
 export default {
   name: "schedules",
@@ -174,14 +180,14 @@ export default {
         CHANNEL
       );
     }
-    //this.create();
+    this.create();
   },
 
   filters: {
     shortDate(value) {
       let dateVar = new Date(value);
-      let dataVar2 = dateVar.toDateString();
-      let data = dataVar2.substring(4);
+      let dataVar2 = dateVar.toString();
+      let data = dataVar2.substring(4, 21);
       return data;
     },
     activeView(value) {
@@ -207,7 +213,7 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
-            this.sortType
+            this.sortType, { headers: headers }
         );
 
         if (res.data.totalPages < this.page)
@@ -259,7 +265,7 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
-            this.sortType
+            this.sortType, { headers: headers }
         );
 
         if (res.data.numberOfElements == 0) {
@@ -301,10 +307,8 @@ export default {
           API_BASE_URL +
             "/api/schedules?page=0&size=" +
             this.rowSize +
-            "&sort=" +
-            this.sortByValue +
-            "," +
-            this.sortType
+            "&sort=createdAt," +
+            this.sortType, { headers: headers }
         );
         this.schedulesData = res.data.content;
         if (res.data.totalPages == 0) this.pagesSize = 1;
@@ -392,16 +396,16 @@ body {
 }
 
 .column2 {
-  width: 7%;
+  width: 11%;
   margin-right: 25px;
   margin-left: 0px;
-  position: relative;
   right: 15px;
 }
 
 #title-li .column2 {
-  position: unset;
-  margin-left: 0px;
+    position: unset;
+    margin-left: 20px;
+    padding-left: 15px;
 }
 
 #title-li .column4 {
@@ -434,7 +438,7 @@ body {
 }
 
 .linear1 {
-  left: 33%;
+  left: 32%;
 }
 
 .linear2 {

@@ -5,8 +5,10 @@
       <form id="forma">
         <div class="section">
           <p>
+
             <span id="formTitle">
             {{ formType }} Trigger </span>
+
             <label id="close-icon" @click="exit">x</label>
           </p>
         </div>
@@ -19,6 +21,8 @@
             v-model="messageTitle"
             @click="getMessageID"
             :class="{errorBorder: showTitleError, noErrorBorder: !showTitleError}"
+
+            :disabled="formType == 'Update'"
           >
             <option disabled selected>{{ messageTitle }}</option>
             <option
@@ -37,8 +41,10 @@
             class="border"
             v-model="triggerType"
             :class="{errorBorder: showTriggerError, noErrorBorder: !showTriggerError}"
+
+            :disabled="formType == 'Update'"
           >
-            <option disabled selected>{{triggerType}}</option>
+            <option disabled selected>Some trigger type</option>
             <option>On channel join</option>
           </select>
 
@@ -49,11 +55,13 @@
           <select
             id="field3"
             class="border"
+            @click="getChannelID"
             v-model="channelName"
             :class="{errorBorder: showChannelError, noErrorBorder: !showChannelError}"
+            :disabled="formType=='Update'"
           >
             <option disabled selected>{{channelName}}</option>
-            <option v-for="channel in channelsData" :key="channel.name">{{ channel.name }}</option>
+            <option v-for="channel in channelsData" :key="channel.channelName">{{ channel.channelName }}</option>
           </select>
 
           <span v-show="showChannelError">Channel name is required</span>
@@ -69,6 +77,7 @@
           <br />
           <input type="button" value="Save" id="submit" @click="save" />
           <input type="button" value="Cancel" id="cancel" @click="exit" />
+
         </div>
       </form>
     </div>
@@ -77,7 +86,13 @@
 
 <script>
 import axios from "axios";
+
 import { API_BASE_URL,USER_LANGUAGE,CREATETRIGGER,SOMEMESSAGETITLE,SOMECHANNELNAME, SOMETRIGGERTYPE,ACTIVE,SAVE,CANCEL,MESSAGE } from "../constants";
+import { ACCESS_TOKEN } from "../constants/index.js";
+const headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
 
 export default {
   name: "formaT",
@@ -86,6 +101,7 @@ export default {
       messagesData: [],
       channelsData: [],
       targetMess: "",
+
       messageTitle: localStorage.getItem(SOMEMESSAGETITLE),
       triggerType: localStorage.getItem(SOMETRIGGERTYPE),
       channelName: localStorage.getItem(SOMECHANNELNAME),
@@ -96,43 +112,29 @@ export default {
       showTitleError: false,
       showTriggerError: false,
       showChannelError: false,
-      showMessageOption: true
+      showMessageOption: true,
+      channelId: "",
+      targetChannel: ""
     };
   },
+
   mounted: async function() {
-    if (localStorage.getItem(USER_LANGUAGE) != "en") {
-      document.getElementById("formTitle").innerHTML= localStorage.getItem(
-        CREATETRIGGER
-      );
-       document.getElementById("formTitle").style.color="black";
-       document.getElementById("submit").value= localStorage.getItem(
-        SAVE
-      );
-        document.getElementById("cancel").value= localStorage.getItem(
-        CANCEL
-      );
-       document.getElementsByClassName("checkText")[0].innerHTML = localStorage.getItem(
-        ACTIVE
-      );
-    }
     if (this.$route.params.id != null) {
       var currentR = this.$router.currentRoute.fullPath;
       var path = currentR.substring(0, 30);
-
       if (path == "/dashboard/messages/newTrigger") {
-        try {
-          const res = await axios.get(
-            API_BASE_URL + "/api/messages/" + this.$route.params.id
-          );
-          this.messagesData = res.data;
-          this.messageTitle = this.messagesData.title;
-          this.showMessageOption = false;
-        } catch (err) {
+
+        try{
+            const res = await axios.get(API_BASE_URL + "/api/messages/" + this.$route.params.id);
+            this.messageTitle = res.data.title;
+        }
+        catch(err)
+        {
           this.$emit("show-notification", -1);
         }
+
       } else {
         this.formType = "Update";
-
         var res;
         try {
           res = await axios.get(
@@ -147,7 +149,9 @@ export default {
           this.$emit("show-notification", -1);
         }
         try {
-          const resM = await axios.get(API_BASE_URL + "/api/messages");
+          const resM = await axios.get(API_BASE_URL + "/api/messages", {
+            headers: headers
+          });
           this.messagesData = resM.data.content;
         } catch (err) {
           this.$emit("show-notification", -1);
@@ -155,16 +159,17 @@ export default {
       }
     } else {
       try {
-        const res = await axios.get(API_BASE_URL + "/api/messages");
+        const res = await axios.get(API_BASE_URL + "/api/messages", {
+          headers: headers
+        });
         this.messagesData = res.data.content;
       } catch (err) {
         this.$emit("show-notification", -1);
       }
     }
     try {
-      //Aplikacija nije povezana sa listom kanala
-      const res = await axios.get(API_BASE_URL + "/api/channels");
-      this.channelsData = [{ name: "#general" }, { name: "#incubator" }];
+      const res = await axios.get(API_BASE_URL + "/api/channels")
+      this.channelsData = res.data;
     } catch (err) {
       this.$emit("show-notification", -1);
     }
@@ -238,32 +243,29 @@ export default {
       if (this.$route.params.id != null) {
         var cr = this.$router.currentRoute.fullPath;
         var path = cr.substring(0, 30);
-
         if (path == "/dashboard/messages/newTrigger") {
           try {
-            await axios.post(API_BASE_URL + "/api/triggers", {
-              channel: this.channelName,
-              triggerType: this.triggerType,
-              active: this.active,
-              messageId: this.$route.params.id
-            });
+            await axios.post(
+              API_BASE_URL + "/api/triggers",
+              {
+                channelId: this.channelId,
+                triggerType: this.triggerType,
+                active: this.active,
+                messageId: this.$route.params.id
+              },
+              { headers: headers }
+            );
             this.$emit("show-notification");
           } catch (err) {
             this.$emit("show-notification", -1);
           }
         } else {
           try {
-            const res = await axios.get(API_BASE_URL + "/api/messages");
+            const res = await axios.get(API_BASE_URL + "/api/messages", { headers: headers });
             this.messagesData = res.data.content;
 
             await axios.put(
-              API_BASE_URL + "/api/triggers/" + this.$route.params.id,
-              {
-                channel: this.channelName,
-                triggerType: this.triggerType,
-                active: this.active,
-                messageId: this.messId
-              }
+              API_BASE_URL + "/api/triggers/" + this.$route.params.id + "?active=" + this.active
             );
             this.$emit("show-notification");
           } catch (err) {
@@ -272,12 +274,16 @@ export default {
         }
       } else {
         try {
-          await axios.post(API_BASE_URL + "/api/triggers", {
-            active: this.active,
-            channel: this.channelName,
-            messageId: this.messId,
-            triggerType: this.triggerType
-          });
+          await axios.post(
+            API_BASE_URL + "/api/triggers",
+            {
+              active: this.active,
+              messageId: this.messId,
+              triggerType: this.triggerType,
+              channelId: this.channelId
+            },
+            { headers: headers }
+          );
           this.$emit("show-notification");
         } catch (err) {
           this.$emit("show-notification", -1);
@@ -288,11 +294,22 @@ export default {
     },
     getMessageID() {
       if (this.messagesData.length > 1) {
-        this.targetMess = this.messagesData.filter(
+       this.targetMess = this.messagesData.filter(
           mess => mess.title == this.messageTitle
         );
         this.messId = this.targetMess[0].messageId;
       }
+
+      else
+        this.messId = this.messagesData[0].messageId;
+    },
+    getChannelID(){
+      if(this.channelsData.length>1){
+        this.targetChannel = this.channelsData.filter(obj => obj.channelName == this.channelName);
+        this.channelId = this.targetChannel[0].id;
+      }
+      else
+        this.channelId = this.channelsData[0].id;
     }
   }
 };

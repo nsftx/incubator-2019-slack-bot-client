@@ -1,4 +1,5 @@
 <template>
+
   <div id="error">
     <img id="pic" class="img-circle" width="500" height="300" src="../assets/404.png"/>
     <h1> 404 Error</h1>
@@ -19,6 +20,7 @@
           <p class="center"> | </p> <br>
       <br />
 <input type="button" value="Go back to the login page" id="submit" @click="goBack()" />
+
     </div>
   </div>
 </template>
@@ -27,6 +29,7 @@ import { ACCESS_TOKEN } from "../constants/index.js";
 export default {
   name: "error",
   mounted: function() {
+
       if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementsByTagName("H1").innerHTML=localStorage.getItem(ERROR);
     }
@@ -43,6 +46,7 @@ export default {
         localStorage.setItem(USER_LANGUAGE, "");
         localStorage.setItem(USER_NAME, "");
         localStorage.setItem(USER_PIC, "");
+
   },
   methods: {
     goBack() {
@@ -50,6 +54,7 @@ export default {
     }
   }
 };
+
 </script>
 <style scoped>
 #error{
@@ -98,3 +103,4 @@ export default {
   margin:auto;
 }
 </style>
+

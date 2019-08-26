@@ -1,5 +1,5 @@
 <template>
-<div id="pollView">
+  <div id="pollView">
     <div id="form-style-10">
       <form id="forma">
         <div id="section">
@@ -10,15 +10,21 @@
         </div>
         <div id="inner-wrap">
           <label class="la">Title</label>
-          <input type="text" name="field1" v-model="poll.title" id="field1" placeholder="New poll title" />
+          <input
+            type="text"
+            name="field1"
+            id="field1"
+            v-model="title"
+            placeholder="New poll title"
+          />
 
           <label>Option</label>
           <label style="float: right">Vote number</label>
 
           <ul>
-            <li v-for="answer in poll.answers" :key="answer.text">
-              <h5 style="width: 70%">{{ answer.text }}</h5>
-              <h5>{{ answer.vote }}</h5>
+            <li v-for="choice in choiceList" :key="choice.choiceId">
+              <h5 style="width: 70%">{{ choice.choiceValue }}</h5>
+              <h5>{{ choice.counter }}</h5>
             </li>
           </ul>
 
@@ -30,24 +36,52 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { API_BASE_URL } from "../constants/index.js";
+import { Current_User_Role, THEME_ID, THEME } from "../constants/index.js";
+import { User_Email } from "../constants/index.js";
+import { ACCESS_TOKEN } from "../constants/index.js";
+import ClickOutside from "vue-click-outside";
+import { setTimeout } from "timers";
+const headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
+
 export default {
-    name: "pollView",
-    data()
-    {
-      return{
-        poll: {id: 1, title: "Naslov ankete", answers: [{text: "Tekst opcije 1", vote: 10}, {text: "Text opcije 2", vote: 15}]}
-      }
-    },
-    methods:{
-      exit() {
+  name: "pollView",
+  data() {
+    return {
+      title: "",
+      choiceList: [],
+    }
+  },
+
+  mounted: function(){
+    this.create();
+  },
+  methods: {
+    exit() {
       this.$router.go(-1);
     },
+    async create()
+    {
+      try
+      {
+        const res = await axios.get(API_BASE_URL + "/api/polls/" + this.$route.params.id)
+        this.title = res.data.title;
+        this.choiceList = res.data.choiceList;
+      }
+      catch(err)
+      {
+        this.$emit("show-notification", -1);
+      }
     }
-}
+  }
+};
 </script>
 
 <style scoped>
-
 * {
   font-family: "Roboto", sans-serif;
 }
@@ -94,7 +128,7 @@ export default {
 #form-style-10 input[type="url"],
 #form-style-10 input[type="password"],
 #form-style-10 textarea,
-#form-style-10 select{
+#form-style-10 select {
   padding-top: 10px;
   overflow: none;
   margin-bottom: 20px;
@@ -112,7 +146,8 @@ export default {
   font-size: 15px;
 }
 
-ul li{
+
+ul li {
   padding-top: 10px;
   margin-bottom: 20px;
   display: block;
@@ -231,17 +266,15 @@ ul li{
   top: 10px;
 }
 
-#form-style-10 #choiceButton{
-	float: right;
-	height: 30px;
-	width: 30px;
-	background-color: #0080ff;
-	color: white;
-	border-radius: 50%;
-	font-size: 25px;
-	line-height: 10px;
+
+#form-style-10 #choiceButton {
+  float: right;
+  height: 30px;
+  width: 30px;
+  background-color: #0080ff;
+  color: white;
+  border-radius: 50%;
+  font-size: 25px;
+  line-height: 10px;
 }
-
-
-
 </style>
