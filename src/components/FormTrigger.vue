@@ -5,7 +5,10 @@
       <form id="forma">
         <div class="section">
           <p>
-            {{ formType }} Trigger
+
+            <span id="formTitle">
+            {{ formType }} Trigger </span>
+
             <label id="close-icon" @click="exit">x</label>
           </p>
         </div>
@@ -18,6 +21,7 @@
             v-model="messageTitle"
             @click="getMessageID"
             :class="{errorBorder: showTitleError, noErrorBorder: !showTitleError}"
+
             :disabled="formType == 'Update'"
           >
             <option disabled selected>{{ messageTitle }}</option>
@@ -37,6 +41,7 @@
             class="border"
             v-model="triggerType"
             :class="{errorBorder: showTriggerError, noErrorBorder: !showTriggerError}"
+
             :disabled="formType == 'Update'"
           >
             <option disabled selected>Some trigger type</option>
@@ -71,7 +76,8 @@
           <br />
           <br />
           <input type="button" value="Save" id="submit" @click="save" />
-          <input type="button" value="Cancel" @click="exit" />
+          <input type="button" value="Cancel" id="cancel" @click="exit" />
+
         </div>
       </form>
     </div>
@@ -80,7 +86,8 @@
 
 <script>
 import axios from "axios";
-import { API_BASE_URL } from "../constants";
+
+import { API_BASE_URL,USER_LANGUAGE,CREATETRIGGER,SOMEMESSAGETITLE,SOMECHANNELNAME, SOMETRIGGERTYPE,ACTIVE,SAVE,CANCEL,MESSAGE } from "../constants";
 import { ACCESS_TOKEN } from "../constants/index.js";
 const headers = {
   "Content-Type": "application/json",
@@ -94,9 +101,10 @@ export default {
       messagesData: [],
       channelsData: [],
       targetMess: "",
-      messageTitle: "Some message title",
-      triggerType: "Some trigger type",
-      channelName: "Some channel name",
+
+      messageTitle: localStorage.getItem(SOMEMESSAGETITLE),
+      triggerType: localStorage.getItem(SOMETRIGGERTYPE),
+      channelName: localStorage.getItem(SOMECHANNELNAME),
       active: false,
       formType: "Create",
       messId: "",
@@ -291,6 +299,7 @@ export default {
         );
         this.messId = this.targetMess[0].messageId;
       }
+
       else
         this.messId = this.messagesData[0].messageId;
     },

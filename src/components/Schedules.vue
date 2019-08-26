@@ -122,6 +122,8 @@ import {
 } from "../constants/index.js";
 import { CURRENT_USER_ROLE, THEME } from "../constants/index.js";
 import { ACCESS_TOKEN, LANGUAGE } from "../constants/index.js";
+import axios from "axios";
+
 import ClickOutside from "vue-click-outside";
 import axios from "axios";
 const headers = {
@@ -150,9 +152,11 @@ export default {
 
   mounted: function() {
     if (localStorage.getItem(THEME) == "light") {
+      this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("Schedules").style.backgroundColor = "white";
     } else if (localStorage.getItem(THEME) == "dark") {
+      this.$emit("change-dark");
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("Schedules").style.backgroundColor = "black";
     }

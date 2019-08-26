@@ -3,8 +3,8 @@
     <div id="form-style-10">
       <form id="forma">
         <div id="section">
-          <p>
-            {{ formType }} Message
+          <p >
+            <span id="formTitle"> {{ formType }} Message </span>
             <label id="close-icon" @click="exit" style="font-size: 20px">X</label>
           </p>
         </div>
@@ -23,7 +23,9 @@
             @click="select('italic')"
           >Italic</div>
           <div
+
           style="text-decoration: underline"
+
             class="style-option"
             :class="{styleOptionSelected: urlSelected}"
             @click="select('url')"
@@ -76,11 +78,13 @@
 <script>
 import { ACCESS_TOKEN } from "../constants/index.js";
 import axios from "axios";
+
 import { API_BASE_URL } from "../constants";
 const headers = {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
 };
+
 
 export default {
   name: "formaM",
@@ -106,6 +110,32 @@ export default {
     if (this.$route.params.id != null) {
       this.create();
       this.formType = "Update";
+
+    }
+    if (localStorage.getItem(USER_LANGUAGE) != "en") {
+      document.getElementById("formTitle").innerHTML= localStorage.getItem(
+        CREATEMESSAGE
+      );
+       document.getElementById("formTitle").style.color="black";
+       document.getElementById("submit").value= localStorage.getItem(
+        SAVE
+      );
+        document.getElementById("cancle").value= localStorage.getItem(
+        CANCEL
+      );
+      document.getElementsByTagName("label")[1].innerHTML = localStorage.getItem(
+        TITLE
+      );
+      document.getElementsByTagName("label")[2].innerHTML = localStorage.getItem(
+        TEXT
+      );
+      document.getElementsByTagName("input")[0].placeholder = localStorage.getItem(
+        NEWMESSAGE
+      );
+       document.getElementsByTagName("textarea")[0].placeholder = localStorage.getItem(
+        TYPEYOURMESSAGE
+      );
+
     }
   },
 
@@ -192,6 +222,15 @@ export default {
       } else if (this.urlSelected == true) this.text += " <http://url|text>";
     },
 
+
+    preview() {
+      this.text = this.text.replace(/_/g, "");
+      this.text = this.text.replace(/\*/g, "");
+      var tekst = this.text.bold();
+      console.log(tekst);
+    },
+
+
     async save() {
       this.liveValidation = true;
       if (this.check_text(this.text) == false) this.invalid = true;
@@ -202,9 +241,9 @@ export default {
       } else {
         if (this.$route.params.id == null) {
           try {
-            await axios.post("http://localhost:8080/api/messages",
-            
-            {
+
+            await axios.post(API_BASE_URL + "/api/messages", {
+
               title: this.title,
               text: this.text
             },{ headers: headers });

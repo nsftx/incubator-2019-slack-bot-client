@@ -7,59 +7,41 @@
     <div class="data" id="profile">
       <br />
       <br />
-      <p id="theme">
-        <strong>Theme:</strong>
-      </p>
-      <div id="select">
-        <v-menu open-on-hover bottom offset-y>
-          <template v-slot:activator="{ on }">
+      <div id="select1">
             <button
               id="color"
-              v-on="on"
-              v-on:input="bgc.backgroundColor = $event.target.value"
-            >Select color</button>
+            >Select Theme</button>
             <br />
             <br />
-          </template>
-          <ul id="settings">
-            <li
-              class="options"
-              v-for="(item, index) in items2"
-              :key="index"
-              @click="showThemeSettings(index)"
-            >
-              <p class="option">{{ item.title }}</p>
-            </li>
-          </ul>
-        </v-menu>
+         <input type="radio" id="one" value="Dark" v-model="picked1" @click="showThemeSettings('Dark')">
+<label for="one">Dark</label>
+<br>
+<br>
+<input type="radio" id="two" value="Light" v-model="picked1" @click="showThemeSettings('Light')">
+<label for="two">Light</label>
+<br>
+<br>
+<br>
+<span> <span id="picked1">Picked:  </span> {{ picked1 }}</span>
       </div>
       <br />
-      <p id="languageparagraph">
-        <strong>Language:</strong>
-      </p>
-      <div id="select">
-        <v-menu open-on-hover bottom offset-y>
-          <template v-slot:activator="{ on }">
+      <div id="select2">
             <button
-              id="language"
-              v-on="on"
-              v-on:input="bgc.backgroundColor = $event.target.value"
+              id="language" 
             >Select Language</button>
             <br />
             <br />
-          </template>
-          <ul id="settings">
-            <li
-              class="options"
-              v-for="(item, index) in items3"
-              :key="index"
-              @click="showLanguageSettings(index)"
-            >
-              <p class="option">{{ item.title }}</p>
-            </li>
-          </ul>
-        </v-menu>
-      </div>
+         <input type="radio" id="one1" value="English" v-model="picked2" >
+<label for="one">English</label>
+<br>
+<br>
+<input type="radio" id="two1" value="Bosnian" v-model="picked2" >
+<label for="two">Bosnian</label>
+<br>
+<br>
+<br>
+<span> <span id="picked2">Picked: </span> {{ picked2 }}</span>
+</div>
       <input type="button" value="Save" @click="Save()" id="submit" />
     </div>
   </div>
@@ -85,13 +67,14 @@ import {
 } from "../constants/index.js";
 import {
   USER_EMAIL,
-  THEME,
+  USER_THEME,
   SETTINGS,
-  COLOR,
+  THEME,
   LANGUAGE,
-  THEMEPARAGRAPH,
-  LANGUAGEPARAGRAPH,
-  USER_LANGUAGE
+  SELECTCOLOR,
+  SELECTLANGUAGE,
+  USER_LANGUAGE,
+  PICKED
 } from "../constants/index.js";
 import { ACCESS_TOKEN, TRIGGERS, ACTIVEAT } from "../constants/index.js";
 import { SAVE } from "../constants/index.js";
@@ -104,121 +87,75 @@ export default {
   name: "settings2",
   data() {
     return {
-      items3Value: "",
-      items2Value: "",
-      items2: [{ title: "dark" }, { title: "light" }],
-      items3: [
-        { title: "English", value: "en" },
-        { title: "Bosnian", value: "fr" }
-      ]
+      picked1: " ",
+      picked2:" ",
     };
   },
   mounted: function() {
-    if (localStorage.getItem(THEME) == "light") {
+    if (localStorage.getItem(USER_THEME) == "light") {
+
       this.$emit("change-light");
       document.getElementById("settings2").style.backgroundColor = "white";
       document.getElementById("settings2").style.color = "black";
       document.getElementById("header").style.backgroundColor = "white";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "dark") {
       this.$emit("change-dark");
       document.getElementById("settings2").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
-      document.getElementById("color").style.backgroundColor = "black";
-      document.getElementById("color").style.color = "white";
-      document.getElementById("language").style.backgroundColor = "black";
-      document.getElementById("language").style.color = "white";
-      document.getElementById("languageparagraph").style.color = "black";
-      document.getElementById("theme").style.color = "black";
       document.getElementById("profile").style.backgroundColor = "#2c3e50";
+       document.getElementById("profile").style.color= "black";
     }
 
-    axios
-      .get(API_BASE_URL + "/user/translation", {
-        params: {
-          language: localStorage.getItem(USER_LANGUAGE)
-        },
-        headers: headers
-      })
-      .then(
-        response => {
-          localStorage.setItem(SETTINGS, response.data.settings);
-          localStorage.setItem(COLOR, response.data.theme);
-          localStorage.setItem(LANGUAGE, response.data.language);
-          localStorage.setItem(THEMEPARAGRAPH, response.data.selectColor);
-          localStorage.setItem(LANGUAGEPARAGRAPH, response.data.selectLanguage);
-          localStorage.setItem(MESSAGES, response.data.messages);
-          localStorage.setItem(SCHEDULES, response.data.schedules);
-          localStorage.setItem(USERS, response.data.users);
-          localStorage.setItem(TRIGGERS, response.data.triggers);
-          localStorage.setItem(TITLE, response.data.title);
-          localStorage.setItem(TEXT, response.data.text);
-          localStorage.setItem(MESSAGE, response.data.message);
-          localStorage.setItem(NEXTRUN, response.data.nextRun);
-          localStorage.setItem(ACTIVEAT, response.data.activeAt);
-          localStorage.setItem(REPEAT, response.data.repeat);
-          localStorage.setItem(CHANNEL, response.data.channel);
-          localStorage.setItem(TRIGGER, response.data.trigger);
-          localStorage.setItem(ACTIVE, response.data.active);
-          localStorage.setItem(NAME, response.data.name);
-          localStorage.setItem(ROLE, response.data.role);
-          localStorage.setItem(CREATEDAT, response.data.createdAt);
-          localStorage.setItem(SAVE, response.data.save);
+    if(localStorage.getItem(USER_LANGUAGE)!="en"){
+          document.getElementById("picked1").innerHTML=localStorage.getItem(PICKED);
+          document.getElementById("picked2").innerHTML=localStorage.getItem(PICKED);
           document.getElementById("color").innerHTML = localStorage.getItem(
-            COLOR
+           SELECTCOLOR
           );
           document.getElementById("language").innerHTML = localStorage.getItem(
-            LANGUAGE
+            SELECTLANGUAGE
           );
-          document.getElementById("theme").innerHTML = localStorage.getItem(
-            THEMEPARAGRAPH
-          );
-          document.getElementById(
-            "languageparagraph"
-          ).innerHTML = localStorage.getItem(LANGUAGEPARAGRAPH);
+
           document.getElementById("title").innerHTML = localStorage.getItem(
             SETTINGS
           );
           document.getElementById("submit").value = localStorage.getItem(SAVE);
-          console.log(response);
+  }
         },
-        error => {
-          console.log(error);
-        }
-      );
-  },
   methods: {
-    showThemeSettings(index) {
-      this.items2Value = this.items2[index].title;
-      if (index == 0) {
+    showThemeSettings(value) {
+      if (value=="Dark") {
         this.$emit("change-dark");
-        document.getElementById("header").style.backgroundColor = "black";
-        document.getElementById("settings2").style.backgroundColor = "black";
-        document.getElementById("color").style.backgroundColor = "black";
-        document.getElementById("language").style.backgroundColor = "black";
-      } else if (index == 1) {
+      document.getElementById("settings2").style.backgroundColor = "black";
+      document.getElementById("header").style.backgroundColor = "black";
+      document.getElementById("profile").style.backgroundColor = "#2c3e50";
+      document.getElementById("select1").style.color= "black";
+       document.getElementById("select2").style.color= "black";
+       //document.getElementById("profile").style.color="white";
+      } else if (value=="Light") {
+
         this.$emit("change-light");
         document.getElementById("header").style.backgroundColor = "white";
         document.getElementById("settings2").style.backgroundColor = "white";
         document.getElementById("settings2").style.color = "black";
-        document.getElementById("color").style.backgroundColor = "white";
-        document.getElementById("language").style.backgroundColor = "white";
+        document.getElementById("profile").style.backgroundColor = "#f1f1f1";
       }
-    },
-    showLanguageSettings(index) {
-      this.items3Value = this.items3[index].value;
+
     },
     Save() {
       axios
         .post(
           API_BASE_URL + "/user/userSettings",
-          { theme: this.items2Value, language: this.items3Value },
+          { theme: this.picked1, language: this.picked2 },
+
           {
             headers: headers
           }
         )
         .then(
           response => {
-            localStorage.setItem(THEME, response.data.theme);
+            localStorage.setItem(USER_THEME, response.data.theme);
+
             localStorage.setItem(USER_LANGUAGE, response.data.language);
             console.log(response);
           },
@@ -238,12 +175,10 @@ export default {
   height: 100vh;
 }
 #header[data-v-47aa12d3] {
-  margin-right: 10px;
   display: block;
   width: 99%;
   float: right;
   background-color: white;
-  height: 72px;
 }
 h1[data-v-47aa12d3] {
   margin-left: 0px;
@@ -253,14 +188,10 @@ h1[data-v-47aa12d3] {
   float: left;
 }
 #header {
-  padding-left: 20px;
-  margin-left: 15px;
-  margin-right: 10px;
   display: block;
   width: 99%;
   float: right;
   background-color: white;
-  height: 72px;
 }
 .data p[data-v-47aa12d3] {
   margin-left: 20px;
@@ -268,8 +199,6 @@ h1[data-v-47aa12d3] {
   display: inline;
 }
 button[data-v-47aa12d3] {
-  height: 100%;
-  width: 100%;
   float: left;
   text-align: center;
 }
@@ -301,8 +230,8 @@ button[data-v-47aa12d3] {
 
 #settings2 #submit {
   position: absolute;
-  bottom: 450px;
-  right: 100px;
+  bottom: 420px;
+  right: 90px;
   float: right;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   width: 18%;
@@ -335,7 +264,6 @@ button[data-v-47aa12d3] {
 }
 h1 {
   float: left;
-  margin-bottom: 15px;
 }
 #settings2 {
   width: 100%;
@@ -352,7 +280,6 @@ h1 {
   background-color: #f1f1f1;
   margin-top: 20px;
   width: 100%;
-  margin-left: 20px;
   margin-right: 20px;
 }
 #email {
@@ -366,7 +293,8 @@ h1 {
 #profile {
   display: flex;
   flex-direction: column;
-  height: 500px;
+  height: 60%;
+
   text-align: left;
 }
 #pic {
@@ -377,12 +305,25 @@ h1 {
 button {
   float: left;
 }
-#select {
+#select1,#select2 {
   display: inline;
-  width: 100px;
-  background-color: white;
-  margin-top: 0px;
-  margin-left: 30px;
+  width: 130px;
+  margin-top: 50px;
+  margin-left: 20px;
   float: left;
+  color:#2c3e50;
+  font-size:120%;
 }
+input{
+  font-size:30%;
+}
+label{
+  text-align:center;
+  font-weight:300;
+
+}
+span{
+  font-weight:100;
+}
+
 </style>

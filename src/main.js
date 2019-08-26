@@ -16,6 +16,7 @@ import Profil from "./components/Profile.vue"
 import settings from "./components/Settings.vue"
 import OAuth2RedirectHandler from "./components/OAuth2RedirectHandler.vue"
 import Error from "./components/Error.vue"
+
 import poll from "./components/poll.vue"
 import FormPoll from "./components/FormPoll.vue"
 import Activity from "./components/Activity.vue"

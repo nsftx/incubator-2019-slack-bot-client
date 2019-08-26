@@ -287,6 +287,7 @@ export default {
     async create() {
       try {
         const res = await axios.get(
+
           API_BASE_URL + "/api/triggers?page=0&size=" + this.rowSize + "&sort=createdAt," + this.sortType, { headers: headers }
         );
         this.triggersData = res.data.content;

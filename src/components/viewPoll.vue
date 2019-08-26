@@ -146,6 +146,7 @@ export default {
   font-size: 15px;
 }
 
+
 ul li {
   padding-top: 10px;
   margin-bottom: 20px;
@@ -264,6 +265,7 @@ ul li {
   position: relative;
   top: 10px;
 }
+
 
 #form-style-10 #choiceButton {
   float: right;

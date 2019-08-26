@@ -110,10 +110,6 @@ import { ACCESS_TOKEN, MESSAGES } from "../constants/index.js";
 import axios from "axios";
 import ClickOutside from "vue-click-outside";
 import { setTimeout } from "timers";
-const headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
 export default {
   name: "messages",
   data() {
@@ -133,10 +129,17 @@ export default {
     };
   },
   mounted: function() {
+    let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
     if (localStorage.getItem(THEME) == "light") {
+      this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("messages").style.backgroundColor = "white";
     } else if (localStorage.getItem(THEME) == "dark") {
+      this.$emit("change-dark");
+
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("messages").style.backgroundColor = "black";
     }
@@ -166,6 +169,10 @@ export default {
   },
   methods: {
     async reloadMessages() {
+     let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       var pg = this.page - 1;
       try {
         const res = await axios.get(
@@ -177,6 +184,7 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
+
             this.sortType, { headers: headers }
         );
 
@@ -225,8 +233,13 @@ export default {
     },
 
     async deleteMessage(id) {
+     let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       await axios.delete(API_BASE_URL + "/api/messages/" + id);
       var pg = this.page - 1;
+
 
       try {
         const  res = await axios.get(
@@ -273,6 +286,10 @@ export default {
     },
 
     async create() {
+     let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       try {
         const res = await axios.get(
           API_BASE_URL +

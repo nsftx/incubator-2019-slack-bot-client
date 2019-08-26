@@ -3,13 +3,15 @@
     <div id="form-style-10">
       <form id="forma">
         <div id="section">
-          <p>
-            Create Poll
+
+          <p> <span id="createPoll">
+            Create Poll </span>
             <label id="close-icon" @click="exit" style="font-size: 20px">X</label>
           </p>
         </div>
-        <label class="la">Title</label>
-        <div id="inner-wrap">
+          <label class="la">Title</label>
+          <div id="inner-wrap">
+
           <input
             autocomplete="off"
             type="text"
@@ -20,6 +22,7 @@
             :class="{errorBorder: showTitleError, noErrorBorder: !showTitleError}"
           />
           <span v-show="showTitleError">Title size is minimum 3 characters</span>
+
           <br />
           <br />
 
@@ -90,6 +93,7 @@
           <br />
           <br />
 
+
           <input type="button" value="Save" @click="save" id="submit" class="input-options" />
           <input type="button" value="Cancel" @click="exit" id="cancle" class="input-options" />
         </div>
@@ -99,10 +103,12 @@
 </template>
 
 <script>
-import { ACCESS_TOKEN } from "../constants/index.js";
+
+import { ACCESS_TOKEN,USER_THEME,USER_LANGUAGE,TITLE,CREATEPOLL,CANCEL,SAVE,NEWPOLLTITLE, CHOICES } from "../constants/index.js";
 import axios from "axios";
 import DatePicker from "vue2-datepicker";
 import { API_BASE_URL } from "../constants";
+
 const headers = {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
@@ -110,13 +116,16 @@ const headers = {
 
 export default {
   name: "FormPoll",
+
   components: { DatePicker },
+
   data() {
     return {
       title: "",
       choices: [],
       liveValidation: false,
       showTitleError: false,
+
       showChoiceError: false,
       date: null,
       showDateError: false,
@@ -161,6 +170,26 @@ export default {
   },
 
   mounted: async function() {
+  if (localStorage.getItem(USER_THEME) == "light") {
+      document.getElementById("form-style-10").style.backgroundColor = "white";
+      //document.getElementById("messages").style.backgroundColor="white";
+    } else if (localStorage.getItem(USER_THEME) == "dark") {
+      document.getElementById("form-style-10").style.backgroundColor = "black";
+      //document.getElementById("messages").style.backgroundColor="black";
+    }
+    if (localStorage.getItem(USER_LANGUAGE) != "en") {
+      document.getElementById("createPoll").innerHTML = localStorage.getItem(CREATEPOLL);
+      document.getElementById("createPoll").style.color="black";
+      document.getElementsByClassName(
+        "la"
+      )[0].innerHTML = localStorage.getItem(TITLE);
+      document.getElementById("cancle").value=  localStorage.getItem(CANCEL);
+       document.getElementById("submit").value=  localStorage.getItem(SAVE);
+        document.getElementById("field1").placeholder = localStorage.getItem(NEWPOLLTITLE);
+         document.getElementById("choices").innerHTML = localStorage.getItem(CHOICES);
+    }
+    this.choices.push({choiceValue: ""});
+    this.choices.push({choiceValue: ""});
     this.choices.push({ choiceValue: "" });
     this.choices.push({ choiceValue: "" });
     document.getElementsByClassName("mx-input-append")[0].style.padding = "0px";
@@ -192,6 +221,7 @@ export default {
     channelName(value) {
       this.channelName = value;
       if (this.liveValidation == true) this.check_channelName(value);
+
     }
   },
 
@@ -199,6 +229,7 @@ export default {
     exit() {
       this.$router.go(-1);
     },
+
 
     addBorder() {
       for (var i = 0; i < this.choices.length; i++) {
@@ -222,6 +253,7 @@ export default {
 
     check_title(value) {
       if (this.title.length < 3) {
+
         this.showTitleError = true;
         return false;
       } else {
@@ -229,6 +261,7 @@ export default {
         return true;
       }
     },
+
 
     check_choices(value) {
       var checkError = false;
@@ -243,9 +276,11 @@ export default {
             "rgba(0, 0, 0, 0.2)";
       }
       if (checkError == true) return false;
+
       this.showChoiceError = false;
       return true;
     },
+
 
     check_date(value) {
       var today = new Date();
@@ -315,6 +350,7 @@ export default {
     }
   }
 };
+
 </script>
 
 <style scoped>
@@ -339,6 +375,7 @@ export default {
   padding-bottom: 50px;
 }
 
+
 .mx-input {
   overflow: visible;
 }
@@ -353,6 +390,7 @@ export default {
 .mx-datepicker {
   width: 100%;
 }
+
 
 #form-style-10 #inner-wrap {
   display: block;
@@ -496,6 +534,7 @@ export default {
   top: 10px;
 }
 
+
 #form-style-10 #choiceButton {
   float: right;
   height: 30px;
@@ -530,6 +569,7 @@ span {
   font-weight: 400;
 }
 
+
 .la2 {
   position: relative;
   top: 15px;
@@ -538,4 +578,5 @@ span {
   z-index: 1;
   padding: 0px 4px;
 }
+
 </style>
