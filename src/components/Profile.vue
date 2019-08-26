@@ -133,15 +133,15 @@ p{
 }
 #profile1 {
   padding: 20px;
-  height: 100%;
-  width: 95%;
+    height: 100%;
+    width: 100%;
 }
 #profile {
   background-color:#f1f1f1;
   box-sizing: border-box;
   padding: 20px;
   padding-bottom: 0px;
-  height: 60%;
+  height: 61%;
 }
 
 h1 {

@@ -47,7 +47,7 @@
             v-model="channelName"
             :class="{errorBorder: showChannelError, noErrorBorder: !showChannelError}"
           >
-            <option id="someChannelName" disabled selected>Some channel name</option>
+            <option id="someChannelName" disabled selected>{{channelName}}</option>
             <option v-for="channel in channelsData" :key="channel.name">{{ channel.name }}</option>
           </select>
 
@@ -78,7 +78,7 @@
 <script>
 import axios from "axios";
 import DatePicker from "vue2-datepicker";
-import { API_BASE_URL,USER_LANGUAGE,CREATESCHEDULE,SAVE,CANCEL,REPEAT,ACTIVE,MESSAGE,RUNAT,SOMECHANNELNAME,SOMEMESSAGETITLE,NEWMESSAGE,TYPEYOURMESSAGE } from "../constants";
+import { API_BASE_URL,USER_LANGUAGE,CREATESCHEDULE,SAVE,CANCEL,REPEAT,ACTIVE,MESSAGE,RUNAT,SOMECHANNELNAME,SOMEMESSAGETITLE,NEWMESSAGE,TYPEYOURMESSAGE, SELECTDATE } from "../constants";
 
 export default {
   name: "formaS",
@@ -130,7 +130,7 @@ export default {
           "previous 30 days"
         ],
         placeholder: {
-          date: "Select Date",
+          date: localStorage.getItem(SELECTDATE),
           dateRange: "Select Date Range"
         }
       }
@@ -149,12 +149,6 @@ export default {
         document.getElementById("cancel").value= localStorage.getItem(
         CANCEL
       );
-        /*document.getElementById("field1").innerHTML= localStorage.getItem(
-        SOMEMESSAGETITLE
-      );*/
-      /* document.getElementById("someChannelName").innerHTML= localStorage.getItem(
-        SOMECHANNELNAME
-      );*/
       document.getElementsByClassName("checkText")[0].innerHTML = localStorage.getItem(
        REPEAT
       );

@@ -58,10 +58,10 @@ import {
 import { ACCESS_TOKEN } from "../constants/index.js";
 import navigation from "./Navigation.vue";
 import axios from "axios";
-const headers = {
+/*const headers = {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+};*/
 export default {
   name: "Dashboard",
   components: {
@@ -72,28 +72,54 @@ export default {
       items: [{ title: "Profile" }, { title: "Settings" }, { title: "Log Out" }]
     };
   },
-  mounted: function() {
-    axios
+  mounted: async function() {
+     let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
+    await axios
       .get(API_BASE_URL + "/user/me", {
         headers: headers
       })
       .then(response => {
         console.log(response);
-        document.getElementById("email").innerHTML = response.data.email;
+
         localStorage.setItem(USER_EMAIL, response.data.email);
-        document.getElementById("name").innerHTML = response.data.name;
-        document.getElementById("pic").src = response.data.imageUrl;
+        localStorage.setItem(USER_NAME, response.data.name);
+        localStorage.setItem(USER_PIC, response.data.imageUrl);
         localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
         localStorage.setItem(USER_THEME, response.data.userSettings.theme);
-         localStorage.setItem(USER_LANGUAGE, response.data.userSettings.language);
+        localStorage.setItem(USER_LANGUAGE,response.data.userSettings.language);
       })
       .catch(err => {
         console.log(err);
       });
+        await axios
+      .get(API_BASE_URL + "/user/translation", {
+        params: {
+          language: localStorage.getItem(USER_LANGUAGE)
+        },
+        headers: headers
+      })
+      .then(
+        response => {
+          for (var key in response.data) {
+    if (response.data.hasOwnProperty(key)) {
+        localStorage.setItem(key,response.data[key]);
+    }
+}
+          console.log(response);
+        },
+        error => {
+          console.log(error);
+        }
+      );
     if (localStorage.getItem(USER_THEME) == "light") {
       document.getElementById("dropdown").style.backgroundColor = "white";
+       document.getElementById("header").style.backgroundColor = "white";
     } else if (localStorage.getItem(USER_THEME) == "dark") {
       document.getElementById("dropdown").style.backgroundColor = "black";
+      document.getElementById("header").style.backgroundColor = "black";
     }
 
     document.getElementById("email").innerHTML = localStorage.getItem(

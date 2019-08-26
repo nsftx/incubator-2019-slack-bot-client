@@ -4,7 +4,7 @@
       <form id="forma">
         <div id="section">
           <p>
-            Create User
+            <span id="createUser"> Create User </span>
             <label id="close-icon" @click="exit" style="font-size: 20px">X</label>
           </p>
         </div>
@@ -28,7 +28,7 @@
             v-model="roleType"
             :class="{errorBorder: roleError, noErrorBorder: !roleError}"
           >
-            <option disabled selected>New user role</option>
+            <option disabled selected>{{roleType}}</option>
             <option v-for="rol in role" :key="rol.name">{{ rol }}</option>
           </select>
           <span v-show="roleError">User role is required</span>
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { ACCESS_TOKEN } from "../constants/index.js";
+import { ACCESS_TOKEN,USER_LANGUAGE,USER_THEME,ROLE,CREATEUSER,CANCEL,SAVE, NEWUSERROLE, NEWUSEREMAIL, USER } from "../constants/index.js";
 import axios from "axios";
 const headers = {
   "Content-Type": "application/json",
@@ -54,8 +54,8 @@ export default {
   data() {
     return {
       email: "",
-      role: ["ADMIN", "USER"],
-      roleType: "New user role",
+      role: ["ADMIN", localStorage.getItem(USER)],
+      roleType: localStorage.getItem(NEWUSERROLE),
       emailError: false,
       roleError: false,
       liveValidation: false,
@@ -71,19 +71,21 @@ export default {
 			console.log(this.$route.params.id)
 			this.create();
     }*/
-     if (localStorage.getItem(THEME) == "light") {
+     if (localStorage.getItem(USER_THEME) == "light") {
       document.getElementById("form-style-10").style.backgroundColor = "white";
       //document.getElementById("messages").style.backgroundColor="white";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "dark") {
       document.getElementById("form-style-10").style.backgroundColor = "black";
       //document.getElementById("messages").style.backgroundColor="black";
     }
-    if (localStorage.getItem(LANGUAGE) != "en") {
-      document.getElementsByTagName("p")[0].innerHTML = "Kreiraj Korisnika";
+    if (localStorage.getItem(USER_LANGUAGE) != "en") {
+      document.getElementById("createUser").innerHTML = localStorage.getItem(CREATEUSER);
+      document.getElementById("field1").placeholder=localStorage.getItem(NEWUSEREMAIL);
+       document.getElementById("createUser").style.color="black";
       document.getElementsByTagName(
         "LABEL"
       )[2].innerHTML = localStorage.getItem(ROLE);
-      document.getElementsByTagName("INPUT")[0].value = "Otkazi";
+      document.getElementById("cancle").value=  localStorage.getItem(CANCEL);
       document.getElementsByTagName("INPUT")[1].value = localStorage.getItem(
         SAVE
       );

@@ -54,4 +54,12 @@ export const CANCEL="cancel";
 export const SOMEMESSAGETITLE="someMessageTitle";
 export const LANGUAGEEN="languageEN";
 export const LANGUAGEFR="languageFR";
+export const USER="user";
+export const CREATEPOLL="createpoll";
+export const NEWPOLLTITLE="newpolltitle";
+export const CHOICES="choices";
+export const CREATETRIGGER="createtrigger";
+export const SOMETRIGGERTYPE="sometriggertype";
+export const PICKED="picked";
+
 

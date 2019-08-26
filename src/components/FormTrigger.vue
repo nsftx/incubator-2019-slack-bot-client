@@ -5,7 +5,8 @@
       <form id="forma">
         <div class="section">
           <p>
-            {{ formType }} Trigger
+            <span id="formTitle">
+            {{ formType }} Trigger </span>
             <label id="close-icon" @click="exit">x</label>
           </p>
         </div>
@@ -37,7 +38,7 @@
             v-model="triggerType"
             :class="{errorBorder: showTriggerError, noErrorBorder: !showTriggerError}"
           >
-            <option disabled selected>Some trigger type</option>
+            <option disabled selected>{{triggerType}}</option>
             <option>On channel join</option>
           </select>
 
@@ -51,7 +52,7 @@
             v-model="channelName"
             :class="{errorBorder: showChannelError, noErrorBorder: !showChannelError}"
           >
-            <option disabled selected>Some channel name</option>
+            <option disabled selected>{{channelName}}</option>
             <option v-for="channel in channelsData" :key="channel.name">{{ channel.name }}</option>
           </select>
 
@@ -67,7 +68,7 @@
           <br />
           <br />
           <input type="button" value="Save" id="submit" @click="save" />
-          <input type="button" value="Cancel" @click="exit" />
+          <input type="button" value="Cancel" id="cancel" @click="exit" />
         </div>
       </form>
     </div>
@@ -76,7 +77,7 @@
 
 <script>
 import axios from "axios";
-import { API_BASE_URL } from "../constants";
+import { API_BASE_URL,USER_LANGUAGE,CREATETRIGGER,SOMEMESSAGETITLE,SOMECHANNELNAME, SOMETRIGGERTYPE,ACTIVE,SAVE,CANCEL,MESSAGE } from "../constants";
 
 export default {
   name: "formaT",
@@ -85,9 +86,9 @@ export default {
       messagesData: [],
       channelsData: [],
       targetMess: "",
-      messageTitle: "Some message title",
-      triggerType: "Some trigger type",
-      channelName: "Some channel name",
+      messageTitle: localStorage.getItem(SOMEMESSAGETITLE),
+      triggerType: localStorage.getItem(SOMETRIGGERTYPE),
+      channelName: localStorage.getItem(SOMECHANNELNAME),
       active: false,
       formType: "Create",
       messId: "",
@@ -99,6 +100,21 @@ export default {
     };
   },
   mounted: async function() {
+    if (localStorage.getItem(USER_LANGUAGE) != "en") {
+      document.getElementById("formTitle").innerHTML= localStorage.getItem(
+        CREATETRIGGER
+      );
+       document.getElementById("formTitle").style.color="black";
+       document.getElementById("submit").value= localStorage.getItem(
+        SAVE
+      );
+        document.getElementById("cancel").value= localStorage.getItem(
+        CANCEL
+      );
+       document.getElementsByClassName("checkText")[0].innerHTML = localStorage.getItem(
+        ACTIVE
+      );
+    }
     if (this.$route.params.id != null) {
       var currentR = this.$router.currentRoute.fullPath;
       var path = currentR.substring(0, 30);

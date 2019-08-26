@@ -3,8 +3,8 @@
     <div id="form-style-10">
       <form id="forma">
         <div id="section">
-          <p>
-            Create Poll
+          <p> <span id="createPoll">
+            Create Poll </span>
             <label id="close-icon" @click="exit" style="font-size: 20px">X</label>
           </p>
         </div>
@@ -22,7 +22,7 @@
           <span v-show="showTitleError">Title size is minimum 3 characters</span>
           <br> <br>
 
-          <label>Choices:</label>
+          <label id="choices">Choices:</label>
           <input type="text" v-for="(choice, index) in choices" :key="index" v-model="choice.choiceValue" :class="{noErrorBorder: true}" :placeholder="index+1 + '.'"/>
 
 		  <input type="button" value="+" @click="addNewChoice" :disabled="choices.length == 5" id="choiceButton" :class="{disabledButton: (choices.length == 5)}">
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { ACCESS_TOKEN } from "../constants/index.js";
+import { ACCESS_TOKEN,USER_THEME,USER_LANGUAGE,TITLE,CREATEPOLL,CANCEL,SAVE,NEWPOLLTITLE, CHOICES } from "../constants/index.js";
 import axios from "axios";
 const headers = {
   "Content-Type": "application/json",
@@ -63,6 +63,24 @@ export default {
 
   mounted: function() 
   {
+    if (localStorage.getItem(USER_THEME) == "light") {
+      document.getElementById("form-style-10").style.backgroundColor = "white";
+      //document.getElementById("messages").style.backgroundColor="white";
+    } else if (localStorage.getItem(USER_THEME) == "dark") {
+      document.getElementById("form-style-10").style.backgroundColor = "black";
+      //document.getElementById("messages").style.backgroundColor="black";
+    }
+    if (localStorage.getItem(USER_LANGUAGE) != "en") {
+      document.getElementById("createPoll").innerHTML = localStorage.getItem(CREATEPOLL);
+      document.getElementById("createPoll").style.color="black";
+      document.getElementsByClassName(
+        "la"
+      )[0].innerHTML = localStorage.getItem(TITLE);
+      document.getElementById("cancle").value=  localStorage.getItem(CANCEL);
+       document.getElementById("submit").value=  localStorage.getItem(SAVE);
+        document.getElementById("field1").placeholder = localStorage.getItem(NEWPOLLTITLE);
+         document.getElementById("choices").innerHTML = localStorage.getItem(CHOICES);
+    }
     this.choices.push({choiceValue: ""});
     this.choices.push({choiceValue: ""});
   },

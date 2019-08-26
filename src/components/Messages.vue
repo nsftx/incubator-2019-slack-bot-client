@@ -110,10 +110,10 @@ import { ACCESS_TOKEN, MESSAGES } from "../constants/index.js";
 import axios from "axios";
 import ClickOutside from "vue-click-outside";
 import { setTimeout } from "timers";
-const headers = {
+/*const headers = {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+};*/
 export default {
   name: "messages",
   data() {
@@ -133,6 +133,10 @@ export default {
     };
   },
   mounted: function() {
+    let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
     if (localStorage.getItem(THEME) == "light") {
       this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";

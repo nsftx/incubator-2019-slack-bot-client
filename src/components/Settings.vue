@@ -7,44 +7,40 @@
     <div class="data" id="profile">
       <br />
       <br />
-      <div id="select">
+      <div id="select1">
             <button
               id="color"
-              v-on="on"
-              v-on:input="bgc.backgroundColor = $event.target.value"
             >Select Theme</button>
             <br />
             <br />
-         <input type="radio" id="one" value="Dark" v-model="picked1">
+         <input type="radio" id="one" value="Dark" v-model="picked1" @click="showThemeSettings('Dark')">
 <label for="one">Dark</label>
 <br>
 <br>
-<input type="radio" id="two" value="Light" v-model="picked1">
+<input type="radio" id="two" value="Light" v-model="picked1" @click="showThemeSettings('Light')">
 <label for="two">Light</label>
 <br>
 <br>
 <br>
-<span>Picked: {{ picked1 }}</span>
+<span> <span id="picked1">Picked:  </span> {{ picked1 }}</span>
       </div>
       <br />
-      <div id="select">
+      <div id="select2">
             <button
-              id="language"
-              v-on="on"
-              v-on:input="bgc.backgroundColor = $event.target.value"
+              id="language" 
             >Select Language</button>
             <br />
             <br />
-         <input type="radio" id="one" value="English" v-model="picked">
+         <input type="radio" id="one1" value="English" v-model="picked2" >
 <label for="one">English</label>
 <br>
 <br>
-<input type="radio" id="two" value="Bosnian" v-model="picked">
+<input type="radio" id="two1" value="Bosnian" v-model="picked2" >
 <label for="two">Bosnian</label>
 <br>
 <br>
 <br>
-<span>Picked: {{ picked }}</span>
+<span> <span id="picked2">Picked: </span> {{ picked2 }}</span>
       </div>
       <input type="button" value="Save" @click="Save()" id="submit" />
     </div>
@@ -77,7 +73,8 @@ import {
   LANGUAGE,
   SELECTCOLOR,
   SELECTLANGUAGE,
-  USER_LANGUAGE
+  USER_LANGUAGE,
+  PICKED
 } from "../constants/index.js";
 import { ACCESS_TOKEN, TRIGGERS, ACTIVEAT } from "../constants/index.js";
 import { SAVE } from "../constants/index.js";
@@ -90,15 +87,8 @@ export default {
   name: "settings2",
   data() {
     return {
-      picked: " ",
-      picked1:" ",
-      items3Value: "",
-      items2Value: "",
-      items2: [{ title: "dark" }, { title: "light" }],
-      items3: [
-        { title: "English", value: "en" },
-        { title: "Bosnian", value: "fr" }
-      ]
+      picked1: " ",
+      picked2:" ",
     };
   },
   mounted: function() {
@@ -111,25 +101,13 @@ export default {
       this.$emit("change-dark");
       document.getElementById("settings2").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
-      document.getElementById("color").style.backgroundColor = "black";
-      document.getElementById("color").style.color = "white";
-      document.getElementById("language").style.backgroundColor = "black";
-      document.getElementById("language").style.color = "white";
-      document.getElementById("languageparagraph").style.color = "black";
-      document.getElementById("theme").style.color = "black";
       document.getElementById("profile").style.backgroundColor = "#2c3e50";
+       document.getElementById("profile").style.color= "black";
     }
 
-    axios
-      .get(API_BASE_URL + "/user/translation", {
-        params: {
-          language: localStorage.getItem(USER_LANGUAGE)
-        },
-        headers: headers
-      })
-      .then(
-        response => {
-          
+    if(localStorage.getItem(USER_LANGUAGE)!="en"){
+          document.getElementById("picked1").innerHTML=localStorage.getItem(PICKED);
+          document.getElementById("picked2").innerHTML=localStorage.getItem(PICKED);
           document.getElementById("color").innerHTML = localStorage.getItem(
            SELECTCOLOR
           );
@@ -140,51 +118,38 @@ export default {
             SETTINGS
           );
           document.getElementById("submit").value = localStorage.getItem(SAVE);
-          console.log(response);
+  }
         },
-        error => {
-          console.log(error);
-        }
-      );
-  },
   methods: {
-    showThemeSettings(index) {
-      this.items2Value = this.items2[index].title;
-      if (index == 0) {
+    showThemeSettings(value) {
+      if (value=="Dark") {
         this.$emit("change-dark");
       document.getElementById("settings2").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
-      document.getElementById("color").style.backgroundColor = "black";
-      document.getElementById("color").style.color = "white";
-      document.getElementById("language").style.backgroundColor = "black";
-      document.getElementById("language").style.color = "white";
-      document.getElementById("languageparagraph").style.color = "black";
-      document.getElementById("theme").style.color = "black";
       document.getElementById("profile").style.backgroundColor = "#2c3e50";
-      } else if (index == 1) {
+      document.getElementById("select1").style.color= "black";
+       document.getElementById("select2").style.color= "black";
+       //document.getElementById("profile").style.color="white";
+      } else if (value=="Light") {
         this.$emit("change-light");
         document.getElementById("header").style.backgroundColor = "white";
         document.getElementById("settings2").style.backgroundColor = "white";
         document.getElementById("settings2").style.color = "black";
-        document.getElementById("color").style.backgroundColor = "white";
-        document.getElementById("language").style.backgroundColor = "white";
+        document.getElementById("profile").style.backgroundColor = "#f1f1f1";
       }
-    },
-    showLanguageSettings(index) {
-      this.items3Value = this.items3[index].value;
     },
     Save() {
       axios
         .post(
           API_BASE_URL + "/user/userSettings",
-          { theme: this.items2Value, language: this.items3Value },
+          { theme: this.picked1, language: this.picked2 },
           {
             headers: headers
           }
         )
         .then(
           response => {
-            localStorage.setItem(THEME, response.data.theme);
+            localStorage.setItem(USER_THEME, response.data.theme);
             localStorage.setItem(USER_LANGUAGE, response.data.language);
             console.log(response);
           },
@@ -259,8 +224,8 @@ button[data-v-47aa12d3] {
 
 #settings2 #submit {
   position: absolute;
-  bottom: 450px;
-  right: 100px;
+  bottom: 420px;
+  right: 90px;
   float: right;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   width: 18%;
@@ -322,7 +287,7 @@ h1 {
 #profile {
   display: flex;
   flex-direction: column;
-  height: 500px;
+  height: 60%;
   text-align: left;
 }
 #pic {
@@ -333,10 +298,10 @@ h1 {
 button {
   float: left;
 }
-#select {
+#select1,#select2 {
   display: inline;
   width: 130px;
-  margin-top: 0px;
+  margin-top: 50px;
   margin-left: 20px;
   float: left;
   color:#2c3e50;

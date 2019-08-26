@@ -89,51 +89,16 @@ import {
 } from "../constants/index.js";
 import axios from "axios";
 import { async } from 'q';
-const headers = {
+/*const headers = {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+};*/
 export default {
   name: "navigation",
   mounted: async function() {
-    await axios
-      .get(API_BASE_URL + "/user/me", {
-        headers: headers
-      })
-      .then(response => {
-        console.log(response);
-
-        localStorage.setItem(USER_EMAIL, response.data.email);
-        localStorage.setItem(USER_NAME, response.data.name);
-        localStorage.setItem(USER_PIC, response.data.imageUrl);
-        localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
-        localStorage.setItem(USER_THEME, response.data.userSettings.theme);
-        localStorage.setItem(USER_LANGUAGE,response.data.userSettings.language);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    await axios
-      .get(API_BASE_URL + "/user/translation", {
-        params: {
-          language: localStorage.getItem(USER_LANGUAGE)
-        },
-        headers: headers
-      })
-      .then(
-        response => {
-          for (var key in response.data) {
-    if (response.data.hasOwnProperty(key)) {
-        localStorage.setItem(key,response.data[key]);
-    }
-}
-          console.log(response);
-        },
-        error => {
-          console.log(error);
-        }
-      );
-      console.log(localStorage.getItem(SETTINGS));
+   
+  
+     
     if (localStorage.getItem(CURRENT_USER_ROLE) != "ADMIN") {
       document.getElementById("usertab").style.display = "none";
     }
