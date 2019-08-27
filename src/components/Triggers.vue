@@ -111,7 +111,9 @@ import {
   TRIGGER,
   CHANNEL,
   ACTIVE,
-  MESSAGE
+  MESSAGE,
+  USER_LANGUAGE,
+  USER_THEME
 } from "../constants/index.js";
 import axios from "axios";
 import ClickOutside from "vue-click-outside";
@@ -154,14 +156,16 @@ export default {
   },
 
   mounted: function() {
-    if (localStorage.getItem(THEME) == "light") {
+    if (localStorage.getItem(USER_THEME) == "Light") {
+       this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("Triggers").style.backgroundColor = "white";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "Dark") {
+      this.$emit("change-dark");
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("Triggers").style.backgroundColor = "black";
     }
-    if (localStorage.getItem(LANGUAGE) != "en") {
+    if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
         TRIGGERS
       );

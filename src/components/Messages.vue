@@ -103,7 +103,9 @@ import {
   API_BASE_URL,
   TITLE,
   TEXT,
-  CREATEDAT
+  CREATEDAT,
+  USER_THEME,
+  USER_LANGUAGE
 } from "../constants/index.js";
 import { USER_EMAIL, LANGUAGE } from "../constants/index.js";
 import { ACCESS_TOKEN, MESSAGES } from "../constants/index.js";
@@ -133,17 +135,17 @@ export default {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
 };
-    if (localStorage.getItem(THEME) == "light") {
+    if (localStorage.getItem(USER_THEME) == "Light") {
       this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("messages").style.backgroundColor = "white";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "Dark") {
       this.$emit("change-dark");
 
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("messages").style.backgroundColor = "black";
     }
-    if (localStorage.getItem(LANGUAGE) != "en") {
+    if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
         MESSAGES
       );

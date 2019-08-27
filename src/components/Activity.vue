@@ -80,7 +80,7 @@
 
 <script>
 import { API_BASE_URL } from "../constants/index.js";
-import { Current_User_Role, THEME_ID, THEME } from "../constants/index.js";
+import { Current_User_Role, THEME_ID, USER_THEME } from "../constants/index.js";
 import { User_Email } from "../constants/index.js";
 import { ACCESS_TOKEN, CAUSE ,CONSEQUENCE ,USER_LANGUAGE, ACTIVITY_LOG } from "../constants/index.js";
 import axios from "axios";
@@ -109,13 +109,15 @@ export default {
       }
   },
   mounted: function(){
-     if (localStorage.getItem(THEME) == "light") {
+     if (localStorage.getItem(USER_THEME) == "Light") {
+       this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("divlist").style.backgroundColor = "white";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "Dark") {
+      this.$emit("change-dark");
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("divlist").style.backgroundColor = "black";
-      document.getElementById("Audit").style.backgroundColor = "black";
+      document.getElementById("Activity").style.backgroundColor = "black";
     }
      if (localStorage.getItem(USER_LANGUAGE) != "en") {
        document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(

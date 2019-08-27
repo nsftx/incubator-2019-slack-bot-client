@@ -120,8 +120,8 @@ import {
   REPEAT,
   CHANNEL
 } from "../constants/index.js";
-import { CURRENT_USER_ROLE, THEME } from "../constants/index.js";
-import { ACCESS_TOKEN, LANGUAGE } from "../constants/index.js";
+import { CURRENT_USER_ROLE, USER_THEME } from "../constants/index.js";
+import { ACCESS_TOKEN, USER_LANGUAGE } from "../constants/index.js";
 import axios from "axios";
 
 import ClickOutside from "vue-click-outside";
@@ -150,16 +150,16 @@ export default {
   },
 
   mounted: function() {
-    if (localStorage.getItem(THEME) == "light") {
+    if (localStorage.getItem(USER_THEME) == "Light") {
       this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("Schedules").style.backgroundColor = "white";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "Dark") {
       this.$emit("change-dark");
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("Schedules").style.backgroundColor = "black";
     }
-    if (localStorage.getItem(LANGUAGE) != "en") {
+    if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
         SCHEDULES
       );

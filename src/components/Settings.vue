@@ -96,17 +96,18 @@ export default {
     };
   },
   mounted: function() {
-    if (localStorage.getItem(USER_THEME) == "light") {
+    if (localStorage.getItem(USER_THEME) == "Light") {
       this.$emit("change-light");
       document.getElementById("settings2").style.backgroundColor = "white";
       document.getElementById("settings2").style.color = "black";
       document.getElementById("header").style.backgroundColor = "white";
-    } else if (localStorage.getItem(USER_THEME) == "dark") {
-      this.$emit("change-dark");
+    } else if (localStorage.getItem(USER_THEME) == "Dark") {
+       this.$emit("change-dark");
       document.getElementById("settings2").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("profile").style.backgroundColor = "#2c3e50";
-       document.getElementById("profile").style.color= "black";
+      document.getElementById("select1").style.color= "black";
+       document.getElementById("select2").style.color= "black";
     }
 
     if(localStorage.getItem(USER_LANGUAGE)!="en"){
