@@ -45,7 +45,7 @@
 
 <script>
 
-import { ACCESS_TOKEN,USER_LANGUAGE,USER_THEME,ROLE,CREATEUSER,CANCEL,SAVE, NEWUSERROLE, NEWUSEREMAIL, USER } from "../constants/index.js";
+import { ACCESS_TOKEN,USER_LANGUAGE,USER_THEME,ROLE,CREATEUSER,CANCEL,SAVE, NEWUSERROLE, NEWUSEREMAIL, USER,API_BASE_URL } from "../constants/index.js";
 
 import axios from "axios";
 const headers = {
@@ -103,6 +103,10 @@ export default {
       this.$router.go(-1);
     },
     async save() {
+      let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       this.liveValidation = true;
       if (this.check_email(this.email) == false) this.invalid = true;
       if (this.check_roleType(this.roleType) == false) this.invalid = true;
@@ -112,10 +116,11 @@ export default {
       } else {
         if (this.$route.params.id == null) {
           try {
+            console.log(this.email,this.roleType);
             await axios.post(API_BASE_URL + "/user/create", {
-              title: this.title,
-              text: this.text
-            });
+              email: this.email,
+              role: this.roleType
+            },{ headers:headers});
           } catch (err) {
             this.$emit("show-notification", -1);
             this.$router.go(-1);
@@ -125,8 +130,8 @@ export default {
           try {
             await axios.put(
               API_BASE_URL + "/user/getAllUsers/" + this.$route.params.id,
-              { title: this.title, text: this.text }
-            );
+              { title: this.title, text: this.text },{ headers:headers});
+            
           } catch (err) {
             this.$emit("show-notification", -1);
             this.$router.go(-1);

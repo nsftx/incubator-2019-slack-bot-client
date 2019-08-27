@@ -291,21 +291,26 @@ export default {
       }
     },
     async create() {
-        await axios.get(
-          API_BASE_URL +
-            "/user/getAllUsers?page=0&size=" +
-            this.rowSize +
-            "&sort=name," +
-            this.sortType,{headers: headers }
-        ).then(response => {
-          this.usersData = response.data.content;
-        if (response.data.totalPages == 0) this.pagesSize = 1;
-        else this.pagesSize = response.data.totalPages;
-        this.rowSize = response.data.size;
-        }).catch((error) => {
-    this.showNotification(-1);
-  });
-    },
+     let headers = {
+ "Content-Type": "application/json",
+ Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
+    try {
+       const res = await axios.get(
+         API_BASE_URL +
+           "/user/getAllUsers?page=0" +
+           "&size=" +
+           this.rowSize ,
+           { headers: headers }
+       );
+       this.usersData = res.data.content;
+       if (res.data.totalPages == 0) this.pagesSize = 1;
+       else this.pagesSize = res.data.totalPages;
+       this.rowSize = res.data.size;
+     } catch (err) {
+       this.showNotification(-1);
+     }
+   },
     sortBy(value) {
       if (this.sortType == "desc") this.sortType = "asc";
       else this.sortType = "desc";

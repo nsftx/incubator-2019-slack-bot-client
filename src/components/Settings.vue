@@ -155,6 +155,26 @@ export default {
       else
       lang="fr";
       console.log(this.picked2);
+      if(this.picked1!="" && this.picked2==""){
+         axios
+        .post(
+          API_BASE_URL + "/user/userSettings",
+          { theme: this.picked1, language: lang },
+          {
+            headers: headers
+          }
+        )
+        .then(
+          response => {
+            localStorage.setItem(USER_THEME, response.data.theme);
+            localStorage.setItem(USER_LANGUAGE, response.data.language);
+            console.log(response);
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      }
       axios
         .post(
           API_BASE_URL + "/user/userSettings",
