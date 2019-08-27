@@ -3,7 +3,7 @@
     <div id="form-style-10">
       <form id="forma">
         <div id="section">
-          <p>
+          <p id="pollViewTitle">
             Poll
             <label id="close-icon" @click="exit" style="font-size: 20px">X</label>
           </p>
@@ -18,8 +18,8 @@
             placeholder="New poll title"
           />
 
-          <label>Option</label>
-          <label style="float: right">Vote number</label>
+          <label id="option">Option</label>
+          <label id="votenumber" style="float: right">Vote number</label>
 
           <ul>
             <li v-for="choice in choiceList" :key="choice.choiceId">
@@ -37,8 +37,8 @@
 
 <script>
 import axios from 'axios';
-import { API_BASE_URL } from "../constants/index.js";
-import { Current_User_Role, THEME_ID, THEME } from "../constants/index.js";
+import { API_BASE_URL, VOTENUMBER } from "../constants/index.js";
+import { Current_User_Role, THEME_ID, THEME,SAVE,CANCEL,USER_LANGUAGE,POLL,TITLE,NEWPOLLTITLE,OPTION } from "../constants/index.js";
 import { User_Email } from "../constants/index.js";
 import { ACCESS_TOKEN } from "../constants/index.js";
 import ClickOutside from "vue-click-outside";
@@ -58,6 +58,21 @@ export default {
   },
 
   mounted: function(){
+     if (localStorage.getItem(USER_LANGUAGE) != "en") {
+       document.getElementById("pollViewTitle").innerHTML = localStorage.getItem(
+       POLL
+      );
+       document.getElementById("field1").placeholder = localStorage.getItem(
+       NEWPOLLTITLE
+      );
+      document.getElementById("option").innerHTML= localStorage.getItem(
+       OPTION
+      );
+      document.getElementById("votenumber").innerHTML = localStorage.getItem(
+        VOTENUMBER
+      );
+      document.getElementById("cancle").value=localStorage.getItem(CANCEL);
+    }
     this.create();
   },
   methods: {

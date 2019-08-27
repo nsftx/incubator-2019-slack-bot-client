@@ -42,7 +42,7 @@
             <p>{{user.email}}</p>
           </div>
           <div class="column3 column">
-            <p>{{user.id}}</p>
+            <p>{{user.role}}</p>
           </div>
           <div class="column4 column">
             <i class="material-icons">create</i>

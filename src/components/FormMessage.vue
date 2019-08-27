@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { ACCESS_TOKEN } from "../constants/index.js";
+import { ACCESS_TOKEN,USER_LANGUAGE,CREATEMESSAGE,SAVE,CANCEL,TITLE,TEXT,NEWMESSAGE,TYPEYOURMESSAGE } from "../constants/index.js";
 import axios from "axios";
 
 import { API_BASE_URL } from "../constants";
