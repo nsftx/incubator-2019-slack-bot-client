@@ -1,6 +1,8 @@
 //urls
-export const API_BASE_URL = 'http://welcome-bot.tk:9090';
-export const OAUTH2_REDIRECT_URI = 'http://welcome-bot.tk:80/oauth2/redirect'
+//export const API_BASE_URL = 'http://welcome-bot.tk:9090';
+//export const OAUTH2_REDIRECT_URI = 'http://welcome-bot.tk:80/oauth2/redirect'
+export const API_BASE_URL = 'http://localhost:8080';
+export const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect'
 export const GOOGLE_AUTH_URL = API_BASE_URL + '/oauth2/authorize/google?redirect_uri=' + OAUTH2_REDIRECT_URI;
 //User things
 export const ACCESS_TOKEN = 'accessToken';
@@ -63,5 +65,7 @@ export const SOMETRIGGERTYPE="sometriggertype";
 export const PICKED="picked";
 export const DARK="dark";
 export const LIGHT="light";
-
+export const ENDDATE="enddate";
+export const OPTION="option";
+export const VOTENUMBER="votenumber";
 

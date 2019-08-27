@@ -26,7 +26,7 @@
           <br />
           <br />
 
-          <label>Choices:</label>
+          <label id="choices">Choices:</label>
           <input
             type="text"
             v-for="(choice, index) in choices"
@@ -64,7 +64,7 @@
           <br />
           <br />
 
-          <label class="la">Channel name</label>
+          <label id="channelname" class="la">Channel name</label>
           <select
             id="field3"
             v-model="channelName"
@@ -104,7 +104,7 @@
 
 <script>
 
-import { ACCESS_TOKEN,USER_THEME,USER_LANGUAGE,TITLE,CREATEPOLL,CANCEL,SAVE,NEWPOLLTITLE, CHOICES } from "../constants/index.js";
+import { ACCESS_TOKEN,USER_THEME,USER_LANGUAGE,TITLE,CREATEPOLL,CANCEL,SAVE,NEWPOLLTITLE, CHOICES, SOMECHANNELNAME, SELECTDATE, ENDDATE } from "../constants/index.js";
 import axios from "axios";
 import DatePicker from "vue2-datepicker";
 import { API_BASE_URL } from "../constants";
@@ -131,7 +131,7 @@ export default {
       showDateError: false,
       active: true,
       channelsData: [],
-      channelName: "Some channel name",
+      channelName: localStorage.getItem(SOMECHANNELNAME),
       channelId: "",
       targetChannel: "",
       showChannelError: false,
@@ -162,7 +162,7 @@ export default {
           "previous 30 days"
         ],
         placeholder: {
-          date: "Select Date",
+          date: localStorage.getItem(SELECTDATE),
           dateRange: "Select Date Range"
         }
       }
@@ -170,10 +170,10 @@ export default {
   },
 
   mounted: async function() {
-  if (localStorage.getItem(USER_THEME) == "light") {
+  if (localStorage.getItem(USER_THEME) == "Light") {
       document.getElementById("form-style-10").style.backgroundColor = "white";
       //document.getElementById("messages").style.backgroundColor="white";
-    } else if (localStorage.getItem(USER_THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "Dark") {
       document.getElementById("form-style-10").style.backgroundColor = "black";
       //document.getElementById("messages").style.backgroundColor="black";
     }
@@ -183,8 +183,10 @@ export default {
       document.getElementsByClassName(
         "la"
       )[0].innerHTML = localStorage.getItem(TITLE);
-      document.getElementById("cancle").value=  localStorage.getItem(CANCEL);
-       document.getElementById("submit").value=  localStorage.getItem(SAVE);
+      document.getElementsByClassName("la2")[0].innerHTML=localStorage.getItem(ENDDATE);
+      document.getElementById("channelname").innerHTML=localStorage.getItem(SOMECHANNELNAME);
+      document.getElementById("cancle").value= localStorage.getItem(CANCEL);
+       document.getElementById("submit").value=localStorage.getItem(SAVE);
         document.getElementById("field1").placeholder = localStorage.getItem(NEWPOLLTITLE);
          document.getElementById("choices").innerHTML = localStorage.getItem(CHOICES);
     }

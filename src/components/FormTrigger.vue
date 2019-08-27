@@ -69,7 +69,7 @@
           <br />
 
           <label class="container">
-            <p class="checkText">Active</p>
+            <p id="active" class="checkText">Active</p>
             <input type="checkbox" checked="checked" v-model="active" />
             <span class="checkmark"></span>
           </label>
@@ -119,6 +119,15 @@ export default {
   },
 
   mounted: async function() {
+     if (localStorage.getItem(USER_LANGUAGE) != "en") {
+      document.getElementById("formTitle").innerHTML= localStorage.getItem(
+        CREATETRIGGER
+      );
+       document.getElementById("formTitle").style.color="black";
+       document.getElementById("active").innerHTML=localStorage.getItem(ACTIVE);
+        document.getElementById("cancel").value=localStorage.getItem(CANCEL);
+         document.getElementById("submit").value=localStorage.getItem(SAVE);
+     }
     if (this.$route.params.id != null) {
       var currentR = this.$router.currentRoute.fullPath;
       var path = currentR.substring(0, 30);
