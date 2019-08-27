@@ -82,7 +82,7 @@
 import { API_BASE_URL } from "../constants/index.js";
 import { Current_User_Role, THEME_ID, THEME } from "../constants/index.js";
 import { User_Email } from "../constants/index.js";
-import { ACCESS_TOKEN } from "../constants/index.js";
+import { ACCESS_TOKEN, CAUSE ,CONSEQUENCE ,USER_LANGUAGE, ACTIVITY_LOG } from "../constants/index.js";
 import axios from "axios";
 import ClickOutside from "vue-click-outside";
 const headers = {
@@ -109,6 +109,26 @@ export default {
       }
   },
   mounted: function(){
+     if (localStorage.getItem(THEME) == "light") {
+      document.getElementById("header").style.backgroundColor = "white";
+      document.getElementById("divlist").style.backgroundColor = "white";
+    } else if (localStorage.getItem(THEME) == "dark") {
+      document.getElementById("header").style.backgroundColor = "black";
+      document.getElementById("divlist").style.backgroundColor = "black";
+      document.getElementById("Audit").style.backgroundColor = "black";
+    }
+     if (localStorage.getItem(USER_LANGUAGE) != "en") {
+       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
+       ACTIVITY_LOG
+      );
+      document.getElementsByTagName("H5")[1].innerHTML = localStorage.getItem(
+        CAUSE
+      );
+      document.getElementsByTagName("H5")[2].innerHTML = localStorage.getItem(
+        CONSEQUENCE
+      );
+     
+    }
     this.auditData = [{id: 1, cause: "Testni tekst 1", consequence: "Testni tekst 1"}, {id: 2, cause: "Testni tekst 2", consequence: "Testni tekst 2"}]
   },
   methods:{

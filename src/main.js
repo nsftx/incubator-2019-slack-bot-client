@@ -17,7 +17,7 @@ import settings from "./components/Settings.vue"
 import OAuth2RedirectHandler from "./components/OAuth2RedirectHandler.vue"
 import Error from "./components/Error.vue"
 
-import poll from "./components/poll.vue"
+import Poll from "./components/Poll.vue"
 import FormPoll from "./components/FormPoll.vue"
 import Activity from "./components/Activity.vue"
 import viewPoll from "./components/viewPoll.vue"
@@ -51,7 +51,7 @@ const router = new VueRouter({
         [
           {
             path: "poll",
-            component: poll,
+            component: Poll,
             children:
               [
                 {

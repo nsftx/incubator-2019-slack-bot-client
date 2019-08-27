@@ -90,13 +90,7 @@ export default {
         localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
         localStorage.setItem(USER_THEME, response.data.userSettings.theme);
         localStorage.setItem(USER_LANGUAGE,response.data.userSettings.language);
-
-      })
-      .catch(err => {
-        console.log(err);
-      });
-
-        await axios
+           return axios
       .get(API_BASE_URL + "/user/translation", {
         params: {
           language: localStorage.getItem(USER_LANGUAGE)
@@ -116,6 +110,13 @@ export default {
           console.log(error);
         }
       );
+
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+     
     if (localStorage.getItem(USER_THEME) == "light") {
       document.getElementById("dropdown").style.backgroundColor = "white";
        document.getElementById("header").style.backgroundColor = "white";
@@ -179,7 +180,7 @@ export default {
       this.data.items[2].title = localStorage.getItem(LOGOUT);
 
     }
-    navigation.Translate();
+    navigation.methods.Translate();
   }
   }
 };

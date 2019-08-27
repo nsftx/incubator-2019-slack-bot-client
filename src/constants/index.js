@@ -61,5 +61,7 @@ export const CHOICES="choices";
 export const CREATETRIGGER="createtrigger";
 export const SOMETRIGGERTYPE="sometriggertype";
 export const PICKED="picked";
+export const DARK="dark";
+export const LIGHT="light";
 
 

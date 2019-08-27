@@ -36,7 +36,7 @@
       </button>
     </router-link>
 
-    <router-link to="/dashboard/audit" class="router-link">
+    <router-link to="/dashboard/activity" class="router-link">
       <button>
         <v-icon color="white" size="32" style="margin-bottom: 10px">track_changes</v-icon>
         <br /> <span> Activity log </span>
@@ -99,10 +99,6 @@ import {
 } from "../constants/index.js";
 import axios from "axios";
 import { async } from 'q';
-/*const headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};*/
 export default {
   name: "navigation",
   mounted: async function() {

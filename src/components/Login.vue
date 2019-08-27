@@ -4,7 +4,6 @@
     <div id="right">
       <div id="right-content">
         <a id="btn btn-block social-btn google" href>
-
           <!--<i class="fab fa-google">| Sign In With Google</i>-->
           <div id="google-sign"></div>
         </a>
@@ -36,7 +35,6 @@ export default {
 <style scoped>
 #login {
   height: 100vh;
-
 }
 
 #google-sign{
@@ -114,11 +112,6 @@ i:hover {
 
   background-color: white;
 }
-@media only screen and (max-width: 600px) {
-  #login {
-    display: block;
-  }
-
 
 #left h1 {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
@@ -190,6 +183,7 @@ i:hover {
   #right-content i:hover {
     color: rgb(116, 167, 233);
   }
+
   #left {
     float: none;
     box-sizing: border-box;
@@ -216,7 +210,6 @@ i:hover {
   #logo {
     position: absolute;
     height: 70px;
-
     width: 220px;
     top: 10%;
     left: 50%;

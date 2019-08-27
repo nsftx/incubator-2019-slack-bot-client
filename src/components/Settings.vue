@@ -14,11 +14,11 @@
             <br />
             <br />
          <input type="radio" id="one" value="Dark" v-model="picked1" @click="showThemeSettings('Dark')">
-<label for="one">Dark</label>
+<label id="dark" for="one">Dark</label>
 <br>
 <br>
 <input type="radio" id="two" value="Light" v-model="picked1" @click="showThemeSettings('Light')">
-<label for="two">Light</label>
+<label id="light" for="two">Light</label>
 <br>
 <br>
 <br>
@@ -32,15 +32,15 @@
             <br />
             <br />
          <input type="radio" id="one1" value="English" v-model="picked2" >
-<label for="one">English</label>
+<label id="english" for="one">English</label>
 <br>
 <br>
 <input type="radio" id="two1" value="Bosnian" v-model="picked2" >
-<label for="two">Bosnian</label>
+<label id="bosnian" for="two">Bosnian</label>
 <br>
 <br>
 <br>
-<span> <span id="picked2">Picked: </span> {{ picked2 }}</span>
+<span> <span id="picked2">Picked: </span> {{ picked2}}</span>
 </div>
       <input type="button" value="Save" @click="Save()" id="submit" />
     </div>
@@ -63,7 +63,11 @@ import {
   ACTIVE,
   NAME,
   ROLE,
-  CREATEDAT
+  CREATEDAT,
+  LANGUAGEFR,
+  LANGUAGEEN,
+  DARK,
+  LIGHT
 } from "../constants/index.js";
 import {
   USER_EMAIL,
@@ -87,13 +91,12 @@ export default {
   name: "settings2",
   data() {
     return {
-      picked1: " ",
+      picked1:" ",
       picked2:" ",
     };
   },
   mounted: function() {
     if (localStorage.getItem(USER_THEME) == "light") {
-
       this.$emit("change-light");
       document.getElementById("settings2").style.backgroundColor = "white";
       document.getElementById("settings2").style.color = "black";
@@ -115,11 +118,14 @@ export default {
           document.getElementById("language").innerHTML = localStorage.getItem(
             SELECTLANGUAGE
           );
-
           document.getElementById("title").innerHTML = localStorage.getItem(
             SETTINGS
           );
           document.getElementById("submit").value = localStorage.getItem(SAVE);
+          document.getElementById("english").innerHTML= localStorage.getItem(LANGUAGEEN);
+          document.getElementById("bosnian").innerHTML= localStorage.getItem(LANGUAGEFR);
+          document.getElementById("dark").innerHTML=localStorage.getItem(DARK);
+          document.getElementById("light").innerHTML=localStorage.getItem(LIGHT);
   }
         },
   methods: {
@@ -133,7 +139,6 @@ export default {
        document.getElementById("select2").style.color= "black";
        //document.getElementById("profile").style.color="white";
       } else if (value=="Light") {
-
         this.$emit("change-light");
         document.getElementById("header").style.backgroundColor = "white";
         document.getElementById("settings2").style.backgroundColor = "white";
@@ -143,11 +148,17 @@ export default {
 
     },
     Save() {
+      console.log(this.picked1,this.picked2);
+      let lang;
+      if(this.picked2=="English")
+      lang="en";
+      else
+      lang="fr";
+      console.log(this.picked2);
       axios
         .post(
           API_BASE_URL + "/user/userSettings",
-          { theme: this.picked1, language: this.picked2 },
-
+          { theme: this.picked1, language: lang },
           {
             headers: headers
           }
@@ -155,7 +166,6 @@ export default {
         .then(
           response => {
             localStorage.setItem(USER_THEME, response.data.theme);
-
             localStorage.setItem(USER_LANGUAGE, response.data.language);
             console.log(response);
           },
@@ -163,6 +173,8 @@ export default {
             console.log(error);
           }
         );
+        this.picked1="";
+        this.picked2="";
       this.$emit("change-language");
     }
   }
@@ -307,10 +319,7 @@ button {
 }
 #select1,#select2 {
   display: inline;
-  width: 130px;
-  margin-top: 50px;
   margin-left: 20px;
-  float: left;
   color:#2c3e50;
   font-size:120%;
 }

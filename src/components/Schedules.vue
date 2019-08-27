@@ -125,7 +125,6 @@ import { ACCESS_TOKEN, LANGUAGE } from "../constants/index.js";
 import axios from "axios";
 
 import ClickOutside from "vue-click-outside";
-import axios from "axios";
 const headers = {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)

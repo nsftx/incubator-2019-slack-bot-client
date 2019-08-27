@@ -126,6 +126,10 @@ export default {
   },
 
   mounted: function() {
+    let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
     if (localStorage.getItem(THEME) == "light") {
 
       document.getElementById("header").style.backgroundColor = "white";
@@ -287,21 +291,20 @@ export default {
       }
     },
     async create() {
-      try {
-        const res = await axios.get(
+        await axios.get(
           API_BASE_URL +
             "/user/getAllUsers?page=0&size=" +
             this.rowSize +
             "&sort=name," +
-            this.sortType
-        );
-        this.usersData = res.data.content;
-        if (res.data.totalPages == 0) this.pagesSize = 1;
-        else this.pagesSize = res.data.totalPages;
-        this.rowSize = res.data.size;
-      } catch (err) {
-        this.showNotification(-1);
-      }
+            this.sortType,{headers: headers }
+        ).then(response => {
+          this.usersData = response.data.content;
+        if (response.data.totalPages == 0) this.pagesSize = 1;
+        else this.pagesSize = response.data.totalPages;
+        this.rowSize = response.data.size;
+        }).catch((error) => {
+    this.showNotification(-1);
+  });
     },
     sortBy(value) {
       if (this.sortType == "desc") this.sortType = "asc";
