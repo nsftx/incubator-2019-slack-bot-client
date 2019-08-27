@@ -77,14 +77,15 @@ export default {
       document.getElementById("role1").innerHTML = localStorage.getItem(
         CURRENT_USER_ROLE
       );
-    if (localStorage.getItem(USER_THEME) == "light") {
+    if (localStorage.getItem(USER_THEME) == "Light") {
       this.$emit("change-light");
       document.getElementById("profile1").style.backgroundColor = "white";
       document.getElementById("profile1").style.color = "black";
-    } else if (localStorage.getItem(USER_THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "Dark") {
       this.$emit("change-dark");
-
-      document.getElementById("profile").style.backgroundColor = "black";
+      document.getElementById("profile").style.backgroundColor = "#2c3e50";
+      document.getElementById("profile").style.color = "black";
+      //document.getElementById("profile").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("table").style.backgroundColor = "black";
       document.getElementById("profile1").style.color = "white";
@@ -130,8 +131,7 @@ export default {
   background-color: #f1f1f1;
 }
 p{
-  font-size: 16.8px;;
-  color:#2c3e50;
+  font-size: 16.8px;
 }
 #profile1 {
   padding: 20px;

@@ -92,7 +92,7 @@
 
 <script scoped>
 import { API_BASE_URL } from "../constants/index.js";
-import { Current_User_Role, THEME_ID, THEME,POLL,USER_LANGUAGE,TITLE,CHANNEL,ACTIVE} from "../constants/index.js";
+import { Current_User_Role, THEME_ID, THEME,POLL,USER_LANGUAGE,TITLE,CHANNEL,ACTIVE,USER_THEME} from "../constants/index.js";
 import { User_Email } from "../constants/index.js";
 import { ACCESS_TOKEN } from "../constants/index.js";
 import axios from "axios";
@@ -118,11 +118,13 @@ export default {
         }
     },
     mounted: function(){
-      if (localStorage.getItem(THEME) == "light") {
+      if (localStorage.getItem(USER_THEME) == "Light") {
+        this.$emit("change-light");
         document.getElementById("poll").style.backgroundColor = "white";
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("divlist").style.backgroundColor = "white";
-    } else if (localStorage.getItem(THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "Dark") {
+      this.$emit("change-dark");
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("divlist").style.backgroundColor = "black";
       document.getElementById("poll").style.backgroundColor = "black";
