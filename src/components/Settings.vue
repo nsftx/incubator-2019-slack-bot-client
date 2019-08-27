@@ -35,7 +35,7 @@
 <label id="english" for="one">English</label>
 <br>
 <br>
-<input type="radio" id="two1" value="Bosnian" v-model="picked2" >
+<input type="radio" id="two1"  value="Bosnian" v-model="picked2" >
 <label id="bosnian" for="two">Bosnian</label>
 <br>
 <br>
@@ -92,7 +92,7 @@ export default {
   data() {
     return {
       picked1:" ",
-      picked2:" ",
+      picked2:"",
     };
   },
   mounted: function() {
@@ -149,18 +149,16 @@ export default {
 
     },
     Save() {
-      console.log(this.picked1,this.picked2);
-      let lang;
       if(this.picked2=="English")
-      lang="en";
-      else
-      lang="fr";
-      console.log(this.picked2);
-      if(this.picked1!="" && this.picked2==""){
+      localStorage.setItem(USER_LANGUAGE,"en");
+      else if(this.picked2=="Bosnian")
+      localStorage.setItem(USER_LANGUAGE,"fr");
+       if(this.picked1!="")
+      localStorage.setItem(USER_THEME,this.picked1);
          axios
         .post(
           API_BASE_URL + "/user/userSettings",
-          { theme: this.picked1, language: lang },
+          { theme: localStorage.getItem(USER_THEME), language: localStorage.getItem(USER_LANGUAGE)},
           {
             headers: headers
           }
@@ -175,29 +173,11 @@ export default {
             console.log(error);
           }
         );
-      }
-      axios
-        .post(
-          API_BASE_URL + "/user/userSettings",
-          { theme: this.picked1, language: lang },
-          {
-            headers: headers
-          }
-        )
-        .then(
-          response => {
-            localStorage.setItem(USER_THEME, response.data.theme);
-            localStorage.setItem(USER_LANGUAGE, response.data.language);
-            console.log(response);
-          },
-          error => {
-            console.log(error);
-          }
-        );
-        this.picked1="";
+         this.picked1="";
         this.picked2="";
       this.$emit("change-language");
-    }
+      }
+      
   }
 };
 </script>
