@@ -20,7 +20,7 @@
             </p>
           </div>
           <div class="column3 column">
-            <h5>ID</h5>
+            <h5>Role</h5>
             <p>
               <i class="material-icons">arrow_drop_down</i>
             </p>
@@ -45,8 +45,7 @@
             <p>{{user.role}}</p>
           </div>
           <div class="column4 column">
-            <i class="material-icons">create</i>
-            <i class="material-icons">delete</i>
+            <i class="material-icons" @click="deleteUser(user.id)">delete</i>
           </div>
         </li>
       </ul>
