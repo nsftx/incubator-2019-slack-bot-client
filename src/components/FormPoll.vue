@@ -3,15 +3,13 @@
     <div id="form-style-10">
       <form id="forma">
         <div id="section">
-
-          <p> <span id="createPoll">
-            Create Poll </span>
+          <p>
+            <span id="createPoll">Create Poll</span>
             <label id="close-icon" @click="exit" style="font-size: 20px">X</label>
           </p>
         </div>
-          <label class="la">Title</label>
-          <div id="inner-wrap">
-
+        <label class="la">Title</label>
+        <div id="inner-wrap">
           <input
             autocomplete="off"
             type="text"
@@ -59,9 +57,8 @@
           <span
             v-show="choices.length==5"
             style="color: #888"
-          >Maximum number of choices has been reached</span>
+          >Maximum number of choices have been reached</span>
 
-          <br />
           <br />
 
           <label id="channelname" class="la">Channel name</label>
@@ -70,14 +67,16 @@
             v-model="channelName"
             @click="getChannelID"
             :class="{errorBorder: showChannelError, noErrorBorder: !showChannelError}"
-            :disabled="formType=='Update'"
           >
-            <option disabled selected> {{channelName}} </option>
-            <option v-for="channel in channelsData" :key="channel.channelName">{{ channel.channelName }}</option>
+            <option disabled selected>{{channelName}}</option>
+            <option
+              v-for="channel in channelsData"
+              :key="channel.channelName"
+            >{{ channel.channelName }}</option>
           </select>
 
           <span v-show="showChannelError">Channel name is required</span>
-          <br>
+          <br />
 
           <label class="la2">End date</label>
           <br />
@@ -93,7 +92,6 @@
           <br />
           <br />
 
-
           <input type="button" value="Save" @click="save" id="submit" class="input-options" />
           <input type="button" value="Cancel" @click="exit" id="cancle" class="input-options" />
         </div>
@@ -103,8 +101,20 @@
 </template>
 
 <script>
-
-import { ACCESS_TOKEN,USER_THEME,USER_LANGUAGE,TITLE,CREATEPOLL,CANCEL,SAVE,NEWPOLLTITLE, CHOICES, SOMECHANNELNAME, SELECTDATE, ENDDATE } from "../constants/index.js";
+import {
+  ACCESS_TOKEN,
+  USER_THEME,
+  USER_LANGUAGE,
+  TITLE,
+  CREATEPOLL,
+  CANCEL,
+  SAVE,
+  NEWPOLLTITLE,
+  CHOICES,
+  SOMECHANNELNAME,
+  SELECTDATE,
+  ENDDATE
+} from "../constants/index.js";
 import axios from "axios";
 import DatePicker from "vue2-datepicker";
 import { API_BASE_URL } from "../constants";
@@ -125,7 +135,6 @@ export default {
       choices: [],
       liveValidation: false,
       showTitleError: false,
-
       showChoiceError: false,
       date: null,
       showDateError: false,
@@ -170,7 +179,7 @@ export default {
   },
 
   mounted: async function() {
-  if (localStorage.getItem(USER_THEME) == "Light") {
+    if (localStorage.getItem(USER_THEME) == "Light") {
       document.getElementById("form-style-10").style.backgroundColor = "white";
       //document.getElementById("messages").style.backgroundColor="white";
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
@@ -178,20 +187,28 @@ export default {
       //document.getElementById("messages").style.backgroundColor="black";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
-      document.getElementById("createPoll").innerHTML = localStorage.getItem(CREATEPOLL);
-      document.getElementById("createPoll").style.color="black";
+      document.getElementById("createPoll").innerHTML = localStorage.getItem(
+        CREATEPOLL
+      );
+      document.getElementById("createPoll").style.color = "black";
+      document.getElementsByClassName("la")[0].innerHTML = localStorage.getItem(
+        TITLE
+      );
       document.getElementsByClassName(
-        "la"
-      )[0].innerHTML = localStorage.getItem(TITLE);
-      document.getElementsByClassName("la2")[0].innerHTML=localStorage.getItem(ENDDATE);
-      document.getElementById("channelname").innerHTML=localStorage.getItem(SOMECHANNELNAME);
-      document.getElementById("cancle").value= localStorage.getItem(CANCEL);
-       document.getElementById("submit").value=localStorage.getItem(SAVE);
-        document.getElementById("field1").placeholder = localStorage.getItem(NEWPOLLTITLE);
-         document.getElementById("choices").innerHTML = localStorage.getItem(CHOICES);
+        "la2"
+      )[0].innerHTML = localStorage.getItem(ENDDATE);
+      document.getElementById("channelname").innerHTML = localStorage.getItem(
+        SOMECHANNELNAME
+      );
+      document.getElementById("cancle").value = localStorage.getItem(CANCEL);
+      document.getElementById("submit").value = localStorage.getItem(SAVE);
+      document.getElementById("field1").placeholder = localStorage.getItem(
+        NEWPOLLTITLE
+      );
+      document.getElementById("choices").innerHTML = localStorage.getItem(
+        CHOICES
+      );
     }
-    this.choices.push({choiceValue: ""});
-    this.choices.push({choiceValue: ""});
     this.choices.push({ choiceValue: "" });
     this.choices.push({ choiceValue: "" });
     document.getElementsByClassName("mx-input-append")[0].style.padding = "0px";
@@ -223,7 +240,6 @@ export default {
     channelName(value) {
       this.channelName = value;
       if (this.liveValidation == true) this.check_channelName(value);
-
     }
   },
 
@@ -232,21 +248,8 @@ export default {
       this.$router.go(-1);
     },
 
-
-    addBorder() {
-      for (var i = 0; i < this.choices.length; i++) {
-        if (this.choices[i].choiceValue == "") {
-          document.getElementsByClassName("choices")[i].style.borderColor =
-            "red";
-        } else
-          document.getElementsByClassName("choices")[i].style.borderColor =
-            "rgba(0, 0, 0, 0.2)";
-      }
-    },
-
     addNewChoice() {
       this.choices.push({ choiceValue: "" });
-      this.addBorder();
     },
 
     removeChoice() {
@@ -255,7 +258,6 @@ export default {
 
     check_title(value) {
       if (this.title.length < 3) {
-
         this.showTitleError = true;
         return false;
       } else {
@@ -263,7 +265,6 @@ export default {
         return true;
       }
     },
-
 
     check_choices(value) {
       var checkError = false;
@@ -282,7 +283,6 @@ export default {
       this.showChoiceError = false;
       return true;
     },
-
 
     check_date(value) {
       var today = new Date();
@@ -315,10 +315,10 @@ export default {
       if (this.check_date(this.date) == false) this.invalid = true;
       if (this.check_choices(this.choices) == false) this.invalid = true;
       if (this.check_channelName(this.channelName) == false)
-      if (this.invalid == true) {
-        this.invalid = false;
-        return;
-      }
+        if (this.invalid == true) {
+          this.invalid = false;
+          return;
+        }
 
       try
       {
@@ -326,7 +326,8 @@ export default {
         API_BASE_URL + "/api/polls",
         {
           active: this.active,
-          channel: this.channelId,
+          channelId: this.channelId,
+          activeUntil: this.date,
           choiceList: this.choices,
           title: this.title
         },
@@ -342,17 +343,16 @@ export default {
       this.$router.go(-1);
     },
 
-    getChannelID(){
-      if(this.channelsData.length>1){
-        this.targetChannel = this.channelsData.filter(obj => obj.channelName == this.channelName);
+    getChannelID() {
+      if (this.channelsData.length > 1) {
+        this.targetChannel = this.channelsData.filter(
+          obj => obj.channelName == this.channelName
+        );
         this.channelId = this.targetChannel[0].id;
-      }
-      else
-        this.channelId = this.channelsData[0].id;
+      } else this.channelId = this.channelsData[0].id;
     }
   }
 };
-
 </script>
 
 <style scoped>
@@ -377,7 +377,6 @@ export default {
   padding-bottom: 50px;
 }
 
-
 .mx-input {
   overflow: visible;
 }
@@ -392,7 +391,6 @@ export default {
 .mx-datepicker {
   width: 100%;
 }
-
 
 #form-style-10 #inner-wrap {
   display: block;
@@ -536,7 +534,6 @@ export default {
   top: 10px;
 }
 
-
 #form-style-10 #choiceButton {
   float: right;
   height: 30px;
@@ -571,7 +568,6 @@ span {
   font-weight: 400;
 }
 
-
 .la2 {
   position: relative;
   top: 15px;
@@ -580,5 +576,4 @@ span {
   z-index: 1;
   padding: 0px 4px;
 }
-
 </style>

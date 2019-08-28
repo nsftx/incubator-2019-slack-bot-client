@@ -4,7 +4,6 @@
     <div id="right">
       <div id="right-content">
         <a id="btn btn-block social-btn google" href>
-          <!--<i class="fab fa-google">| Sign In With Google</i>-->
           <div id="google-sign"></div>
         </a>
       </div>
@@ -40,7 +39,6 @@ export default {
 #google-sign{
   height: 50px;
   width: 300px;
-
   background-image: url("../assets/google-signin.png");
   background-position: center;
   background-size: cover;

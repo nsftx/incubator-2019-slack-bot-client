@@ -10,19 +10,19 @@
           <div class="column1 column">
             <h5>ID</h5>
             <p>
-              <i class="material-icons">arrow_drop_down</i>
+              <i class="material-icons" @click="sortByValue('auditId')">arrow_drop_down</i>
             </p>
           </div>
           <div class="column2 column">
-            <h5>cause</h5>
+            <h5>Action</h5>
             <p>
-              <i class="material-icons">arrow_drop_down</i>
+              <i class="material-icons" @click="sortByValue('cause')">arrow_drop_down</i>
             </p>
           </div>
-           <div class="column3 column">
-            <h5>consequence</h5>
+          <div class="column3 column">
+            <h5>Result</h5>
             <p>
-              <i class="material-icons">arrow_drop_down</i>
+              <i class="material-icons" @click="sortByValue('consequence')">arrow_drop_down</i>
             </p>
           </div>
         </li>
@@ -31,7 +31,7 @@
           <div class="linear2"></div>
           <div class="linear1"></div>
           <div class="column1 column">
-            <p>{{ audit.id }}</p>
+            <p>{{ audit.auditId }}</p>
           </div>
           <div class="column2 column">
             <p>{{ audit.cause}}</p>
@@ -61,7 +61,7 @@
 
     <div
       id="notification"
-      v-show="showNoti"
+      v-show="showNotificationValue"
       :class="{redBorder: errorOccured, greenBorder: !errorOccured}"
     >
       <input
@@ -96,16 +96,16 @@ export default {
       return{
         auditData: [],
         textNoti: "",
-        showNoti: false,
         rowSizesValue: [5, 10, 20],
         rowSize: 20,
         page: 1, //current active page
         pagesSize: 1, //Number of pages
         menu: false,
         sortByValue: "createdAt",
+        sortType: "desc",
         textNoti: "",
         errorOccured: false,
-        showNoti: false
+        showNotificationValue: false
       }
   },
   mounted: function(){
@@ -131,7 +131,7 @@ export default {
       );
      
     }
-    this.auditData = [{id: 1, cause: "Testni tekst 1", consequence: "Testni tekst 1"}, {id: 2, cause: "Testni tekst 2", consequence: "Testni tekst 2"}]
+    this.create();
   },
   methods:{
       toggleMenu() {
@@ -145,45 +145,73 @@ export default {
     setRows(value) {
       if (value != this.rowSize) {
         this.rowSize = value;
-        //this.reloadTriggers();
+        this.reloadActivity();
       }
       this.menu = !this.menu;
     },
 
     changePage(nextPage) {
       this.page = nextPage;
-      //this.reloadTriggers(nextPage - 1);
+      this.reloadActivity(nextPage - 1);
+    },
+
+    async reloadActivity() {
+      var pg = this.page - 1;
+      try {
+        const res = await axios.get(
+          API_BASE_URL + "/api/logs?page=" + pg + "&size=" + this.rowSize,
+          { headers: headers }
+        );
+
+        if (res.data.totalPages < this.page)
+          this.changePage(res.data.totalPages);
+          
+        this.auditData = res.data.content;
+        this.pagesSize = res.data.totalPages;
+      } catch (err) {
+        this.showNotification(-1);
+      }
     },
 
     async create() {
       try {
         const res = await axios.get(
-          API_BASE_URL + "/api/triggers?page=0&size=" + this.rowSize
+          API_BASE_URL + "/api/logs?page=0&size=" + this.rowSize,
+          { headers: headers }
         );
-        this.triggersData = res.data.content;
+        this.auditData = res.data.content;
         if (res.data.totalPages == 0) this.pagesSize = 1;
         else this.pagesSize = res.data.totalPages;
         this.rowSize = res.data.size;
       } catch (err) {
-        console.log(err);
+        this.showNotification(-1);
       }
     },
 
-     showNotification(value) {
-       if(value == -1)
-       {
-           this.textNoti = "Some error have occured";
-           this.errorOccured = true;
-       }
-       else
-       {
-          this.errorOccured = false;
-          this.textNoti = "Succes"; 
-       }
-       this.showNoti = !this.showNoti;
-       setTimeout(this.closeNoti, 1500)
-       {}
+    closeNotification(){
+      this.showNotificationValue = false;
     },
+
+    showNotification(value) {
+      if (value == -1) {
+        this.textNoti = "Some error have occured";
+        this.errorOccured = true;
+      } else {
+        this.errorOccured = false;
+        this.textNoti = "Succes";
+      }
+      this.showNotificationValue = !this.showNotificationValue;
+      setTimeout(this.closeNotification, 1500)
+      {}
+    },
+
+    sortBy(value) {
+      if (this.sortType == "desc") this.sortType = "asc";
+      else this.sortType = "desc";
+
+      this.sortByValue = value;
+      this.reloadActivity();
+    }
   },
   directives: {
     ClickOutside
@@ -225,13 +253,6 @@ h1 {
 
 body {
   font-family: "Lato", sans-serif;
-}
-
-#footer {
-  position: absolute;
-  bottom: -10px;
-  width: calc(93% - 20px);
-  margin-right: 20px;
 }
 
 .column1{

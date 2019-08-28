@@ -4,7 +4,7 @@
       <form id="forma">
         <div id="section">
           <p>
-            <span id="createUser"> Create User </span>
+            <span id="createUser">Create User</span>
 
             <label id="close-icon" @click="exit" style="font-size: 20px">X</label>
           </p>
@@ -44,8 +44,19 @@
 </template>
 
 <script>
-
-import { ACCESS_TOKEN,USER_LANGUAGE,USER_THEME,ROLE,CREATEUSER,CANCEL,SAVE, NEWUSERROLE, NEWUSEREMAIL, USER,API_BASE_URL } from "../constants/index.js";
+import {
+  ACCESS_TOKEN,
+  USER_LANGUAGE,
+  USER_THEME,
+  ROLE,
+  CREATEUSER,
+  CANCEL,
+  SAVE,
+  NEWUSERROLE,
+  NEWUSEREMAIL,
+  USER,
+  API_BASE_URL
+} from "../constants/index.js";
 
 import axios from "axios";
 const headers = {
@@ -58,26 +69,18 @@ export default {
   data() {
     return {
       email: "",
-
       role: ["ADMIN", localStorage.getItem(USER)],
       roleType: localStorage.getItem(NEWUSERROLE),
-
       emailError: false,
       roleError: false,
       liveValidation: false,
       invalid: false,
+      formType: "Create",
       rule: /.*\@\w{1,}\.\w{1,}/
     };
   },
-  mounted: function() {
-    /*if(this.$route.params.id == null)
-			console.log("Nije prosljedjen parametar");
-		else
-		{
-			console.log(this.$route.params.id)
-			this.create();
-    }*/
-     if (localStorage.getItem(USER_THEME) == "light") {
+  mounted: async function() {
+    if (localStorage.getItem(USER_THEME) == "light") {
       document.getElementById("form-style-10").style.backgroundColor = "white";
       //document.getElementById("messages").style.backgroundColor="white";
     } else if (localStorage.getItem(USER_THEME) == "dark") {
@@ -85,13 +88,17 @@ export default {
       //document.getElementById("messages").style.backgroundColor="black";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
-      document.getElementById("createUser").innerHTML = localStorage.getItem(CREATEUSER);
-      document.getElementById("field1").placeholder=localStorage.getItem(NEWUSEREMAIL);
-       document.getElementById("createUser").style.color="black";
+      document.getElementById("createUser").innerHTML = localStorage.getItem(
+        CREATEUSER
+      );
+      document.getElementById("field1").placeholder = localStorage.getItem(
+        NEWUSEREMAIL
+      );
+      document.getElementById("createUser").style.color = "black";
       document.getElementsByTagName(
         "LABEL"
       )[2].innerHTML = localStorage.getItem(ROLE);
-      document.getElementById("cancle").value=  localStorage.getItem(CANCEL);
+      document.getElementById("cancle").value = localStorage.getItem(CANCEL);
 
       document.getElementsByTagName("INPUT")[1].value = localStorage.getItem(
         SAVE
@@ -104,9 +111,9 @@ export default {
     },
     async save() {
       let headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       this.liveValidation = true;
       if (this.check_email(this.email) == false) this.invalid = true;
       if (this.check_roleType(this.roleType) == false) this.invalid = true;
@@ -116,11 +123,14 @@ export default {
       } else {
         if (this.$route.params.id == null) {
           try {
-            console.log(this.email,this.roleType);
-            await axios.post(API_BASE_URL + "/user/create", {
-              email: this.email,
-              role: this.roleType
-            },{ headers:headers});
+            await axios.post(
+              API_BASE_URL + "/user/create",
+              {
+                email: this.email,
+                role: this.roleType
+              },
+              { headers: headers }
+            );
           } catch (err) {
             this.$emit("show-notification", -1);
             this.$router.go(-1);
@@ -128,10 +138,11 @@ export default {
           }
         } else {
           try {
-            await axios.put(
+            await axios.get(
               API_BASE_URL + "/user/getAllUsers/" + this.$route.params.id,
-              { title: this.title, text: this.text },{ headers:headers});
-            
+              { title: this.title, text: this.text },
+              { headers: headers }
+            );
           } catch (err) {
             this.$emit("show-notification", -1);
             this.$router.go(-1);
@@ -143,10 +154,15 @@ export default {
         this.$router.go(-1);
       }
     },
-    async create(){
-			try {
+    async create() {
+      let headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
+      try {
         const res = await axios.get(
-          API_BASE_URL + "/user/getAllUsers/" + this.$route.params.id
+          API_BASE_URL + "/user/getAllUsers/" + this.$route.params.id, 
+          { headers: headers }
         );
         this.title = res.data.title;
         this.text = res.data.text;
@@ -177,7 +193,6 @@ export default {
   },
   watch: {
     email(value) {
-
       this.email = value;
       if (this.liveValidation == true) this.check_email(value);
     },

@@ -3,8 +3,8 @@
     <div id="form-style-10">
       <form id="forma">
         <div id="section">
-          <p >
-            <span id="formTitle"> {{ formType }} Message </span>
+          <p>
+            <span id="formTitle">{{ formType }} Message</span>
             <label id="close-icon" @click="exit" style="font-size: 20px">X</label>
           </p>
         </div>
@@ -23,9 +23,7 @@
             @click="select('italic')"
           >Italic</div>
           <div
-
-          style="text-decoration: underline"
-
+            style="text-decoration: underline"
             class="style-option"
             :class="{styleOptionSelected: urlSelected}"
             @click="select('url')"
@@ -52,7 +50,7 @@
           <span
             v-show="urlSelected"
             style="color: grey"
-          >Please input your url instead url and your text instead text</span>
+          >Please input your url instead "url" and your text instead "text"</span>
 
           <label :class="{errorText: showMessageError}">Text</label>
           <textarea
@@ -67,7 +65,7 @@
           <span v-show="showMessageError">Text size should be more then 20 characters</span>
           <br />
           <br />
-          <input type="button" :value="formType" @click="save" id="submit" />
+          <input type="button" value="Save" @click="save" id="submit" />
           <input type="button" value="Cancel" @click="exit" id="cancle" />
         </div>
       </form>
@@ -76,7 +74,17 @@
 </template>
 
 <script>
-import { ACCESS_TOKEN,USER_LANGUAGE,CREATEMESSAGE,SAVE,CANCEL,TITLE,TEXT,NEWMESSAGE,TYPEYOURMESSAGE } from "../constants/index.js";
+import {
+  ACCESS_TOKEN,
+  USER_LANGUAGE,
+  CREATEMESSAGE,
+  SAVE,
+  CANCEL,
+  TITLE,
+  TEXT,
+  NEWMESSAGE,
+  TYPEYOURMESSAGE
+} from "../constants/index.js";
 import axios from "axios";
 
 import { API_BASE_URL } from "../constants";
@@ -84,7 +92,6 @@ const headers = {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
 };
-
 
 export default {
   name: "formaM",
@@ -110,32 +117,26 @@ export default {
     if (this.$route.params.id != null) {
       this.create();
       this.formType = "Update";
-
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
-      document.getElementById("formTitle").innerHTML= localStorage.getItem(
+      document.getElementById("formTitle").innerHTML = localStorage.getItem(
         CREATEMESSAGE
       );
-       document.getElementById("formTitle").style.color="black";
-       document.getElementById("submit").value= localStorage.getItem(
-        SAVE
-      );
-        document.getElementById("cancle").value= localStorage.getItem(
-        CANCEL
-      );
-      document.getElementsByTagName("label")[1].innerHTML = localStorage.getItem(
-        TITLE
-      );
-      document.getElementsByTagName("label")[2].innerHTML = localStorage.getItem(
-        TEXT
-      );
-      document.getElementsByTagName("input")[0].placeholder = localStorage.getItem(
-        NEWMESSAGE
-      );
-       document.getElementsByTagName("textarea")[0].placeholder = localStorage.getItem(
-        TYPEYOURMESSAGE
-      );
-
+      document.getElementById("formTitle").style.color = "black";
+      document.getElementById("submit").value = localStorage.getItem(SAVE);
+      document.getElementById("cancle").value = localStorage.getItem(CANCEL);
+      document.getElementsByTagName(
+        "label"
+      )[1].innerHTML = localStorage.getItem(TITLE);
+      document.getElementsByTagName(
+        "label"
+      )[2].innerHTML = localStorage.getItem(TEXT);
+      document.getElementsByTagName(
+        "input"
+      )[0].placeholder = localStorage.getItem(NEWMESSAGE);
+      document.getElementsByTagName(
+        "textarea"
+      )[0].placeholder = localStorage.getItem(TYPEYOURMESSAGE);
     }
   },
 
@@ -219,17 +220,8 @@ export default {
       } else if (this.italicSelected == true) {
         this.text += " _ _";
         this.styleCharacters = "_ _";
-      } else if (this.urlSelected == true) this.text += " <http://url|text>";
+      } else if (this.urlSelected == true) this.text += " <url|text>";
     },
-
-
-    preview() {
-      this.text = this.text.replace(/_/g, "");
-      this.text = this.text.replace(/\*/g, "");
-      var tekst = this.text.bold();
-      console.log(tekst);
-    },
-
 
     async save() {
       this.liveValidation = true;
@@ -241,12 +233,14 @@ export default {
       } else {
         if (this.$route.params.id == null) {
           try {
-
-            await axios.post(API_BASE_URL + "/api/messages", {
-
-              title: this.title,
-              text: this.text
-            },{ headers: headers });
+            await axios.post(
+              API_BASE_URL + "/api/messages",
+              {
+                title: this.title,
+                text: this.text
+              },
+              { headers: headers }
+            );
           } catch (err) {
             this.$emit("show-notification", -1);
             this.$router.go(-1);

@@ -48,7 +48,6 @@
             <i
               class="material-icons tooltip"
               @click="showScheduleForm(message.messageId)"
-              data-tooltip="Neki tekst"
             >assignment_turned_in</i>
             <i class="material-icons" @click="showTriggerForm(message.messageId)">assistant</i>
             <i class="material-icons" @click="editMessage(message.messageId)">create</i>
@@ -77,7 +76,7 @@
 
     <div
       id="notification"
-      v-show="showNoti"
+      v-show="showNotificationValue"
       :class="{redBorder: errorOccured, greenBorder: !errorOccured}"
     >
       <input
@@ -127,14 +126,14 @@ export default {
       sortByValue: "createdAt",
       textNoti: "",
       errorOccured: false,
-      showNoti: false
+      showNotificationValue: false
     };
   },
   mounted: function() {
     let headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+    };
     if (localStorage.getItem(USER_THEME) == "Light") {
       this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
@@ -171,10 +170,10 @@ export default {
   },
   methods: {
     async reloadMessages() {
-     let headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+      let headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       var pg = this.page - 1;
       try {
         const res = await axios.get(
@@ -186,8 +185,8 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
-
-            this.sortType, { headers: headers }
+            this.sortType,
+          { headers: headers }
         );
 
         if (res.data.totalPages < this.page)
@@ -208,14 +207,14 @@ export default {
         this.errorOccured = false;
         this.textNoti = "Succes";
       }
-      this.showNoti = !this.showNoti;
-      setTimeout(this.closeNoti, 1500);
+      this.showNoti = !this.showNotificationValue;
+      setTimeout(this.closeNotification, 1500);
       {
       }
     },
 
-    closeNoti() {
-      this.showNoti = false;
+    closeNotification() {
+      this.showNotificationValue = false;
     },
 
     showMessageForm() {
@@ -235,24 +234,26 @@ export default {
     },
 
     async deleteMessage(id) {
-     let headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+      let headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       await axios.delete(API_BASE_URL + "/api/messages/" + id);
       var pg = this.page - 1;
 
-
       try {
-        const  res = await axios.get(
-            API_BASE_URL +
-              "/api/messages?page=" +
-              pg +
-              "&size=" +
-              this.rowSize +
-              "&sort=" + this.sortByValue + "," +
-              this.sortType, { headers: headers }
-          );
+        const res = await axios.get(
+          API_BASE_URL +
+            "/api/messages?page=" +
+            pg +
+            "&size=" +
+            this.rowSize +
+            "&sort=" +
+            this.sortByValue +
+            "," +
+            this.sortType,
+          { headers: headers }
+        );
 
         if (res.data.numberOfElements == 0) {
           if (this.page != 1) this.changePage(this.page - 1);
@@ -288,17 +289,18 @@ export default {
     },
 
     async create() {
-     let headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+      let headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       try {
         const res = await axios.get(
           API_BASE_URL +
             "/api/messages?page=0&size=" +
             this.rowSize +
             "&sort=createdAt," +
-            this.sortType, { headers: headers }
+            this.sortType,
+          { headers: headers }
         );
         this.messagesData = res.data.content;
         if (res.data.totalPages == 0) this.pagesSize = 1;
@@ -535,7 +537,7 @@ li:hover .linear2 {
   height: 40px;
   margin-top: 5px;
   position: absolute;
-  left: 17%;
+  left: 16%;
 }
 
 .linear2 {
@@ -548,7 +550,7 @@ li:hover .linear2 {
   height: 39px;
   margin-top: 5px;
   position: absolute;
-  left: 48%;
+  left: 45%;
 }
 
 #btn {
@@ -558,8 +560,8 @@ li:hover .linear2 {
   border-radius: 50%;
   font-size: 30px;
   position: absolute;
-  bottom: 50px;
-  right: 13px;
+  bottom: 4%;
+  right: 5%;
   background-color: #006bf5;
   color: white;
   border: 1px solid white;
@@ -585,7 +587,7 @@ li:hover .linear2 {
 #footer {
   position: absolute;
   bottom: -10px;
-  width: calc(93% - 20px);
+  width: calc(87.5% - 20px);
   margin-right: 20px;
 }
 
@@ -669,12 +671,14 @@ li:hover .linear2 {
 
 #notification {
   height: 10vh;
-  width: 400px;
+  width: 370px;
   position: absolute;
-  right: 100px;
-  bottom: 10px;
+  right: 11%;
+  bottom: 20px;
   background-color: white;
   border-radius: 10px;
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 

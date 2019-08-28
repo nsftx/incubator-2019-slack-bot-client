@@ -47,7 +47,7 @@
           <div class="linear1"></div>
           <div class="linear2"></div>
           <div class="column1 column">
-            <p>{{ trigger.message.text }}</p>
+            <p>{{ trigger.message.title }}</p>
           </div>
           <div class="column2 column">
             <p>{{ trigger.createdAt | shortDate }}</p>
@@ -87,7 +87,7 @@
 
     <div
       id="notification"
-      v-show="showNoti"
+      v-show="showNotificationValue"
       :class="{redBorder: errorOccured, greenBorder: !errorOccured}"
     >
       <input
@@ -138,7 +138,7 @@ export default {
       sortByValue: "createdAt",
       textNoti: "",
       errorOccured: false,
-      showNoti: false
+      showNotificationValue: false
     };
   },
 
@@ -157,7 +157,7 @@ export default {
 
   mounted: function() {
     if (localStorage.getItem(USER_THEME) == "Light") {
-       this.$emit("change-light");
+      this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("Triggers").style.backgroundColor = "white";
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
@@ -202,7 +202,8 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
-            this.sortType, { headers: headers }
+            this.sortType,
+          { headers: headers }
         );
 
         if (res.data.totalPages < this.page)
@@ -223,14 +224,14 @@ export default {
         this.errorOccured = false;
         this.textNoti = "Succes";
       }
-      this.showNoti = !this.showNoti;
-      setTimeout(this.closeNoti, 1500);
+      this.showNotificationValue = !this.showNotificationValue;
+      setTimeout(this.closeNotification, 1500);
       {
       }
     },
 
-    closeNoti() {
-      this.showNoti = false;
+    closeNotification() {
+      this.showNotificationValue = false;
     },
 
     async editTrigger(id) {
@@ -250,8 +251,8 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
-            this.sortType, 
-            { headers: headers }
+            this.sortType,
+          { headers: headers }
         );
 
         if (res.data.numberOfElements == 0) {
@@ -291,8 +292,12 @@ export default {
     async create() {
       try {
         const res = await axios.get(
-
-          API_BASE_URL + "/api/triggers?page=0&size=" + this.rowSize + "&sort=createdAt," + this.sortType, { headers: headers }
+          API_BASE_URL +
+            "/api/triggers?page=0&size=" +
+            this.rowSize +
+            "&sort=createdAt," +
+            this.sortType,
+          { headers: headers }
         );
         this.triggersData = res.data.content;
         if (res.data.totalPages == 0) this.pagesSize = 1;
@@ -379,7 +384,7 @@ body {
 }
 
 .column5 {
-  width: 5%;
+  width: 6%;
 }
 
 .column4 {
@@ -388,38 +393,10 @@ body {
 
 .linear1 {
   width: 88px;
-  left: 32%;
+  left: 30%;
 }
 
 .linear2 {
-  left: 52%;
-}
-
-#btn {
-  float: right;
-  height: 60px;
-  width: 60px;
-  border-radius: 50%;
-  font-size: 30px;
-  position: absolute;
-  bottom: 50px;
-  right: 13px;
-  background-color: #006bf5;
-  color: white;
-  border: 1px solid white;
-  font-family: "Courier New", Courier, monospace;
-  line-height: 60px;
-  z-index: 99;
-}
-
-#btn:hover {
-  cursor: pointer;
-}
-
-#footer {
-  position: absolute;
-  bottom: -10px;
-  width: calc(93% - 20px);
-  margin-right: 20px;
+  left: 50%;
 }
 </style>

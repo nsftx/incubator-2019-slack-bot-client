@@ -54,28 +54,26 @@ import {
   THEME,
   USER_NAME,
   USER_PIC
-
 } from "../constants/index.js";
 export default {
   name: "profil",
   mounted: function() {
-    
-      document.getElementById("email1").innerHTML = localStorage.getItem(
-        USER_EMAIL
-      );
-      document.getElementById("name1").innerHTML = localStorage.getItem(
-        USER_NAME
-      );
-      document.getElementById("pic1").src = localStorage.getItem(
-        USER_PIC
-      );
-      document.getElementById("language1").innerHTML =localStorage.getItem("language"+localStorage.getItem(
-        USER_LANGUAGE
-      ).toUpperCase());
-      document.getElementById("theme1").innerHTML = localStorage.getItem(USER_THEME);
-      document.getElementById("role1").innerHTML = localStorage.getItem(
-        CURRENT_USER_ROLE
-      );
+    document.getElementById("email1").innerHTML = localStorage.getItem(
+      USER_EMAIL
+    );
+    document.getElementById("name1").innerHTML = localStorage.getItem(
+      USER_NAME
+    );
+    document.getElementById("pic1").src = localStorage.getItem(USER_PIC);
+    document.getElementById("language1").innerHTML = localStorage.getItem(
+      "language" + localStorage.getItem(USER_LANGUAGE).toUpperCase()
+    );
+    document.getElementById("theme1").innerHTML = localStorage.getItem(
+      USER_THEME
+    );
+    document.getElementById("role1").innerHTML = localStorage.getItem(
+      CURRENT_USER_ROLE
+    );
     if (localStorage.getItem(USER_THEME) == "Light") {
       this.$emit("change-light");
       document.getElementById("profile1").style.backgroundColor = "white";
@@ -90,15 +88,21 @@ export default {
       document.getElementById("profile1").style.color = "white";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
-      document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(PROFILE);
+      document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
+        PROFILE
+      );
       document.getElementsByTagName("P")[4].innerHTML =
         localStorage.getItem(NAME) + ":";
       document.getElementsByTagName("P")[8].innerHTML =
         localStorage.getItem(LANGUAGE) + ":";
-      document.getElementsByTagName("P")[10].innerHTML =  localStorage.getItem(THEME);
+      document.getElementsByTagName("P")[10].innerHTML = localStorage.getItem(
+        THEME
+      );
       document.getElementsByTagName("P")[12].innerHTML =
         localStorage.getItem(ROLE) + ":";
-      document.getElementById("submit").innerHTML =localStorage.getItem(LOGOUT);
+      document.getElementById("submit").innerHTML = localStorage.getItem(
+        LOGOUT
+      );
     }
   },
   methods: {
@@ -129,28 +133,27 @@ export default {
   height: auto;
   background-color: #f1f1f1;
 }
-p{
+p {
   font-size: 16.8px;
 }
 #profile1 {
   padding: 20px;
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 }
 #profile {
-  background-color:#f1f1f1;
+  background-color: #f1f1f1;
   box-sizing: border-box;
   padding: 20px;
   padding-bottom: 0px;
   height: 61%;
-
 }
 
 h1 {
   text-align: left;
   color: #2c3e50;
   margin-top: 0px;
-  margin-bottom:0px;
+  margin-bottom: 0px;
 
   width: 200px;
   float: left;
@@ -168,9 +171,8 @@ h1 {
   text-align: left;
 }
 .data {
-  margin-left:0px;
+  margin-left: 0px;
   width: 100%;
-
 }
 #email {
   float: left;
@@ -235,9 +237,11 @@ button {
   background-color: #f1f1f1;
   width: 100%;
 }
-#name1,#language1,#role1,#theme1,#email1{
-  font-weight:300;
-
-
+#name1,
+#language1,
+#role1,
+#theme1,
+#email1 {
+  font-weight: 300;
 }
 </style>

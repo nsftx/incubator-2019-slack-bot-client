@@ -10,19 +10,19 @@
           <div class="column1 column">
             <h5>Name</h5>
             <p>
-              <i class="material-icons">arrow_drop_down</i>
+              <i class="material-icons" @click="sortBy('name')">arrow_drop_down</i>
             </p>
           </div>
           <div class="column2 column">
             <h5>Email</h5>
             <p>
-              <i class="material-icons">arrow_drop_down</i>
+              <i class="material-icons" @click="sortBy('email')">arrow_drop_down</i>
             </p>
           </div>
           <div class="column3 column">
             <h5>Role</h5>
             <p>
-              <i class="material-icons">arrow_drop_down</i>
+              <i class="material-icons" @click="sortBy('role')">arrow_drop_down</i>
             </p>
           </div>
           <div class="column4 column">
@@ -71,7 +71,7 @@
 
     <div
       id="notification"
-      v-show="showNoti"
+      v-show="showNotificationValue"
       :class="{redBorder: errorOccured, greenBorder: !errorOccured}"
     >
       <input
@@ -117,24 +117,25 @@ export default {
       page: 1, //current active page
       pagesSize: 1, //Number of pages
       menu: false,
-      sortByValue: "createdAt",
+      sortByValue: "role",
+      sortType: "desc",
       textNoti: "",
       errorOccured: false,
-      showNoti: false
+      showNotificationValue: false
     };
   },
 
   mounted: function() {
     let headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+    };
     if (localStorage.getItem(USER_THEME) == "Light") {
- this.$emit("change-light");
+      this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("divlist").style.backgroundColor = "white";
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
-       this.$emit("change-dark");
+      this.$emit("change-dark");
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("divlist").style.backgroundColor = "black";
       document.getElementById("user").style.backgroundColor = "black";
@@ -164,16 +165,19 @@ export default {
     setRows(value) {
       if (value != this.rowSize) {
         this.rowSize = value;
-        //this.reloadTriggers();
+        this.reloadUsers();
       }
       this.menu = !this.menu;
     },
 
     changePage(nextPage) {
       this.page = nextPage;
-      //this.reloadTriggers(nextPage - 1);
+      this.reloadUsers(nextPage - 1);
     },
 
+    closeNotification() {
+      this.showNotificationValue = false;
+    },
 
     showNotification(value) {
       if (value == -1) {
@@ -183,8 +187,8 @@ export default {
         this.errorOccured = false;
         this.textNoti = "Succes";
       }
-      this.showNoti = !this.showNoti;
-      setTimeout(this.closeNoti, 1500);
+      this.showNotificationValue = !this.showNotificationValue;
+      setTimeout(this.closeNotification, 1500);
       {
       }
     },
@@ -193,10 +197,10 @@ export default {
       this.$router.push("/dashboard/messages/updateUser/" + id);
     },
     async deleteUser(id) {
-     let headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+      let headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       await axios.delete(API_BASE_URL + "/user/delete/" + id);
       var pg = this.page - 1;
       try {
@@ -210,7 +214,7 @@ export default {
               this.rowSize +
               "&sort=title," +
               this.sortType,
-               { headers:headers }
+            { headers: headers }
           );
         else if (this.textSort == true)
           res = await axios.get(
@@ -220,7 +224,8 @@ export default {
               "&size=" +
               this.rowSize +
               "&sort=text," +
-              this.sortType
+              this.sortType,
+            { headers: headers }
           );
         else
           res = await axios.get(
@@ -230,7 +235,8 @@ export default {
               "&size=" +
               this.rowSize +
               "&sort=createdAt," +
-              this.sortType
+              this.sortType,
+            { headers: headers }
           );
 
         if (res.data.numberOfElements == 0) {
@@ -245,18 +251,23 @@ export default {
       }
     },
     async reloadUsers() {
+      let headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       var pg = this.page - 1;
       try {
         const res = await axios.get(
           API_BASE_URL +
-            "/api/messages?page=" +
+            "/user/getAllUsers?page=" +
             pg +
             "&size=" +
             this.rowSize +
             "&sort=" +
             this.sortByValue +
             "," +
-            this.sortType
+            this.sortType,
+          { headers: headers }
         );
 
         if (res.data.totalPages < this.page)
@@ -271,57 +282,38 @@ export default {
     showUserForm() {
       this.$router.push("/dashboard/user/newUser");
     },
-    async reloadMessages() {
-      var pg = this.page - 1;
+    
+    async create() {
+      let headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       try {
         const res = await axios.get(
           API_BASE_URL +
-            "/user/getAllUsers?page=" +
-            pg +
+            "/user/getAllUsers?page=0" +
             "&size=" +
             this.rowSize +
             "&sort=" +
             this.sortByValue +
             "," +
-            this.sortType
+            this.sortType,
+          { headers: headers }
         );
-
-        if (res.data.totalPages < this.page)
-          this.changePage(res.data.totalPages);
-
         this.usersData = res.data.content;
-        this.pagesSize = res.data.totalPages;
+        if (res.data.totalPages == 0) this.pagesSize = 1;
+        else this.pagesSize = res.data.totalPages;
+        this.rowSize = res.data.size;
       } catch (err) {
         this.showNotification(-1);
       }
     },
-    async create() {
-     let headers = {
- "Content-Type": "application/json",
- Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
-    try {
-       const res = await axios.get(
-         API_BASE_URL +
-           "/user/getAllUsers?page=0" +
-           "&size=" +
-           this.rowSize ,
-           { headers: headers }
-       );
-       this.usersData = res.data.content;
-       if (res.data.totalPages == 0) this.pagesSize = 1;
-       else this.pagesSize = res.data.totalPages;
-       this.rowSize = res.data.size;
-     } catch (err) {
-       this.showNotification(-1);
-     }
-   },
     sortBy(value) {
       if (this.sortType == "desc") this.sortType = "asc";
       else this.sortType = "desc";
 
       this.sortByValue = value;
-      this.reloadMessages();
+      this.reloadUsers();
     }
   },
   directives: {
@@ -362,13 +354,6 @@ h1 {
 
 body {
   font-family: "Lato", sans-serif;
-}
-
-#footer {
-  position: absolute;
-  bottom: -10px;
-  width: calc(93% - 20px);
-  margin-right: 20px;
 }
 
 .column3 {

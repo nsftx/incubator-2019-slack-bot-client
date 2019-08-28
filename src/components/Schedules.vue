@@ -51,7 +51,7 @@
           <div class="linear1"></div>
           <div class="linear2"></div>
           <div class="column1 column">
-            <p>{{ schedule.message.text }}</p>
+            <p>{{ schedule.message.title }}</p>
           </div>
           <div class="column2 column">
             <p>{{ schedule.runAt | shortDate}}</p>
@@ -93,7 +93,7 @@
 
     <div
       id="notification"
-      v-show="showNoti"
+      v-show="showNotificationValue"
       :class="{redBorder: errorOccured, greenBorder: !errorOccured}"
     >
       <input
@@ -144,7 +144,7 @@ export default {
       sortType: "desc",
       textNoti: "",
       errorOccured: false,
-      showNoti: false,
+      showNotificationValue: false,
       sortByValue: "createdAt"
     };
   },
@@ -202,9 +202,9 @@ export default {
   methods: {
     async reloadSchedules() {
       let headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       var pg = this.page - 1;
       try {
         const res = await axios.get(
@@ -216,7 +216,8 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
-            this.sortType, { headers: headers }
+            this.sortType,
+          { headers: headers }
         );
 
         if (res.data.totalPages < this.page)
@@ -237,14 +238,14 @@ export default {
         this.errorOccured = false;
         this.textNoti = "Succes";
       }
-      this.showNoti = !this.showNoti;
-      setTimeout(this.closeNoti, 1500);
+      this.showNotificationValue = !this.showNotificationValue;
+      setTimeout(this.closeNotification, 1500);
       {
       }
     },
 
-    closeNoti() {
-      this.showNoti = false;
+    closeNotification() {
+      this.showNotificationValue = false;
     },
 
     showScheduleForm() {
@@ -257,9 +258,9 @@ export default {
 
     async deleteSchedule(id) {
       let headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       await axios.delete(API_BASE_URL + "/api/schedules/" + id);
       var pg = this.page - 1;
       try {
@@ -272,7 +273,8 @@ export default {
             "&sort=" +
             this.sortByValue +
             "," +
-            this.sortType, { headers: headers }
+            this.sortType,
+          { headers: headers }
         );
 
         if (res.data.numberOfElements == 0) {
@@ -310,16 +312,17 @@ export default {
 
     async create() {
       let headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       try {
         const res = await axios.get(
           API_BASE_URL +
             "/api/schedules?page=0&size=" +
             this.rowSize +
             "&sort=createdAt," +
-            this.sortType, { headers: headers }
+            this.sortType,
+          { headers: headers }
         );
         this.schedulesData = res.data.content;
         if (res.data.totalPages == 0) this.pagesSize = 1;
@@ -376,31 +379,6 @@ body {
   padding: 20px;
 }
 
-#btn {
-  float: right;
-  height: 60px;
-  width: 60px;
-  border-radius: 50%;
-  font-size: 30px;
-  position: absolute;
-  bottom: 50px;
-  right: 13px;
-  background-color: #006bf5;
-  color: white;
-  border: 1px solid white;
-  font-family: "Courier New", Courier, monospace;
-  line-height: 60px;
-  z-index: 99;
-}
-
-#btn:hover {
-  cursor: pointer;
-}
-
-#footer {
-  bottom: 15%;
-}
-
 .column1 {
   width: 30%;
   margin-right: 40px;
@@ -414,9 +392,9 @@ body {
 }
 
 #title-li .column2 {
-    position: unset;
-    margin-left: 20px;
-    padding-left: 15px;
+  position: unset;
+  margin-left: 20px;
+  padding-left: 15px;
 }
 
 #title-li .column4 {
@@ -449,17 +427,10 @@ body {
 }
 
 .linear1 {
-  left: 32%;
+  left: 28%;
 }
 
 .linear2 {
-  left: 67%;
-}
-
-#footer {
-  position: absolute;
-  bottom: -10px;
-  width: calc(93% - 20px);
-  margin-right: 20px;
+  left: 66%;
 }
 </style>

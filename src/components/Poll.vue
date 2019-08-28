@@ -1,6 +1,6 @@
 <template>
   <div id="poll">
-    <router-view></router-view>
+    <router-view @reload-poll="reloadPoll()" @show-notification="showNotification($event)"></router-view>
 
     <div id="header">
       <h1>Poll</h1>
@@ -34,7 +34,7 @@
           </div>
         </li>
 
-        <li class="li" v-for="poll in pollData" :key="poll.id" @click="viewPoll(poll.id)">
+        <li class="li" v-for="poll in pollData" :key="poll.pollId" @click="viewPoll(poll.pollId)">
           <div class="linear2"></div>
           <div class="linear1"></div>
           <div class="column1 column">
@@ -44,10 +44,10 @@
             <p>{{poll.channel}}</p>
           </div>
           <div class="column3 column">
-            <p>{{poll.active}}</p>
+            <p>{{poll.activeUntil | shortDate}}</p>
           </div>
           <div class="column4 column">
-            <i class="material-icons">delete</i>
+            <i class="material-icons"  @click.stop="deletePoll(poll.pollId)">delete</i>
           </div>
         </li>
       </ul>
@@ -92,7 +92,17 @@
 
 <script scoped>
 import { API_BASE_URL } from "../constants/index.js";
-import { Current_User_Role, THEME_ID, THEME,POLL,USER_LANGUAGE,TITLE,CHANNEL,ACTIVE,USER_THEME} from "../constants/index.js";
+import {
+  Current_User_Role,
+  THEME_ID,
+  THEME,
+  POLL,
+  USER_LANGUAGE,
+  TITLE,
+  CHANNEL,
+  ACTIVE,
+  USER_THEME
+} from "../constants/index.js";
 import { User_Email } from "../constants/index.js";
 import { ACCESS_TOKEN } from "../constants/index.js";
 import axios from "axios";
@@ -100,27 +110,28 @@ import ClickOutside from "vue-click-outside";
 import { setTimeout } from "timers";
 
 export default {
-    name: "poll",
-    data(){
-        return{
-            pollData: [],
-            textNoti: "",
-            showNoti: false,
-            rowSizesValue: [5, 10, 20],
-            rowSize: 20,
-            page: 1, //current active page
-            pagesSize: 1, //Number of pages
-            menu: false,
-            sortByValue: "createdAt",
-            textNoti: "",
-            errorOccured: false,
-            showNoti: false
-        }
-    },
-    mounted: function(){
-      if (localStorage.getItem(USER_THEME) == "Light") {
-        this.$emit("change-light");
-        document.getElementById("poll").style.backgroundColor = "white";
+  name: "poll",
+  data() {
+    return {
+      pollData: [],
+      textNoti: "",
+      showNoti: false,
+      rowSizesValue: [5, 10, 20],
+      rowSize: 20,
+      page: 1, //current active page
+      pagesSize: 1, //Number of pages
+      menu: false,
+      sortByValue: "createdAt",
+      sortType: "desc",
+      textNoti: "",
+      errorOccured: false,
+      showNoti: false
+    };
+  },
+  mounted: function() {
+    if (localStorage.getItem(USER_THEME) == "Light") {
+      this.$emit("change-light");
+      document.getElementById("poll").style.backgroundColor = "white";
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("divlist").style.backgroundColor = "white";
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
@@ -130,8 +141,8 @@ export default {
       document.getElementById("poll").style.backgroundColor = "black";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
-       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
-       POLL
+      document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
+        POLL
       );
       document.getElementsByTagName("H5")[0].innerHTML = localStorage.getItem(
         TITLE
@@ -143,9 +154,9 @@ export default {
         ACTIVE
       );
     }
-      this.pollData = [{id: 1, title: "Probni naslov 1", channel: "general", active: "active"},{id: 2, title: "Probni naslov 2", channel: "general", active: "not active"}]
-    },
-    methods:{
+    this.create();
+  },
+  methods: {
     showPollForm() {
       this.$router.push("/dashboard/poll/newPoll");
     },
@@ -161,27 +172,56 @@ export default {
     setRows(value) {
       if (value != this.rowSize) {
         this.rowSize = value;
-        //this.reloadTriggers();
+        this.reloadPoll();
       }
       this.menu = !this.menu;
     },
 
     changePage(nextPage) {
       this.page = nextPage;
-      //this.reloadTriggers(nextPage - 1);
+      this.reloadPoll(nextPage - 1);
+    },
+
+    async reloadPoll() {
+      var pg = this.page - 1;
+      try {
+        const res = await axios.get(
+          API_BASE_URL +
+            "/api/polls?page=" +
+            pg +
+            "&size=" +
+            this.rowSize +
+            "&sort=" +
+            this.sortByValue +
+            "," +
+            this.sortType,
+          { headers: headers }
+        );
+        this.pollData = res.data.content;
+
+        if (res.data.totalPages < this.page)
+          this.changePage(res.data.totalPages);
+
+        this.pagesSize = res.data.totalPages;
+      } catch (err) {
+        this.showNotification(-1);
+      }
     },
 
     async create() {
       try {
         const res = await axios.get(
-          API_BASE_URL + "/api/triggers?page=0&size=" + this.rowSize
+          API_BASE_URL +
+            "/api/polls?page=0&size=" +
+            this.rowSize +
+            "&sort=createdAt"
         );
-        this.triggersData = res.data.content;
+        this.pollData = res.data.content;
         if (res.data.totalPages == 0) this.pagesSize = 1;
         else this.pagesSize = res.data.totalPages;
         this.rowSize = res.data.size;
       } catch (err) {
-        alert(err);
+        this.showNotification(-1);
       }
     },
 
@@ -199,18 +239,48 @@ export default {
       }
     },
 
+    async deletePoll(id) {
+      await axios.delete(API_BASE_URL + "/api/polls/" + id);
+      var pg = this.page - 1;
+
+      try {
+        const res = await axios.get(
+          API_BASE_URL +
+            "/api/polls?page=" +
+            pg +
+            "&size=" +
+            this.rowSize +
+            "&sort=" +
+            this.sortByValue +
+            "," +
+            this.sortType,
+          { headers: headers }
+        );
+
+        if (res.data.numberOfElements == 0) {
+          if (this.page != 1) this.changePage(this.page - 1);
+        }
+        this.pollData = res.data.content;
+        if (res.data.totalPages == 0) this.pagesSize = 1;
+        else this.pagesSize = res.data.totalPages;
+        this.showNotification(200);
+      } catch (err) {
+        this.showNotification(-1);
+      }
+    },
+
     closeNoti() {
       this.showNoti = false;
     },
 
-    viewPoll(id){
-      this.$router.push("/dashboard/poll/viewPoll/" + id)
+    viewPoll(id) {
+      this.$router.push("/dashboard/poll/viewPoll/" + id);
     }
   },
   directives: {
     ClickOutside
   }
-}
+};
 </script>
 
 <style scoped>
@@ -228,32 +298,29 @@ export default {
   background-color: white;
 }
 
-#footer {
-  position: absolute;
-  bottom: -10px;
-  width: calc(93% - 20px);
-  margin-right: 20px;
-}
-
-.column1{
+.column1 {
   width: 35%;
 }
 
-.column2{
+.column2 {
   width: 10%;
-  margin-left: 20px;
+  margin-left: 35px;
 }
 
-.column3{
-  width: 7%;
+.column3 {
+  width: 9%;
   padding: 15px;
 }
 
-.linear2{
-  left: 45%;
+.linear1 {
+  left: 34%;
 }
 
-li:hover{
+.linear2 {
+  left: 44%;
+}
+
+li:hover {
   cursor: pointer;
 }
 </style>

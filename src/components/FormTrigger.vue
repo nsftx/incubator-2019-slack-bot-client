@@ -8,7 +8,6 @@
 
             <span id="formTitle">
             {{ formType }} Trigger </span>
-
             <label id="close-icon" @click="exit">x</label>
           </p>
         </div>
@@ -41,11 +40,10 @@
             class="border"
             v-model="triggerType"
             :class="{errorBorder: showTriggerError, noErrorBorder: !showTriggerError}"
-
             :disabled="formType == 'Update'"
           >
             <option disabled selected>Some trigger type</option>
-            <option>On channel join</option>
+            <option v-for="trigger in triggersData" :key="trigger.type">{{ trigger.type }}</option>
           </select>
 
           <span v-show="showTriggerError">Trigger type is required</span>
@@ -100,8 +98,8 @@ export default {
     return {
       messagesData: [],
       channelsData: [],
+      triggersData: [],
       targetMess: "",
-
       messageTitle: localStorage.getItem(SOMEMESSAGETITLE),
       triggerType: localStorage.getItem(SOMETRIGGERTYPE),
       channelName: localStorage.getItem(SOMECHANNELNAME),
@@ -179,6 +177,12 @@ export default {
     try {
       const res = await axios.get(API_BASE_URL + "/api/channels")
       this.channelsData = res.data;
+    } catch (err) {
+      this.$emit("show-notification", -1);
+    }
+    try {
+      const res = await axios.get(API_BASE_URL + "/api/slack-triggers");
+      this.triggersData = res.data;
     } catch (err) {
       this.$emit("show-notification", -1);
     }

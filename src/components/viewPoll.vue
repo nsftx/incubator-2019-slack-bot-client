@@ -10,13 +10,7 @@
         </div>
         <div id="inner-wrap">
           <label class="la">Title</label>
-          <input
-            type="text"
-            name="field1"
-            id="field1"
-            v-model="title"
-            placeholder="New poll title"
-          />
+          <input type="text" name="field1" id="field1" v-model="title" placeholder="New poll title" disabled/>
 
           <label id="option">Option</label>
           <label id="votenumber" style="float: right">Vote number</label>
@@ -36,9 +30,20 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 import { API_BASE_URL, VOTENUMBER } from "../constants/index.js";
-import { Current_User_Role, THEME_ID, THEME,SAVE,CANCEL,USER_LANGUAGE,POLL,TITLE,NEWPOLLTITLE,OPTION } from "../constants/index.js";
+import {
+  Current_User_Role,
+  THEME_ID,
+  THEME,
+  SAVE,
+  CANCEL,
+  USER_LANGUAGE,
+  POLL,
+  TITLE,
+  NEWPOLLTITLE,
+  OPTION
+} from "../constants/index.js";
 import { User_Email } from "../constants/index.js";
 import { ACCESS_TOKEN } from "../constants/index.js";
 import ClickOutside from "vue-click-outside";
@@ -53,25 +58,25 @@ export default {
   data() {
     return {
       title: "",
-      choiceList: [],
-    }
+      choiceList: []
+    };
   },
 
-  mounted: function(){
-     if (localStorage.getItem(USER_LANGUAGE) != "en") {
-       document.getElementById("pollViewTitle").innerHTML = localStorage.getItem(
-       POLL
+  mounted: function() {
+    if (localStorage.getItem(USER_LANGUAGE) != "en") {
+      document.getElementById("pollViewTitle").innerHTML = localStorage.getItem(
+        POLL
       );
-       document.getElementById("field1").placeholder = localStorage.getItem(
-       NEWPOLLTITLE
+      document.getElementById("field1").placeholder = localStorage.getItem(
+        NEWPOLLTITLE
       );
-      document.getElementById("option").innerHTML= localStorage.getItem(
-       OPTION
+      document.getElementById("option").innerHTML = localStorage.getItem(
+        OPTION
       );
       document.getElementById("votenumber").innerHTML = localStorage.getItem(
         VOTENUMBER
       );
-      document.getElementById("cancle").value=localStorage.getItem(CANCEL);
+      document.getElementById("cancle").value = localStorage.getItem(CANCEL);
     }
     this.create();
   },
@@ -79,16 +84,14 @@ export default {
     exit() {
       this.$router.go(-1);
     },
-    async create()
-    {
-      try
-      {
-        const res = await axios.get(API_BASE_URL + "/api/polls/" + this.$route.params.id)
+    async create() {
+      try {
+        const res = await axios.get(
+          API_BASE_URL + "/api/polls/" + this.$route.params.id
+        );
         this.title = res.data.title;
         this.choiceList = res.data.choiceList;
-      }
-      catch(err)
-      {
+      } catch (err) {
         this.$emit("show-notification", -1);
       }
     }
@@ -160,7 +163,6 @@ export default {
   border: 1px inset rgba(0, 0, 0, 0.2);
   font-size: 15px;
 }
-
 
 ul li {
   padding-top: 10px;
@@ -280,7 +282,6 @@ ul li {
   position: relative;
   top: 10px;
 }
-
 
 #form-style-10 #choiceButton {
   float: right;

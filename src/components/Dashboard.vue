@@ -4,7 +4,7 @@
       <navigation />
     </div>
     <div id="dropdown">
-      <v-menu open-on-hover bottom offset-y>
+      <v-menu open-on-hover top offset-y offset-x left>
         <template v-slot:activator="{ on }">
           <div id="usersdata" v-on="on">
             <i id="icon" class="material-icons">arrow_drop_down</i>
@@ -71,59 +71,53 @@ export default {
   },
 
   mounted: async function() {
-     let headers = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-};
+    let headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+    };
     await axios
 
       .get(API_BASE_URL + "/user/me", {
         headers: headers
       })
       .then(response => {
-        console.log(response);
-
-
         localStorage.setItem(USER_EMAIL, response.data.email);
         localStorage.setItem(USER_NAME, response.data.name);
         localStorage.setItem(USER_PIC, response.data.imageUrl);
         localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
         localStorage.setItem(USER_THEME, response.data.userSettings.theme);
-        localStorage.setItem(USER_LANGUAGE,response.data.userSettings.language);
-           return axios
-      .get(API_BASE_URL + "/user/translation", {
-        params: {
-          language: localStorage.getItem(USER_LANGUAGE)
-        },
-        headers: headers
-      })
-      .then(
-        response => {
-          for (var key in response.data) {
-    if (response.data.hasOwnProperty(key)) {
-        localStorage.setItem(key,response.data[key]);
-    }
-}
-          console.log(response);
-        },
-        error => {
-          console.log(error);
-        }
-      );
-
+        localStorage.setItem(
+          USER_LANGUAGE,
+          response.data.userSettings.language
+        );
+        return axios
+          .get(API_BASE_URL + "/user/translation", {
+            params: {
+              language: localStorage.getItem(USER_LANGUAGE)
+            },
+            headers: headers
+          })
+          .then(
+            response => {
+              for (var key in response.data) {
+                if (response.data.hasOwnProperty(key)) {
+                  localStorage.setItem(key, response.data[key]);
+                }
+              }
+            },
+            error => {
+              console.log(error);
+            }
+          );
       })
       .catch(err => {
         console.log(err);
       });
 
-     
     if (localStorage.getItem(USER_THEME) == "Light") {
       document.getElementById("dropdown").style.backgroundColor = "white";
-       document.getElementById("header").style.backgroundColor = "white";
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
       document.getElementById("dropdown").style.backgroundColor = "black";
-      document.getElementById("header").style.backgroundColor = "black";
-
     }
 
     document.getElementById("email").innerHTML = localStorage.getItem(
@@ -132,29 +126,20 @@ export default {
     document.getElementById("name").innerHTML = localStorage.getItem(USER_NAME);
     document.getElementById("pic").src = localStorage.getItem(USER_PIC);
 
-
-    if (localStorage.getItem(USER_THEME) == "Light") {
-      document.getElementById("dropdown").style.backgroundColor = "white";
-    } else if (localStorage.getItem(USER_THEME) == "Dark") {
-      document.getElementById("dropdown").style.backgroundColor = "black";
-    }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
-      document.getElementsByClassName("option")[0].innerHTML = localStorage.getItem(PROFILE);
+      document.getElementsByClassName(
+        "option"
+      )[0].innerHTML = localStorage.getItem(PROFILE);
       document.getElementsByClassName(
         "option"
       )[1].innerHTML = localStorage.getItem(SETTINGS);
-      document.getElementsByClassName("option")[2].innerHTML = localStorage.getItem(LOGOUT);
-
+      document.getElementsByClassName(
+        "option"
+      )[2].innerHTML = localStorage.getItem(LOGOUT);
     }
   },
   methods: {
-    changeLight() {
-      document.getElementById("dropdown").style.backgroundColor = "white";
-    },
-    changeDark() {
-      document.getElementById("dropdown").style.backgroundColor = "black";
-    },
-   showDropdown(index) {
+    showDropdown(index) {
       if (index == 0) {
         this.$router.push("/profile");
       } else if (index == 1) {
@@ -172,26 +157,29 @@ export default {
       }
     },
     Translate() {
-    if (localStorage.getItem(USER_LANGUAGE) != "en") {
-
-      this.items[0].title = localStorage.getItem(PROFILE);
-      this.items[1].title = localStorage.getItem(SETTINGS);
-      this.items[2].title = localStorage.getItem(LOGOUT);
-
+      if (localStorage.getItem(USER_LANGUAGE) != "en") {
+        this.items[0].title = localStorage.getItem(PROFILE);
+        this.items[1].title = localStorage.getItem(SETTINGS);
+        this.items[2].title = localStorage.getItem(LOGOUT);
+      }
+      navigation.methods.Translate();
     }
-    navigation.methods.Translate();
-  }
   }
 };
 </script>
 
 <style scoped>
-#dropdown {
-  width: 94%;
-  height: 72px;
+#dropdown{
+  width: 5%;
+  height: 100vh;
   margin-bottom: 0px;
   float: right;
+  margin: 0px auto;
+  display: flex;
+  justify-content: center;
+  background-color: #6b6767;
 }
+
 #settings {
   background-color: #006bf5;
   border-collapse: collapse;
@@ -208,9 +196,11 @@ export default {
   float: right;
 }
 #pic {
-  border-radius: 50%;
-  float: right;
-  margin-top: 0px;
+    border-radius: 50%;
+    float: right;
+    margin-top: 20px;
+    height: 60px;
+    width: 60px;
 }
 .options {
   width: 100%;
@@ -224,7 +214,7 @@ export default {
 .option {
   padding-top: 5px;
   box-sizing: border-box;
-  width: 100%;
+  width: 300px;
   height: 100%;
   text-align: center;
   font-family: "Roboto", sans-serif;
@@ -235,12 +225,13 @@ export default {
 .option:hover {
   color: white;
   background-color: #006bf5;
+  cursor: pointer;
 }
 #usersdata {
   float: right;
-  height: 72px;
   margin-top: 0px;
 }
+
 #usersdata:hover {
   background-color: #f1f1f1;
 }
@@ -249,10 +240,12 @@ export default {
   float: right;
   margin-right: 10px;
   margin-top: 5px;
+  display: none;
 }
 #icon {
   float: right;
   margin-top: 25px;
+  display: none;
   margin-right: 10px;
 }
 * {
@@ -280,7 +273,7 @@ body {
 }
 
 #dashboard {
-  width: 94%;
+  width: 89%;
   height: 100%;
   float: left;
 }
