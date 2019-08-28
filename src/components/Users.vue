@@ -194,6 +194,10 @@ export default {
       this.$router.push("/dashboard/messages/updateUser/" + id);
     },
     async deleteUser(id) {
+     let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       await axios.delete(API_BASE_URL + "/user/delete/" + id);
       var pg = this.page - 1;
       try {
@@ -206,7 +210,8 @@ export default {
               "&size=" +
               this.rowSize +
               "&sort=title," +
-              this.sortType
+              this.sortType,
+               { headers:headers }
           );
         else if (this.textSort == true)
           res = await axios.get(
