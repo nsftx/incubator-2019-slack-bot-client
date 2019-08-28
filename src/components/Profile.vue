@@ -33,7 +33,6 @@
       </p>
       <p id="role1"></p>
       <br />
-      <button @click="signOut()" id="submit">Sign Out</button>
     </div>
   </div>
 </template>

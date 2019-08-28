@@ -22,7 +22,6 @@
 <br>
 <br>
 <br>
-<span> <span id="picked1">Picked:  </span> {{ picked1 }}</span>
       </div>
       <br />
       <div id="select2">
@@ -31,16 +30,15 @@
             >Select Language</button>
             <br />
             <br />
-         <input type="radio" id="one1" value="English" v-model="picked2" >
-<label id="english" for="one">English</label>
+         <input type="radio" id="one1" value="English" v-model="picked2" @click="showLanguageSettings('en')" >
+<label id="english" for="one1">English</label>
 <br>
 <br>
-<input type="radio" id="two1"  value="Bosnian" v-model="picked2" >
-<label id="bosnian" for="two">Bosnian</label>
+<input type="radio" id="two1"  value="Bosnian" v-model="picked2" @click="showLanguageSettings('fr')">
+<label id="bosnian" for="two1">Bosnian</label>
 <br>
 <br>
 <br>
-<span> <span id="picked2">Picked: </span> {{ picked2}}</span>
 </div>
       <input type="button" value="Save" @click="Save()" id="submit" />
     </div>
@@ -91,17 +89,20 @@ export default {
   name: "settings2",
   data() {
     return {
-      picked1:" ",
+      picked1:"",
       picked2:"",
     };
   },
   mounted: function() {
-    if (localStorage.getItem(USER_THEME) == "Light") {
+   
+    if (localStorage.getItem(USER_THEME)=="Light") {
+      document.getElementById("two").checked=true;
       this.$emit("change-light");
       document.getElementById("settings2").style.backgroundColor = "white";
       document.getElementById("settings2").style.color = "black";
       document.getElementById("header").style.backgroundColor = "white";
-    } else if (localStorage.getItem(USER_THEME) == "Dark") {
+    } else if (localStorage.getItem(USER_THEME)=="Dark") {
+      document.getElementById("one").checked=true;
        this.$emit("change-dark");
       document.getElementById("settings2").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
@@ -109,10 +110,10 @@ export default {
       document.getElementById("select1").style.color= "black";
        document.getElementById("select2").style.color= "black";
     }
-
+  document.getElementById("one1").checked=true;
     if(localStorage.getItem(USER_LANGUAGE)!="en"){
-          document.getElementById("picked1").innerHTML=localStorage.getItem(PICKED);
-          document.getElementById("picked2").innerHTML=localStorage.getItem(PICKED);
+       document.getElementById("two1").checked=true;
+       document.getElementById("one1").checked=false;
           document.getElementById("color").innerHTML = localStorage.getItem(
            SELECTCOLOR
           );
@@ -130,8 +131,21 @@ export default {
   }
         },
   methods: {
+    showLanguageSettings(value){
+      document.getElementById("one1").checked=false;
+      document.getElementById("two1").checked=false;
+  if(value=="en")
+   document.getElementById("one1").checked=true;
+   else
+   document.getElementById("two1").checked=true;
+
+
+    },
     showThemeSettings(value) {
+      document.getElementById("one").checked=false;
+      document.getElementById("two").checked=false;
       if (value=="Dark") {
+        document.getElementById("one").checked=true;
         this.$emit("change-dark");
       document.getElementById("settings2").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
@@ -140,6 +154,7 @@ export default {
        document.getElementById("select2").style.color= "black";
        //document.getElementById("profile").style.color="white";
       } else if (value=="Light") {
+         document.getElementById("two").checked=true;
         this.$emit("change-light");
         document.getElementById("header").style.backgroundColor = "white";
         document.getElementById("settings2").style.backgroundColor = "white";
@@ -149,6 +164,11 @@ export default {
 
     },
     Save() {
+       let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
+      console.log(this.picked2);
       if(this.picked2=="English")
       localStorage.setItem(USER_LANGUAGE,"en");
       else if(this.picked2=="Bosnian")
@@ -175,8 +195,54 @@ export default {
         );
          this.picked1="";
         this.picked2="";
+        axios
+      .get(API_BASE_URL + "/user/translation", {
+        params: {
+          language: localStorage.getItem(USER_LANGUAGE)
+        },
+        headers: headers
+      })
+      .then(
+        response => {
+          for (var key in response.data) {
+    if (response.data.hasOwnProperty(key)) {
+        localStorage.setItem(key,response.data[key]);
+    }
+}
+          console.log(response);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+       if(localStorage.getItem(USER_LANGUAGE)!="en"){
+         document.getElementById("one1").checked=false;
+       document.getElementById("two1").checked=true;
+          document.getElementById("color").innerHTML = localStorage.getItem(
+           SELECTCOLOR
+          );
+          document.getElementById("language").innerHTML = localStorage.getItem(
+            SELECTLANGUAGE
+          );
+          document.getElementById("title").innerHTML = localStorage.getItem(
+            SETTINGS
+          );
+          document.getElementById("submit").value = localStorage.getItem(SAVE);
+          document.getElementById("english").innerHTML= localStorage.getItem(LANGUAGEEN);
+          document.getElementById("bosnian").innerHTML= localStorage.getItem(LANGUAGEFR);
+          document.getElementById("dark").innerHTML=localStorage.getItem(DARK);
+          document.getElementById("light").innerHTML=localStorage.getItem(LIGHT);
+  }
+    if (localStorage.getItem(USER_THEME) == "Light") {
+      document.getElementById("two").checked=true;
+    }
+    else if (localStorage.getItem(USER_THEME) == "Dark") {
+      document.getElementById("one").checked=true;
+    }
       this.$emit("change-language");
+      window.location.reload();
       }
+
       
   }
 };
@@ -243,8 +309,8 @@ button[data-v-47aa12d3] {
 
 #settings2 #submit {
   position: absolute;
-  bottom: 420px;
-  right: 90px;
+  bottom: 40%;
+  right: 10%;
   float: right;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   width: 18%;
@@ -320,7 +386,8 @@ button {
 }
 #select1,#select2 {
   display: inline;
-  margin-left: 20px;
+  margin-left: 3%;
+  padding-top:2%;
   color:#2c3e50;
   font-size:120%;
 }

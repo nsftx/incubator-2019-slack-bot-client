@@ -117,10 +117,10 @@ export default {
       });
 
      
-    if (localStorage.getItem(USER_THEME) == "light") {
+    if (localStorage.getItem(USER_THEME) == "Light") {
       document.getElementById("dropdown").style.backgroundColor = "white";
        document.getElementById("header").style.backgroundColor = "white";
-    } else if (localStorage.getItem(USER_THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "Dark") {
       document.getElementById("dropdown").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
 
@@ -133,9 +133,9 @@ export default {
     document.getElementById("pic").src = localStorage.getItem(USER_PIC);
 
 
-    if (localStorage.getItem(USER_THEME) == "light") {
+    if (localStorage.getItem(USER_THEME) == "Light") {
       document.getElementById("dropdown").style.backgroundColor = "white";
-    } else if (localStorage.getItem(USER_THEME) == "dark") {
+    } else if (localStorage.getItem(USER_THEME) == "Dark") {
       document.getElementById("dropdown").style.backgroundColor = "black";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
@@ -168,16 +168,15 @@ export default {
         localStorage.setItem(USER_LANGUAGE, "");
         localStorage.setItem(USER_NAME, "");
         localStorage.setItem(USER_PIC, "");
-        alert("You're safely logged out!");
         this.$router.push("/login");
       }
     },
     Translate() {
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
 
-      this.data.items[0].title = localStorage.getItem(PROFILE);
-      this.data.items[1].title = localStorage.getItem(SETTINGS);
-      this.data.items[2].title = localStorage.getItem(LOGOUT);
+      this.items[0].title = localStorage.getItem(PROFILE);
+      this.items[1].title = localStorage.getItem(SETTINGS);
+      this.items[2].title = localStorage.getItem(LOGOUT);
 
     }
     navigation.methods.Translate();

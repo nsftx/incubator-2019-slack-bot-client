@@ -34,7 +34,7 @@
           </div>
         </li>
 
-        <li v-for="poll in pollData" :key="poll.id" @click="viewPoll(poll.id)">
+        <li class="li" v-for="poll in pollData" :key="poll.id" @click="viewPoll(poll.id)">
           <div class="linear2"></div>
           <div class="linear1"></div>
           <div class="column1 column">

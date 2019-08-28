@@ -201,6 +201,10 @@ export default {
 
   methods: {
     async reloadSchedules() {
+      let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       var pg = this.page - 1;
       try {
         const res = await axios.get(
@@ -252,6 +256,10 @@ export default {
     },
 
     async deleteSchedule(id) {
+      let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       await axios.delete(API_BASE_URL + "/api/schedules/" + id);
       var pg = this.page - 1;
       try {
@@ -301,6 +309,10 @@ export default {
     },
 
     async create() {
+      let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       try {
         const res = await axios.get(
           API_BASE_URL +
