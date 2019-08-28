@@ -104,7 +104,7 @@ import {
   TEXT,
   CREATEDAT,
   USER_THEME,
-  USER_LANGUAGE
+  USER_LANGUAGE,USER_NAME,USER_PIC,CURRENT_USER_ROLE,
 } from "../constants/index.js";
 import { USER_EMAIL, LANGUAGE } from "../constants/index.js";
 import { ACCESS_TOKEN, MESSAGES } from "../constants/index.js";
@@ -129,11 +129,49 @@ export default {
       showNotificationValue: false
     };
   },
-  mounted: function() {
+  mounted: async function() {
     let headers = {
       "Content-Type": "application/json",
       Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
     };
+    await axios
+
+      .get(API_BASE_URL + "/user/me", {
+        headers: headers
+      })
+      .then(response => {
+        localStorage.setItem(USER_EMAIL, response.data.email);
+        localStorage.setItem(USER_NAME, response.data.name);
+        localStorage.setItem(USER_PIC, response.data.imageUrl);
+        localStorage.setItem(CURRENT_USER_ROLE, response.data.role);
+        localStorage.setItem(USER_THEME, response.data.userSettings.theme);
+        localStorage.setItem(
+          USER_LANGUAGE,
+          response.data.userSettings.language
+        );
+        return axios
+          .get(API_BASE_URL + "/user/translation", {
+            params: {
+              language: localStorage.getItem(USER_LANGUAGE)
+            },
+            headers: headers
+          })
+          .then(
+            response => {
+              for (var key in response.data) {
+                if (response.data.hasOwnProperty(key)) {
+                  localStorage.setItem(key, response.data[key]);
+                }
+              }
+            },
+            error => {
+              console.log(error);
+            }
+          );
+      })
+      .catch(err => {
+        console.log(err);
+      });
     if (localStorage.getItem(USER_THEME) == "Light") {
       this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
@@ -144,7 +182,7 @@ export default {
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("messages").style.backgroundColor = "black";
     }
-    if (localStorage.getItem(USER_LANGUAGE) != "en") {
+    if (localStorage.getItem(USER_LANGUAGE) == "fr") {
       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
         MESSAGES
       );

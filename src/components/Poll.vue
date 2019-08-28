@@ -183,6 +183,10 @@ export default {
     },
 
     async reloadPoll() {
+      let headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       var pg = this.page - 1;
       try {
         const res = await axios.get(
@@ -209,12 +213,17 @@ export default {
     },
 
     async create() {
+      let headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       try {
         const res = await axios.get(
           API_BASE_URL +
             "/api/polls?page=0&size=" +
             this.rowSize +
-            "&sort=createdAt"
+            "&sort=createdAt",
+            {headers:headers}
         );
         this.pollData = res.data.content;
         if (res.data.totalPages == 0) this.pagesSize = 1;
@@ -240,6 +249,10 @@ export default {
     },
 
     async deletePoll(id) {
+      let headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+      };
       await axios.delete(API_BASE_URL + "/api/polls/" + id);
       var pg = this.page - 1;
 

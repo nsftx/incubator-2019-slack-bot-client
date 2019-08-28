@@ -33,8 +33,6 @@
     <div id="dashboard">
       <div id="table">
         <router-view
-          @change-light="changeLight()"
-          @change-dark="changeDark()"
           @change-language="Translate()"
         ></router-view>
       </div>
@@ -76,7 +74,6 @@ export default {
       Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
     };
     await axios
-
       .get(API_BASE_URL + "/user/me", {
         headers: headers
       })
@@ -114,11 +111,6 @@ export default {
         console.log(err);
       });
 
-    if (localStorage.getItem(USER_THEME) == "Light") {
-      document.getElementById("dropdown").style.backgroundColor = "white";
-    } else if (localStorage.getItem(USER_THEME) == "Dark") {
-      document.getElementById("dropdown").style.backgroundColor = "black";
-    }
 
     document.getElementById("email").innerHTML = localStorage.getItem(
       USER_EMAIL
@@ -126,7 +118,7 @@ export default {
     document.getElementById("name").innerHTML = localStorage.getItem(USER_NAME);
     document.getElementById("pic").src = localStorage.getItem(USER_PIC);
 
-    if (localStorage.getItem(USER_LANGUAGE) != "en") {
+    if (localStorage.getItem(USER_LANGUAGE) == "fr") {
       document.getElementsByClassName(
         "option"
       )[0].innerHTML = localStorage.getItem(PROFILE);
@@ -147,7 +139,7 @@ export default {
       } else if (index == 2) {
         localStorage.setItem(ACCESS_TOKEN, "");
         localStorage.setItem(CURRENT_USER_ROLE, "");
-        localStorage.setItem(THEME, "");
+        localStorage.setItem(USER_THEME, "");
         localStorage.setItem(CURRENT_USER_ROLE, "");
         localStorage.setItem(USER_EMAIL, "");
         localStorage.setItem(USER_LANGUAGE, "");
@@ -157,7 +149,7 @@ export default {
       }
     },
     Translate() {
-      if (localStorage.getItem(USER_LANGUAGE) != "en") {
+      if (localStorage.getItem(USER_LANGUAGE) == "fr") {
         this.items[0].title = localStorage.getItem(PROFILE);
         this.items[1].title = localStorage.getItem(SETTINGS);
         this.items[2].title = localStorage.getItem(LOGOUT);
