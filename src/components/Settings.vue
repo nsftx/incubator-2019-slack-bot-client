@@ -192,7 +192,8 @@ export default {
             localStorage.setItem(USER_THEME, response.data.theme);
             localStorage.setItem(USER_LANGUAGE, response.data.language);
             console.log(response);
-              return    axios
+             this.$emit("change-language");
+              axios
       .get(API_BASE_URL + "/user/translation", {
         params: {
           language: localStorage.getItem(USER_LANGUAGE)
@@ -244,7 +245,7 @@ document.getElementById("color").innerHTML = localStorage.getItem(
     else if (localStorage.getItem(USER_THEME) == "Dark") {
       document.getElementById("one").checked=true;
     }
-      this.$emit("change-language");
+     
       
       }
 
