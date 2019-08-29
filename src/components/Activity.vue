@@ -186,7 +186,7 @@ document.getElementById("footer").style.backgroundColor="#191919";
     async create() {
       try {
         const res = await axios.get(
-          API_BASE_URL + "/api/logs?page=0&size=" + this.rowSize,
+          API_BASE_URL + "/api/logs?page=0&size=" + this.rowSize + "&sort=createdAt,asc",
           { headers: headers }
         );
         this.auditData = res.data.content;

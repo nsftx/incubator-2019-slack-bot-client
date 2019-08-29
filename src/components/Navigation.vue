@@ -326,4 +326,40 @@ li:hover .material-icons {
 .router-link {
   text-decoration: none;
 }
+
+.notification {
+  position: relative;
+  height: 0px;
+}
+
+.notification::before,
+.notification::after {
+  position: absolute;
+  left: 20%;
+  opacity: 1;
+  transition: all ease 0.3s;
+}
+
+.notification::after {
+  content: attr(notificationNumber);
+  top: 25px;
+  width: 20px;
+  font-size: 16px;
+  margin-left: 34px;
+  padding: 11px;
+  border-radius: 10px;
+  color: #eee;
+  -webkit-transform: translateY(-100%);
+  transform: translateY(-100%);
+  color: white;
+  text-align: center;
+}
+
+#notificationNumber {
+  color: white;
+  position: relative;
+  left: 24px;
+  font-size: 15px;
+}
+
 </style>
