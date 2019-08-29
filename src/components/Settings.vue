@@ -246,7 +246,7 @@ document.getElementById("color").innerHTML = localStorage.getItem(
       document.getElementById("one").checked=true;
     }
       this.$emit("change-language");
-      window.location.reload();
+      
       }
 
       
