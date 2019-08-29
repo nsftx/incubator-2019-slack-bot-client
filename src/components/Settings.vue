@@ -192,14 +192,7 @@ export default {
             localStorage.setItem(USER_THEME, response.data.theme);
             localStorage.setItem(USER_LANGUAGE, response.data.language);
             console.log(response);
-          },
-          error => {
-            console.log(error);
-          }
-        );
-         this.picked1="";
-        this.picked2="";
-        axios
+              return    axios
       .get(API_BASE_URL + "/user/translation", {
         params: {
           language: localStorage.getItem(USER_LANGUAGE)
@@ -233,6 +226,14 @@ document.getElementById("color").innerHTML = localStorage.getItem(
           console.log(error);
         }
       );
+          },
+          error => {
+            console.log(error);
+          }
+        );
+         this.picked1="";
+        this.picked2="";
+  
        if(localStorage.getItem(USER_LANGUAGE)!="en"){
          document.getElementById("one1").checked=false;
        document.getElementById("two1").checked=true;
