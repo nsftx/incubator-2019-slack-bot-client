@@ -247,21 +247,6 @@ export default {
       } catch (err) {
         this.showNotification(-1);
       }
-      if (localStorage.getItem(USER_THEME) == "Dark") {
-        this.$emit("change-dark");
-        for (var i = 0; i < document.getElementsByTagName("li").length; i++) {
-          document.getElementsByTagName("li")[i].style.backgroundColor =
-            "#3c4858";
-          document.getElementsByTagName("li")[i].style.color = "white";
-        }
-        for (
-          var i = 0;
-          i < document.getElementsByClassName("lip").length;
-          i++
-        ) {
-          document.getElementsByClassName("lip")[i].style.color = "white";
-        }
-      }
     },
 
     showNotification(value) {
