@@ -180,7 +180,7 @@ export default {
       document.getElementsByTagName("span")[2].innerHTML = localStorage.getItem(
         TRIGGERS
       );
-      document.getElementsByTagName("span")[4].innerHTML = localStorage.getItem(
+      document.getElementsByTagName("span")[3].innerHTML = localStorage.getItem(
         POLL
       );
       document.getElementsByTagName("span")[5].innerHTML = localStorage.getItem(
