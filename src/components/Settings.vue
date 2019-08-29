@@ -158,10 +158,13 @@ export default {
       } else if (value=="Light") {
          document.getElementById("two").checked=true;
         this.$emit("change-light");
+        document.getElementsByTagName("H1")[0].style.color="black";
         document.getElementById("header").style.backgroundColor = "white";
         document.getElementById("settings2").style.backgroundColor = "white";
         document.getElementById("settings2").style.color = "black";
         document.getElementById("profile").style.backgroundColor = "#f1f1f1";
+        document.getElementById("select1").style.color= "black";
+       document.getElementById("select2").style.color= "black";
       }
 
     },
