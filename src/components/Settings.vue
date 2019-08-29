@@ -112,7 +112,7 @@ export default {
        document.getElementById("select2").style.color= "white";
     }
   document.getElementById("one1").checked=true;
-    if(localStorage.getItem(USER_LANGUAGE)!="en"){
+    if(localStorage.getItem(USER_LANGUAGE)=="fr"){
        document.getElementById("two1").checked=true;
        document.getElementById("one1").checked=false;
           document.getElementById("color").innerHTML = localStorage.getItem(
