@@ -118,6 +118,12 @@ import { async } from "q";
 
 export default {
   name: "navigation",
+  data() {
+    return {
+      notificationNumber: 0,
+      userId: 0
+    };
+  },
   mounted: async function() {
      let headers = {
       "Content-Type": "application/json",
