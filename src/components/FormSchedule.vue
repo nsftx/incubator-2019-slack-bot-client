@@ -42,7 +42,7 @@
                 style="margin-top: 8px"
                 type="datetime"
                 format="[On] YYYY-MM-DD [at] HH:mm"
-                :minute-step="5"
+                :minute-step="1"
                 :disabled="formType=='Update'"
                 confirm
               ></date-picker>
@@ -445,7 +445,9 @@ export default {
   font-family: "Roboto", sans-serif;
   color:#2c3e50;
 }
-
+#formTitle{
+  color: #4d4d4d;
+}
 *[data-v-f2ae3234] {
   width: 100%;
   height: 13px;

@@ -220,7 +220,9 @@ export default {
 * {
   font-family: "Roboto", sans-serif;
 }
-
+#createUser{
+  color: #4d4d4d;
+}
 #form-style-10 {
   width: 640px;
   height: 480px;

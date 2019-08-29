@@ -80,12 +80,13 @@ export default {
       document.getElementById("profile1").style.color = "black";
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
       this.$emit("change-dark");
-      document.getElementById("profile").style.backgroundColor = "#2c3e50";
+      document.getElementsByTagName("H1")[0].style.color="#f1f1f1";
+      document.getElementById("profile").style.backgroundColor = "#191919";
       document.getElementById("profile").style.color = "black";
       //document.getElementById("profile").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
       document.getElementById("table").style.backgroundColor = "black";
-      document.getElementById("profile1").style.color = "white";
+      document.getElementById("profile").style.color = "white";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
@@ -146,7 +147,7 @@ p {
   box-sizing: border-box;
   padding: 20px;
   padding-bottom: 0px;
-  height: 61%;
+  height: auto;
 }
 
 h1 {

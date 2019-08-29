@@ -13,31 +13,31 @@
           <div class="column1 column">
             <h5>Message</h5>
             <p>
-              <i class="material-icons" @click="sortBy('message.title')">arrow_drop_down</i>
+              <i class="material-icons" @click="sortBy('message.title')" title="Sort by message title">arrow_drop_down</i>
             </p>
           </div>
           <div class="column2 column">
             <h5>Next Run</h5>
             <p>
-              <i class="material-icons" @click="sortBy('runAt')">arrow_drop_down</i>
+              <i class="material-icons" @click="sortBy('runAt')" title="Sort by next run">arrow_drop_down</i>
             </p>
           </div>
           <div class="column3 column">
             <h5>Active At</h5>
             <p>
-              <i class="tooltip, material-icons" @click="sortBy('active')">arrow_drop_down</i>
+              <i class="tooltip, material-icons" @click="sortBy('active')" title="Sort by acive">arrow_drop_down</i>
             </p>
           </div>
           <div class="column6 column">
             <h5>Repeat</h5>
             <p>
-              <i class="tooltip, material-icons" @click="sortBy('repeat')">arrow_drop_down</i>
+              <i class="tooltip, material-icons" @click="sortBy('repeat')" title="Sort by repeat">arrow_drop_down</i>
             </p>
           </div>
           <div class="column5 column">
             <h5>Channel</h5>
             <p>
-              <i class="tooltip, material-icons" @click="sortBy('channel')">arrow_drop_down</i>
+              <i class="tooltip, material-icons" @click="sortBy('channel')" title="Sort by channel">arrow_drop_down</i>
             </p>
           </div>
           <div class="column4 column">
@@ -66,8 +66,8 @@
             <p>{{ schedule.channel }}</p>
           </div>
           <div class="column4 column">
-            <i class="material-icons" @click="editSchedule(schedule.scheduleId)">create</i>
-            <i class="material-icons" @click="deleteSchedule(schedule.scheduleId)">delete</i>
+            <i class="material-icons" @click="editSchedule(schedule.scheduleId)" title="Edit schedule">create</i>
+            <i class="material-icons" @click="deleteSchedule(schedule.scheduleId)" title="Delete schedule">delete</i>
           </div>
         </li>
       </ul>

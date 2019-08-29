@@ -104,11 +104,12 @@ export default {
     } else if (localStorage.getItem(USER_THEME)=="Dark") {
       document.getElementById("one").checked=true;
        this.$emit("change-dark");
+      document.getElementsByTagName("H1")[0].style.color="#f1f1f1";
       document.getElementById("settings2").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
-      document.getElementById("profile").style.backgroundColor = "#2c3e50";
-      document.getElementById("select1").style.color= "black";
-       document.getElementById("select2").style.color= "black";
+      document.getElementById("profile").style.backgroundColor = "#191919";
+      document.getElementById("select1").style.color= "white";
+       document.getElementById("select2").style.color= "white";
     }
   document.getElementById("one1").checked=true;
     if(localStorage.getItem(USER_LANGUAGE)!="en"){
@@ -147,11 +148,12 @@ export default {
       if (value=="Dark") {
         document.getElementById("one").checked=true;
         this.$emit("change-dark");
+        document.getElementsByTagName("H1")[0].style.color="#f1f1f1";
       document.getElementById("settings2").style.backgroundColor = "black";
       document.getElementById("header").style.backgroundColor = "black";
-      document.getElementById("profile").style.backgroundColor = "#2c3e50";
-      document.getElementById("select1").style.color= "black";
-       document.getElementById("select2").style.color= "black";
+      document.getElementById("profile").style.backgroundColor = "#191919";
+      document.getElementById("select1").style.color= "white";
+       document.getElementById("select2").style.color= "white";
        //document.getElementById("profile").style.color="white";
       } else if (value=="Light") {
          document.getElementById("two").checked=true;

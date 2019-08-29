@@ -81,6 +81,7 @@ export default {
     if (localStorage.getItem(USER_THEME) == "Dark") {
       document.getElementById("pollViewTitle").style.color="white";
       document.getElementById("form-style-10").style.backgroundColor="#191919";
+       document.getElementById("inner-wrap").style.backgroundColor="#191919";
     }
     this.create();
   },

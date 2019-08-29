@@ -10,19 +10,19 @@
           <div class="column1 column">
             <h5>Title</h5>
             <p>
-              <i class="material-icons" @click="sortBy('title')">arrow_drop_down</i>
+              <i class="material-icons" @click="sortBy('title')" title="Sort by title">arrow_drop_down</i>
             </p>
           </div>
           <div class="column2 column">
             <h5>Text</h5>
             <p>
-              <i class="material-icons" @click="sortBy('text')">arrow_drop_down</i>
+              <i class="material-icons" @click="sortBy('text')" title="Sort by text">arrow_drop_down</i>
             </p>
           </div>
           <div class="column3 column">
             <h5>Created At</h5>
             <p>
-              <i class="tooltip, material-icons" @click="sortBy('createdAt')">arrow_drop_down</i>
+              <i class="tooltip, material-icons" @click="sortBy('createdAt')" title="Sort by date">arrow_drop_down</i>
             </p>
           </div>
           <div class="column4 column">
@@ -48,10 +48,10 @@
             <i
               class="material-icons tooltip"
               @click="showScheduleForm(message.messageId)"
-            >assignment_turned_in</i>
-            <i class="material-icons" @click="showTriggerForm(message.messageId)">assistant</i>
-            <i class="material-icons" @click="editMessage(message.messageId)">create</i>
-            <i class="material-icons" @click="deleteMessage(message.messageId)">delete</i>
+            title="Create schedule">assignment_turned_in</i>
+            <i class="material-icons" @click="showTriggerForm(message.messageId)" title="Create trigger">assistant</i>
+            <i class="material-icons" @click="editMessage(message.messageId)" title="Edit message">create</i>
+            <i class="material-icons" @click="deleteMessage(message.messageId)" title="Delete message">delete</i>
           </div>
         </li>
       </ul>

@@ -344,7 +344,9 @@ export default {
 * {
   font-family: "Roboto", sans-serif;
 }
-
+#formTitle{
+  color: #4d4d4d;
+}
 #formaT {
   width: 640px;
   height: 480px;

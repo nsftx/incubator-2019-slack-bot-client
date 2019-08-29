@@ -24,6 +24,7 @@
           <br />
           <br />
 
+          <div id="choicesList">
           <label id="choices">Choices:</label>
           <input
             type="text"
@@ -34,6 +35,7 @@
             :placeholder="index+1 + '.'"
             class="choices"
           />
+          </div>
 
           <input
             type="button"
@@ -371,6 +373,9 @@ export default {
 * {
   font-family: "Roboto", sans-serif;
 }
+#formTitle{
+  color: #4d4d4d;
+}
 #form-style-10 {
   width: 640px;
   height: auto;
@@ -386,6 +391,11 @@ export default {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   z-index: 120;
   padding-bottom: 50px;
+}
+
+#choicesList{
+  height: 130px;
+  overflow: auto;
 }
 
 .mx-input {
@@ -437,7 +447,6 @@ export default {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   width: 100%;
-  height: 40%;
   padding: 8px;
   border-radius: 6px;
   -webkit-border-radius: 6px;

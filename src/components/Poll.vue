@@ -12,19 +12,19 @@
           <div class="column1 column">
             <h5>Title</h5>
             <p>
-              <i class="material-icons">arrow_drop_down</i>
+              <i class="material-icons" title="Sort by title" @click="sortBy('title')">arrow_drop_down</i>
             </p>
           </div>
           <div class="column2 column">
             <h5>Channel</h5>
             <p>
-              <i class="material-icons">arrow_drop_down</i>
+              <i class="material-icons" title="Sort by channel" @click="sortBy('channel')">arrow_drop_down</i>
             </p>
           </div>
           <div class="column3 column">
             <h5>Active</h5>
             <p>
-              <i class="material-icons">arrow_drop_down</i>
+              <i class="material-icons" title="Sort by active" @click="sortBy('active')">arrow_drop_down</i>
             </p>
           </div>
           <div class="column4 column">
@@ -47,7 +47,7 @@
             <p>{{poll.activeUntil | shortDate}}</p>
           </div>
           <div class="column4 column">
-            <i class="material-icons"  @click.stop="deletePoll(poll.pollId)">delete</i>
+            <i class="material-icons"  @click.stop="deletePoll(poll.pollId)" title="Delete poll">delete</i>
           </div>
         </li>
       </ul>
@@ -190,6 +190,14 @@ export default {
       this.reloadPoll(nextPage - 1);
     },
 
+    sortBy(value) {
+      if (this.sortType == "desc") this.sortType = "asc";
+      else this.sortType = "desc";
+
+      this.sortByValue = value;
+      this.reloadPoll();
+    },
+
     async reloadPoll() {
       let headers = {
         "Content-Type": "application/json",
@@ -296,6 +304,14 @@ export default {
 
     viewPoll(id) {
       this.$router.push("/dashboard/poll/viewPoll/" + id);
+    }
+  },
+  filters: {
+    shortDate(value) {
+      let dateVar = new Date(value);
+      let dataVar2 = dateVar.toDateString();
+      let data = dataVar2.substring(4);
+      return data;
     }
   },
   directives: {

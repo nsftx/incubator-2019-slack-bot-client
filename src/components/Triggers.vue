@@ -11,28 +11,28 @@
           <div class="column1 column">
             <h5>Message</h5>
             <p>
-              <i class="material-icons" @click="sortBy('message.title')">arrow_drop_down</i>
+              <i class="material-icons" @click="sortBy('message.title')" title="Sort by message title">arrow_drop_down</i>
             </p>
           </div>
 
           <div class="column2 column">
             <h5>Trigger</h5>
             <p>
-              <i class="material-icons" @click="sortBy('createdAt')">arrow_drop_down</i>
+              <i class="material-icons" @click="sortBy('createdAt')" title="Sort by date">arrow_drop_down</i>
             </p>
           </div>
 
           <div class="column3 column">
             <h5>Channel</h5>
             <p>
-              <i class="tooltip material-icons" @click="sortBy('channel')">arrow_drop_down</i>
+              <i class="tooltip material-icons" @click="sortBy('channel')" title="Sort by channel">arrow_drop_down</i>
             </p>
           </div>
 
           <div class="column5 column">
             <h5>Active</h5>
             <p>
-              <i class="tooltip material-icons" @click="sortBy('active')">arrow_drop_down</i>
+              <i class="tooltip material-icons" @click="sortBy('active')" title="Sort by active">arrow_drop_down</i>
             </p>
           </div>
 
@@ -60,8 +60,8 @@
             <p>{{ trigger.active | activeView }}</p>
           </div>
           <div class="column4 column">
-            <i class="material-icons" @click="editTrigger(trigger.triggerId)">create</i>
-            <i class="material-icons" @click="deleteTrigger(trigger.triggerId)">delete</i>
+            <i class="material-icons" @click="editTrigger(trigger.triggerId)" title="Edit tigger">create</i>
+            <i class="material-icons" @click="deleteTrigger(trigger.triggerId)" title="Delete trigger">delete</i>
           </div>
         </li>
       </ul>

@@ -10,19 +10,19 @@
           <div class="column1 column">
             <h5>Name</h5>
             <p>
-              <i class="material-icons" @click="sortBy('name')">arrow_drop_down</i>
+              <i class="material-icons" @click="sortBy('name')" title="Sort by name">arrow_drop_down</i>
             </p>
           </div>
           <div class="column2 column">
             <h5>Email</h5>
             <p>
-              <i class="material-icons" @click="sortBy('email')">arrow_drop_down</i>
+              <i class="material-icons" @click="sortBy('email')" title="Sort by email">arrow_drop_down</i>
             </p>
           </div>
           <div class="column3 column">
             <h5>Role</h5>
             <p>
-              <i class="material-icons" @click="sortBy('role')">arrow_drop_down</i>
+              <i class="material-icons" @click="sortBy('role')" title="Sort by role">arrow_drop_down</i>
             </p>
           </div>
           <div class="column4 column">
@@ -45,7 +45,7 @@
             <p>{{user.role}}</p>
           </div>
           <div class="column4 column">
-            <i class="material-icons" @click="deleteUser(user.id)">delete</i>
+            <i class="material-icons" @click="deleteUser(user.id)" title="Delete user">delete</i>
           </div>
         </li>
       </ul>

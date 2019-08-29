@@ -10,19 +10,19 @@
           <div class="column1 column">
             <h5>ID</h5>
             <p>
-              <i class="material-icons" @click="sortByValue('auditId')">arrow_drop_down</i>
+              <i class="material-icons" @click="sortByValue('auditId')" title="Sort by id">arrow_drop_down</i>
             </p>
           </div>
           <div class="column2 column">
             <h5>Action</h5>
             <p>
-              <i class="material-icons" @click="sortByValue('cause')">arrow_drop_down</i>
+              <i class="material-icons" @click="sortByValue('cause')" title="Sort by action">arrow_drop_down</i>
             </p>
           </div>
           <div class="column3 column">
             <h5>Result</h5>
             <p>
-              <i class="material-icons" @click="sortByValue('consequence')">arrow_drop_down</i>
+              <i class="material-icons" @click="sortByValue('consequence')" title="Sort by result">arrow_drop_down</i>
             </p>
           </div>
         </li>

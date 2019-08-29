@@ -172,7 +172,7 @@ export default {
   margin: 0px auto;
   display: flex;
   justify-content: center;
-  background-color: #6b6767;
+  background-color: #f1f1f1;
   color: #2c3e50;
 }
 
@@ -225,12 +225,10 @@ export default {
 }
 #usersdata {
   float: right;
+  height: 0px;
   margin-top: 0px;
 }
 
-#usersdata:hover {
-  background-color: #f1f1f1;
-}
 #credentials {
   height: inherit;
   float: right;

@@ -44,6 +44,10 @@ export default {
   background-size: cover;
 }
 
+#google-sign:hover{
+  height: 60px;
+}
+
 #right {
   height: 100%;
   background-color: rgb(70, 142, 235);
