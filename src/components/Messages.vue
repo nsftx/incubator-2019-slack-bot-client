@@ -182,9 +182,11 @@ export default {
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
       this.$emit("change-dark");
      document.getElementById("footer").style.backgroundColor="#191919";
+     document.getElementsByTagName("H1")[0].style.color="#f1f1f1";
       document.getElementById("divlist").style.backgroundColor="#4c4c4c";
       document.getElementById("header").style.backgroundColor = "#191919";
       document.getElementById("messages").style.backgroundColor = "#191919";
+      document.getElementById("messages").style.color = "#f1f1f1";
       document.getElementById("title-li").style.backgroundColor="#323232";
       document.getElementById("title-li").style.color="#f1f1f1";
       document.getElementsByTagName("H5")[0].style.color="#f1f1f1";
@@ -251,7 +253,6 @@ export default {
           document.getElementsByTagName("li")[i].style.backgroundColor =
             "#3c4858";
           document.getElementsByTagName("li")[i].style.color = "white";
-          document.getElementById("linear1").style.backgroundColor = "#3c4858";
         }
         for (
           var i = 0;
@@ -259,7 +260,6 @@ export default {
           i++
         ) {
           document.getElementsByClassName("lip")[i].style.color = "white";
-          document.getElementById("linear1").style.backgroundColor = "#3c4858";
         }
       }
     },

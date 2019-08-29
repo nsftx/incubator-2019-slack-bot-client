@@ -115,6 +115,8 @@ export default {
       document.getElementById("divlist").style.backgroundColor = "white";
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
       this.$emit("change-dark");
+       document.getElementsByTagName("H1")[0].style.color="#f1f1f1";
+      document.getElementById("Activity").style.color = "#f1f1f1";
 document.getElementById("footer").style.backgroundColor="#191919";
       document.getElementById("divlist").style.backgroundColor="#4c4c4c";
       document.getElementById("header").style.backgroundColor = "#191919";

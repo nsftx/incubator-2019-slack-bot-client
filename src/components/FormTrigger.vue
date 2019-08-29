@@ -136,7 +136,6 @@ export default {
        document.getElementsByTagName("label")[1].style.backgroundColor="#191919";
        document.getElementsByTagName("label")[2].style.backgroundColor="#191919";
        document.getElementsByClassName("la")[2].style.backgroundColor="#191919";
-      document.getElementById("FormPoll").color = "black";
       //document.getElementById("messages").style.backgroundColor="black";
     }
     if (this.$route.params.id != null) {
