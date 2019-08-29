@@ -136,9 +136,15 @@ export default {
       document.getElementById("divlist").style.backgroundColor = "white";
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
       this.$emit("change-dark");
-      document.getElementById("header").style.backgroundColor = "black";
-      document.getElementById("divlist").style.backgroundColor = "black";
-      document.getElementById("poll").style.backgroundColor = "black";
+        document.getElementById("footer").style.backgroundColor="#191919";
+      document.getElementById("divlist").style.backgroundColor="#4c4c4c";
+      document.getElementById("header").style.backgroundColor = "#191919";
+      document.getElementById("poll").style.backgroundColor = "#191919";
+      document.getElementById("title-li").style.backgroundColor="#323232";
+      document.getElementById("title-li").style.color="#f1f1f1";
+      document.getElementsByTagName("H5")[0].style.color="#f1f1f1";
+       document.getElementsByTagName("H5")[1].style.color="#f1f1f1";
+        document.getElementsByTagName("H5")[2].style.color="#f1f1f1";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
@@ -297,6 +303,9 @@ export default {
 </script>
 
 <style scoped>
+#table{
+  height:100vh;
+}
 #poll {
   padding: 20px;
   height: 100%;

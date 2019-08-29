@@ -32,7 +32,7 @@
           </div>
         </li>
 
-        <li  v-for="message in messagesData" :key="message.messageId">
+        <li v-for="message in messagesData" :key="message.messageId">
           <div class="linear2"></div>
           <div class="linear1"></div>
           <div class="column1 column">
@@ -104,7 +104,10 @@ import {
   TEXT,
   CREATEDAT,
   USER_THEME,
-  USER_LANGUAGE,USER_NAME,USER_PIC,CURRENT_USER_ROLE,
+  USER_LANGUAGE,
+  USER_NAME,
+  USER_PIC,
+  CURRENT_USER_ROLE
 } from "../constants/index.js";
 import { USER_EMAIL, LANGUAGE } from "../constants/index.js";
 import { ACCESS_TOKEN, MESSAGES } from "../constants/index.js";
@@ -178,9 +181,16 @@ export default {
       document.getElementById("messages").style.backgroundColor = "white";
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
       this.$emit("change-dark");
-
-      document.getElementById("header").style.backgroundColor = "black";
-      document.getElementById("messages").style.backgroundColor = "black";
+     document.getElementById("footer").style.backgroundColor="#191919";
+      document.getElementById("divlist").style.backgroundColor="#4c4c4c";
+      document.getElementById("header").style.backgroundColor = "#191919";
+      document.getElementById("messages").style.backgroundColor = "#191919";
+      document.getElementById("title-li").style.backgroundColor="#323232";
+      document.getElementById("title-li").style.color="#f1f1f1";
+      document.getElementsByTagName("H5")[0].style.color="#f1f1f1";
+       document.getElementsByTagName("H5")[1].style.color="#f1f1f1";
+        document.getElementsByTagName("H5")[2].style.color="#f1f1f1";
+      
     }
     if (localStorage.getItem(USER_LANGUAGE) == "fr") {
       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
@@ -235,17 +245,24 @@ export default {
       } catch (err) {
         this.showNotification(-1);
       }
-      if(localStorage.getItem(USER_THEME) == "Dark") {
-      this.$emit("change-dark");
- for(var i=0;i<document.getElementsByTagName("li").length;i++){
-      document.getElementsByTagName("li")[i].style.backgroundColor = "#3c4858";
-       document.getElementsByTagName("li")[i].style.color = "white";
-      document.getElementById("linear1").style.backgroundColor="#3c4858"; }
-     for(var i=0;i<document.getElementsByClassName("lip").length;i++){
-      document.getElementsByClassName("lip")[i].style.color= "white";
-      document.getElementById("linear1").style.backgroundColor="#3c4858"; }
-    }
-  },
+      if (localStorage.getItem(USER_THEME) == "Dark") {
+        this.$emit("change-dark");
+        for (var i = 0; i < document.getElementsByTagName("li").length; i++) {
+          document.getElementsByTagName("li")[i].style.backgroundColor =
+            "#3c4858";
+          document.getElementsByTagName("li")[i].style.color = "white";
+          document.getElementById("linear1").style.backgroundColor = "#3c4858";
+        }
+        for (
+          var i = 0;
+          i < document.getElementsByClassName("lip").length;
+          i++
+        ) {
+          document.getElementsByClassName("lip")[i].style.color = "white";
+          document.getElementById("linear1").style.backgroundColor = "#3c4858";
+        }
+      }
+    },
 
     showNotification(value) {
       if (value == -1) {
@@ -357,27 +374,31 @@ export default {
       } catch (err) {
         this.showNotification(-1);
       }
-       /* if (localStorage.getItem(USER_THEME) == "Light") {
+      /* if (localStorage.getItem(USER_THEME) == "Light") {
       this.$emit("change-light");
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("messages").style.backgroundColor = "white";
-    } else if */ if(localStorage.getItem(USER_THEME) == "Dark") {
-      this.$emit("change-dark");
- for(var i;i<document.getElementsByTagName("li").length;i++){
-      document.getElementsByTagName("li")[i].style.backgroundColor = "#3c4858";
-      document.getElementsByTagName("li")[i].style.color = "white";
-      //document.getElementById("messages").style.backgroundColor = "black";
-    }
-    }
-    else if(localStorage.getItem(USER_THEME) == "Light") {
-      /*document.getElementById("linear1").style.backgroundImage="linear-gradient(
+    } else if */ if (
+        localStorage.getItem(USER_THEME) == "Dark"
+      ) {
+        this.$emit("change-dark");
+        for (var i; i < document.getElementsByTagName("li").length; i++) {
+          document.getElementsByTagName("li")[i].style.backgroundColor =
+            "#3c4858";
+          document.getElementsByTagName("li")[i].style.color = "white";
+          //document.getElementById("messages").style.backgroundColor = "black";
+        }
+      } else if (localStorage.getItem(USER_THEME) == "Light") {
+        /*document.getElementById("linear1").style.backgroundImage="linear-gradient(
     90deg,
     rgba(236, 236, 236, 0) 0%,
     white 100%
   )";*/
-      //this.$emit("change-dark");
- for(var i;i<document.getElementsByTagName("li").length;i++)
-      document.getElementsByTagName("li")[i].style.backgroundColor = "white"; } 
+        //this.$emit("change-dark");
+        for (var i; i < document.getElementsByTagName("li").length; i++)
+          document.getElementsByTagName("li")[i].style.backgroundColor =
+            "white";
+      }
     },
 
     sortBy(value) {
@@ -403,10 +424,8 @@ h1 {
 }
 
 #header {
-  margin-left: 15px;
-  margin-right: 10px;
   display: block;
-  width: 99%;
+  width: 100%;
   float: right;
   background-color: white;
 }
@@ -577,6 +596,7 @@ li p {
 }
 
 li:hover {
+  color: #2c3e50;
   background-color: #f1f1f1;
 }
 

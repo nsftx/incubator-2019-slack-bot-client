@@ -104,6 +104,17 @@ export default {
         SAVE
       );
     }
+     if(localStorage.getItem(USER_THEME)=="Dark"){
+        document.getElementById("cancle").style.backgroundColor="#191919";
+        document.getElementById("cancle").style.color="white";
+      document.getElementById("createUser").style.color="white";
+      document.getElementById("form-style-10").style.backgroundColor="#191919";
+       document.getElementById("inner-wrap").style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[0].style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[1].style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[2].style.backgroundColor="#191919";
+
+    }
   },
   methods: {
     exit() {

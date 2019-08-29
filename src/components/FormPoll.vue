@@ -180,17 +180,29 @@ export default {
 
   mounted: async function() {
     if (localStorage.getItem(USER_THEME) == "Light") {
+       document.getElementById("createPoll").style.color = "black";
       document.getElementById("form-style-10").style.backgroundColor = "white";
       //document.getElementById("messages").style.backgroundColor="white";
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
-      document.getElementById("form-style-10").style.backgroundColor = "black";
+       document.getElementById("cancle").style.backgroundColor="#191919";
+        document.getElementById("cancle").style.color="white";
+      document.getElementsByClassName("mx-input")[0].style.backgroundColor="#191919";
+      document.getElementById("channelname").style.backgroundColor="#191919";
+      document.getElementsByClassName("la2")[0].style.backgroundColor="#191919";
+      document.getElementById("createPoll").style.color="white";
+      document.getElementById("form-style-10").style.backgroundColor="#191919";
+       document.getElementById("inner-wrap").style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[0].style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[1].style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[2].style.backgroundColor="#191919";
+      document.getElementById("FormPoll").color = "black";
       //document.getElementById("messages").style.backgroundColor="black";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementById("createPoll").innerHTML = localStorage.getItem(
         CREATEPOLL
       );
-      document.getElementById("createPoll").style.color = "black";
+     
       document.getElementsByClassName("la")[0].innerHTML = localStorage.getItem(
         TITLE
       );
@@ -359,7 +371,6 @@ export default {
 * {
   font-family: "Roboto", sans-serif;
 }
-
 #form-style-10 {
   width: 640px;
   height: auto;

@@ -83,7 +83,8 @@ import {
   TITLE,
   TEXT,
   NEWMESSAGE,
-  TYPEYOURMESSAGE
+  TYPEYOURMESSAGE,
+  USER_THEME
 } from "../constants/index.js";
 import axios from "axios";
 
@@ -122,7 +123,6 @@ export default {
       document.getElementById("formTitle").innerHTML = localStorage.getItem(
         CREATEMESSAGE
       );
-      document.getElementById("formTitle").style.color = "black";
       document.getElementById("submit").value = localStorage.getItem(SAVE);
       document.getElementById("cancle").value = localStorage.getItem(CANCEL);
       document.getElementsByTagName(
@@ -137,6 +137,17 @@ export default {
       document.getElementsByTagName(
         "textarea"
       )[0].placeholder = localStorage.getItem(TYPEYOURMESSAGE);
+    }
+    if(localStorage.getItem(USER_THEME)=="Dark"){
+       document.getElementById("cancle").style.backgroundColor="#191919";
+        document.getElementById("cancle").style.color="white";
+      document.getElementById("formTitle").style.color="white";
+      document.getElementById("form-style-10").style.backgroundColor="#191919";
+       document.getElementById("inner-wrap").style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[0].style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[1].style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[2].style.backgroundColor="#191919";
+
     }
   },
 

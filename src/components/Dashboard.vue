@@ -129,6 +129,9 @@ export default {
         "option"
       )[2].innerHTML = localStorage.getItem(LOGOUT);
     }
+    if (localStorage.getItem(USER_THEME) == "Dark") {
+      document.getElementById("dropdown").color=""
+    }
   },
   methods: {
     showDropdown(index) {
@@ -170,6 +173,7 @@ export default {
   display: flex;
   justify-content: center;
   background-color: #6b6767;
+  color: #2c3e50;
 }
 
 #settings {
@@ -271,7 +275,7 @@ body {
 }
 
 #table {
-  height: 90vh;
+  height: 100vh;
 }
 
 #footer {
