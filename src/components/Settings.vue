@@ -231,9 +231,8 @@ document.getElementById("color").innerHTML = localStorage.getItem(
             console.log(error);
           }
         );
-         this.picked1="";
-        this.picked2="";
-  
+         
+   document.getElementById("one1").checked=true;
        if(localStorage.getItem(USER_LANGUAGE)!="en"){
          document.getElementById("one1").checked=false;
        document.getElementById("two1").checked=true;
