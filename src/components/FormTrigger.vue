@@ -85,7 +85,7 @@
 <script>
 import axios from "axios";
 
-import { API_BASE_URL,USER_LANGUAGE,CREATETRIGGER,SOMEMESSAGETITLE,SOMECHANNELNAME, SOMETRIGGERTYPE,ACTIVE,SAVE,CANCEL,MESSAGE } from "../constants";
+import { USER_THEME,API_BASE_URL,USER_LANGUAGE,CREATETRIGGER,SOMEMESSAGETITLE,SOMECHANNELNAME, SOMETRIGGERTYPE,ACTIVE,SAVE,CANCEL,MESSAGE } from "../constants";
 import { ACCESS_TOKEN } from "../constants/index.js";
 const headers = {
   "Content-Type": "application/json",
@@ -126,6 +126,19 @@ export default {
         document.getElementById("cancel").value=localStorage.getItem(CANCEL);
          document.getElementById("submit").value=localStorage.getItem(SAVE);
      }
+     if (localStorage.getItem(USER_THEME) == "Dark") {
+        document.getElementById("cancel").style.backgroundColor="#191919";
+        document.getElementById("cancel").style.color="white";
+      document.getElementById("formTitle").style.color="white";
+      document.getElementById("formaT").style.backgroundColor="#191919";
+       document.getElementsByClassName("inner-wrap")[0].style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[0].style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[1].style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[2].style.backgroundColor="#191919";
+       document.getElementsByClassName("la")[2].style.backgroundColor="#191919";
+      document.getElementById("FormPoll").color = "black";
+      //document.getElementById("messages").style.backgroundColor="black";
+    }
     if (this.$route.params.id != null) {
       var currentR = this.$router.currentRoute.fullPath;
       var path = currentR.substring(0, 30);

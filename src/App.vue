@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { USER_THEME,API_BASE_URL,ACCESS_TOKEN } from './constants';
 export default {
   name: "app",
   components: {},
@@ -12,6 +13,23 @@ export default {
     return {
       rowSizesValue: [5, 10, 20]
     };
+  },
+  mounted:function(){
+    /*let headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+    };
+    axios
+      .get(API_BASE_URL + "/user/me", {
+        headers: headers
+      })
+      .then(response => {
+        localStorage.setItem(USER_THEME, response.data.userSettings.theme);
+      })*/
+    if(localStorage.getItem(USER_THEME)=="Dark"){
+      document.getElementById("app").style.color="#f1f1f1";
+      document.getElementById("footer").style.backgroundColor="#191919";
+    }
   }
 };
 </script>

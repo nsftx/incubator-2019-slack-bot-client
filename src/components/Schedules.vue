@@ -155,9 +155,18 @@ export default {
       document.getElementById("header").style.backgroundColor = "white";
       document.getElementById("Schedules").style.backgroundColor = "white";
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
+      document.getElementById("footer").style.backgroundColor="#191919";
+      document.getElementById("divlist").style.backgroundColor="#4c4c4c";
+      document.getElementById("header").style.backgroundColor = "#191919";
+      document.getElementById("Schedules").style.backgroundColor = "#191919";
+      document.getElementById("title-li").style.backgroundColor="#323232";
+      document.getElementById("title-li").style.color="#f1f1f1";
+      document.getElementsByTagName("H5")[0].style.color="#f1f1f1";
+       document.getElementsByTagName("H5")[1].style.color="#f1f1f1";
+        document.getElementsByTagName("H5")[2].style.color="#f1f1f1";
+        document.getElementsByTagName("H5")[3].style.color="#f1f1f1";
+        document.getElementsByTagName("H5")[4].style.color="#f1f1f1";
       this.$emit("change-dark");
-      document.getElementById("header").style.backgroundColor = "black";
-      document.getElementById("Schedules").style.backgroundColor = "black";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
@@ -355,10 +364,8 @@ h1 {
 }
 
 #header {
-  margin-left: 15px;
-  margin-right: 10px;
   display: block;
-  width: 99%;
+  width: 100%;
   float: right;
   background-color: white;
 }

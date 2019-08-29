@@ -162,8 +162,16 @@ export default {
       document.getElementById("Triggers").style.backgroundColor = "white";
     } else if (localStorage.getItem(USER_THEME) == "Dark") {
       this.$emit("change-dark");
-      document.getElementById("header").style.backgroundColor = "black";
-      document.getElementById("Triggers").style.backgroundColor = "black";
+document.getElementById("footer").style.backgroundColor="#191919";
+      document.getElementById("divlist").style.backgroundColor="#4c4c4c";
+      document.getElementById("header").style.backgroundColor = "#191919";
+      document.getElementById("Triggers").style.backgroundColor = "#191919";
+      document.getElementById("title-li").style.backgroundColor="#323232";
+      document.getElementById("title-li").style.color="#f1f1f1";
+      document.getElementsByTagName("H5")[0].style.color="#f1f1f1";
+       document.getElementsByTagName("H5")[1].style.color="#f1f1f1";
+        document.getElementsByTagName("H5")[2].style.color="#f1f1f1";
+        document.getElementsByTagName("H5")[3].style.color="#f1f1f1";
     }
     if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementsByTagName("H1")[0].innerHTML = localStorage.getItem(
@@ -334,10 +342,8 @@ h1 {
   float: left;
 }
 #header {
-  margin-left: 15px;
-  margin-right: 10px;
   display: block;
-  width: 99%;
+  width: 100%;
   float: right;
   background-color: white;
 }

@@ -116,7 +116,8 @@ import {
   SOMEMESSAGETITLE,
   NEWMESSAGE,
   TYPEYOURMESSAGE,
-  SELECTDATE
+  SELECTDATE,
+  USER_THEME
 } from "../constants";
 import { ACCESS_TOKEN } from "../constants/index.js";
 const headers = {
@@ -200,6 +201,21 @@ export default {
       document.getElementsByClassName(
         "checkText"
       )[1].innerHTML = localStorage.getItem(ACTIVE);
+    }
+     if (localStorage.getItem(USER_THEME) == "Dark") {
+       document.getElementsByClassName("form-style-10")[0].style.backgroundColor="#191919";
+      document.getElementById("formTitle").style.color="white";
+      document.getElementById("formaS").style.backgroundColor="#191919";
+       document.getElementById("cancel").style.backgroundColor="#191919";
+        document.getElementById("cancel").style.color="white";
+       document.getElementsByClassName("inner-wrap")[0].style.backgroundColor="#191919";
+       document.getElementsByClassName("mx-input")[0].style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[0].style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[1].style.backgroundColor="#191919";
+       document.getElementsByTagName("label")[2].style.backgroundColor="#191919";
+       document.getElementsByClassName("la")[2].style.backgroundColor="#191919";
+      document.getElementById("FormPoll").color = "black";
+      //document.getElementById("messages").style.backgroundColor="black";
     }
     if (this.$route.params.id == null) {
       try {
@@ -428,6 +444,7 @@ export default {
 <style scoped>
 * {
   font-family: "Roboto", sans-serif;
+  color:#2c3e50;
 }
 
 *[data-v-f2ae3234] {
