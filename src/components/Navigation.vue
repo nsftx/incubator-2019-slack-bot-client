@@ -36,6 +36,10 @@
       </button>
     </router-link>
 
+    <div class="notification">
+      <span id="notificationNumber">{{notificationNumber}}</span>
+    </div>
+
     <router-link to="/dashboard/activity" class="router-link">
       <button>
         <v-icon color="white" size="32" style="margin-bottom: 10px">track_changes</v-icon>
@@ -180,6 +184,7 @@ export default {
         USERS
       );
     }
+    this.subscribeToNotification();
   },
   methods: {
     Translate() {
@@ -203,6 +208,36 @@ export default {
           "span"
         )[5].innerHTML = localStorage.getItem(USERS);
       }
+    },
+
+    async subscribeToNotification() {
+      let self = this;
+      this.source = null;
+
+      await axios
+        .get(API_BASE_URL + "/user/me", {
+          headers: headers
+        })
+        .then(response => {
+          this.userId = response.data.id;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+
+      this.source = new EventSource(
+        API_BASE_URL + "/api/logs/new-logs-stream/" + this.userId
+      );
+
+      this.source.addEventListener("new-log-event", function(event) {
+        var comment = JSON.parse(event.data);
+        self.notificationNumber = event.data;
+      });
+
+      this.source.onerror = function() {
+        console.log("TESTERRR");
+        this.close();
+      };
     }
   }
 };

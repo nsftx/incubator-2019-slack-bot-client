@@ -27,7 +27,7 @@
           </div>
         </li>
 
-        <li v-for="audit in auditData" :key="audit.id">
+          <li v-for="audit in auditData" :key="audit.id"  :class="{notSeen: audit.seen}" >
           <div class="linear2"></div>
           <div class="linear1"></div>
           <div class="column1 column">
@@ -242,6 +242,10 @@ h1 {
   width: 100%;
   float: right;
   background-color: white;
+}
+
+.notSeen{
+  opacity: 0.8;
 }
 
 #divlist {
