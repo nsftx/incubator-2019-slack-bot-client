@@ -1,6 +1,6 @@
 <template>
   <div id="user">
-    <router-view></router-view>
+    <router-view @reload-users="reloadUsers()"></router-view>
     <div id="header">
       <h1>Users</h1>
     </div>
@@ -201,11 +201,11 @@ export default {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
       };
-      await axios.delete(API_BASE_URL + "/user/delete/" + id);
+      await axios.delete(API_BASE_URL + "/user/" + id,{headers:headers});
       var pg = this.page - 1;
       try {
-        var res;
-        if (this.titleSort == true)
+        //var res;
+        /*if (this.titleSort == true)
           res = await axios.get(
             API_BASE_URL +
               "/user/getAllUsers?page=" +
@@ -237,8 +237,19 @@ export default {
               "&sort=createdAt," +
               this.sortType,
             { headers: headers }
-          );
-
+          );*/
+ const res = await axios.get(
+          API_BASE_URL +
+            "/user/getAllUsers?page=" +
+            pg +
+            "&size=" +
+            this.rowSize +
+            "&sort=" +
+            this.sortByValue +
+            "," +
+            this.sortType,
+          { headers: headers }
+        );
         if (res.data.numberOfElements == 0) {
           if (this.page != 1) this.changePage(this.page - 1);
         }
@@ -273,7 +284,7 @@ export default {
         if (res.data.totalPages < this.page)
           this.changePage(res.data.totalPages);
 
-        this.messagesData = res.data.content;
+        this.usersData = res.data.content;
         this.pagesSize = res.data.totalPages;
       } catch (err) {
         this.showNotification(-1);
