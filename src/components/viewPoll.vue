@@ -42,7 +42,7 @@ import {
   POLL,
   TITLE,
   NEWPOLLTITLE,
-  OPTION
+  OPTION,USER_THEME
 } from "../constants/index.js";
 import { User_Email } from "../constants/index.js";
 import { ACCESS_TOKEN } from "../constants/index.js";
@@ -77,6 +77,10 @@ export default {
         VOTENUMBER
       );
       document.getElementById("cancle").value = localStorage.getItem(CANCEL);
+    }
+    if (localStorage.getItem(USER_THEME) == "Dark") {
+      document.getElementById("pollViewTitle").style.color="white";
+      document.getElementById("form-style-10").style.backgroundColor="#191919";
     }
     this.create();
   },

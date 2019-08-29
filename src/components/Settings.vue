@@ -168,7 +168,6 @@ export default {
   "Content-Type": "application/json",
   Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
 };
-      console.log(this.picked2);
       if(this.picked2=="English")
       localStorage.setItem(USER_LANGUAGE,"en");
       else if(this.picked2=="Bosnian")
@@ -209,16 +208,7 @@ export default {
         localStorage.setItem(key,response.data[key]);
     }
 }
-          console.log(response);
-        },
-        error => {
-          console.log(error);
-        }
-      );
-       if(localStorage.getItem(USER_LANGUAGE)!="en"){
-         document.getElementById("one1").checked=false;
-       document.getElementById("two1").checked=true;
-          document.getElementById("color").innerHTML = localStorage.getItem(
+document.getElementById("color").innerHTML = localStorage.getItem(
            SELECTCOLOR
           );
           document.getElementById("language").innerHTML = localStorage.getItem(
@@ -232,6 +222,16 @@ export default {
           document.getElementById("bosnian").innerHTML= localStorage.getItem(LANGUAGEFR);
           document.getElementById("dark").innerHTML=localStorage.getItem(DARK);
           document.getElementById("light").innerHTML=localStorage.getItem(LIGHT);
+          console.log(response);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+       if(localStorage.getItem(USER_LANGUAGE)!="en"){
+         document.getElementById("one1").checked=false;
+       document.getElementById("two1").checked=true;
+          
   }
     if (localStorage.getItem(USER_THEME) == "Light") {
       document.getElementById("two").checked=true;
