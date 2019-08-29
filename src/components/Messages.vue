@@ -32,17 +32,17 @@
           </div>
         </li>
 
-        <li v-for="message in messagesData" :key="message.messageId">
+        <li  v-for="message in messagesData" :key="message.messageId">
           <div class="linear2"></div>
           <div class="linear1"></div>
           <div class="column1 column">
             <p>{{message.title}}</p>
           </div>
           <div class="column2 column">
-            <p>{{message.text}}</p>
+            <p class="lip">{{message.text}}</p>
           </div>
           <div class="column3 column">
-            <p>{{message.createdAt | shortDate }}</p>
+            <p class="lip">{{message.createdAt | shortDate }}</p>
           </div>
           <div class="column4 column">
             <i
@@ -235,7 +235,17 @@ export default {
       } catch (err) {
         this.showNotification(-1);
       }
-    },
+      if(localStorage.getItem(USER_THEME) == "Dark") {
+      this.$emit("change-dark");
+ for(var i=0;i<document.getElementsByTagName("li").length;i++){
+      document.getElementsByTagName("li")[i].style.backgroundColor = "#3c4858";
+       document.getElementsByTagName("li")[i].style.color = "white";
+      document.getElementById("linear1").style.backgroundColor="#3c4858"; }
+     for(var i=0;i<document.getElementsByClassName("lip").length;i++){
+      document.getElementsByClassName("lip")[i].style.color= "white";
+      document.getElementById("linear1").style.backgroundColor="#3c4858"; }
+    }
+  },
 
     showNotification(value) {
       if (value == -1) {
@@ -347,6 +357,27 @@ export default {
       } catch (err) {
         this.showNotification(-1);
       }
+       /* if (localStorage.getItem(USER_THEME) == "Light") {
+      this.$emit("change-light");
+      document.getElementById("header").style.backgroundColor = "white";
+      document.getElementById("messages").style.backgroundColor = "white";
+    } else if */ if(localStorage.getItem(USER_THEME) == "Dark") {
+      this.$emit("change-dark");
+ for(var i;i<document.getElementsByTagName("li").length;i++){
+      document.getElementsByTagName("li")[i].style.backgroundColor = "#3c4858";
+      document.getElementsByTagName("li")[i].style.color = "white";
+      //document.getElementById("messages").style.backgroundColor = "black";
+    }
+    }
+    else if(localStorage.getItem(USER_THEME) == "Light") {
+      /*document.getElementById("linear1").style.backgroundImage="linear-gradient(
+    90deg,
+    rgba(236, 236, 236, 0) 0%,
+    white 100%
+  )";*/
+      //this.$emit("change-dark");
+ for(var i;i<document.getElementsByTagName("li").length;i++)
+      document.getElementsByTagName("li")[i].style.backgroundColor = "white"; } 
     },
 
     sortBy(value) {
@@ -476,7 +507,7 @@ li {
   display: flex;
   height: 48px;
   width: 100%;
-  background-color: white;
+  /*background-color: white;*/
   border: 0.5px solid lightgray;
   border-bottom: 0px;
   overflow: hidden;
@@ -516,7 +547,7 @@ li p {
 
 li p {
   margin: 0px;
-  color: rgb(70, 67, 67);
+  /*color: rgb(70, 67, 67);*/
 }
 
 .column1 {
@@ -566,11 +597,11 @@ li:hover .linear2 {
 }
 
 .linear1 {
-  background-image: linear-gradient(
+  /*background-image: linear-gradient(
     90deg,
     rgba(236, 236, 236, 0) 0%,
     white 100%
-  );
+  );*/
   width: 60px;
   height: 40px;
   margin-top: 5px;
@@ -579,11 +610,11 @@ li:hover .linear2 {
 }
 
 .linear2 {
-  background-image: linear-gradient(
+  /*background-image: linear-gradient(
     90deg,
     rgba(236, 236, 236, 0) 0%,
     white 100%
-  );
+  );*/
   width: 60px;
   height: 39px;
   margin-top: 5px;
