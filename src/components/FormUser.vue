@@ -121,6 +121,7 @@ export default {
       this.$router.go(-1);
     },
     async save() {
+    if(this.roleType=="KORISNIK") this.roleType="USER";
       let headers = {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
