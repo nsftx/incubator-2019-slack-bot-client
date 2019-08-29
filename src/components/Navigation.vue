@@ -217,6 +217,10 @@ export default {
     },
 
     async subscribeToNotification() {
+    let headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+    };
       let self = this;
       this.source = null;
 
