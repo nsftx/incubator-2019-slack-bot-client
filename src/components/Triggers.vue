@@ -201,6 +201,10 @@ document.getElementById("footer").style.backgroundColor="#191919";
     },
 
     async reloadTriggers() {
+         let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       var pg = this.page - 1;
       try {
         const res = await axios.get(
@@ -300,6 +304,10 @@ document.getElementById("footer").style.backgroundColor="#191919";
     },
 
     async create() {
+      let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       try {
         const res = await axios.get(
           API_BASE_URL +
