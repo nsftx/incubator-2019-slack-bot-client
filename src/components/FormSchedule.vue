@@ -226,13 +226,18 @@ export default {
         this.$emit("show-notification", -1);
       }
     } else {
+
       var currentR = this.$router.currentRoute.fullPath;
       var path = currentR.substring(0, 31);
 
       if (path == "/dashboard/messages/newSchedule") {
+        let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
         try {
           const res = await axios.get(
-            API_BASE_URL + "/api/messages/" + this.$route.params.id
+            API_BASE_URL + "/api/messages/" + this.$route.params.id,{headers:headers}
           );
           this.messageTitle = res.data.title;
         } catch (err) {
@@ -242,8 +247,12 @@ export default {
         this.formType = "Update";
         var res;
         try {
+          let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
           res = await axios.get(
-            API_BASE_URL + "/api/schedules/" + this.$route.params.id
+            API_BASE_URL + "/api/schedules/" + this.$route.params.id,{headers:headers}
           );
           this.active = res.data.active;
           this.repeat = res.data.repeat;
@@ -255,6 +264,10 @@ export default {
           this.$emit("show-notification", -1);
         }
         try {
+          let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
           const resM = await axios.get(API_BASE_URL + "/api/messages", {
             headers: headers
           });

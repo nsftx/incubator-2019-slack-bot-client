@@ -220,18 +220,7 @@ document.getElementById("color").innerHTML = localStorage.getItem(
           document.getElementById("bosnian").innerHTML= localStorage.getItem(LANGUAGEFR);
           document.getElementById("dark").innerHTML=localStorage.getItem(DARK);
           document.getElementById("light").innerHTML=localStorage.getItem(LIGHT);
-          console.log(response);
-        },
-        error => {
-          console.log(error);
-        }
-      );
-          },
-          error => {
-            console.log(error);
-          }
-        );
-         this.picked1="";
+            this.picked1="";
         this.picked2="";
   
        if(localStorage.getItem(USER_LANGUAGE)!="en"){
@@ -247,6 +236,18 @@ document.getElementById("color").innerHTML = localStorage.getItem(
     }
       this.$emit("change-language");
       window.location.reload();
+          console.log(response);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+          },
+          error => {
+            console.log(error);
+          }
+        );
+       
       }
 
 
