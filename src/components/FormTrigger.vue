@@ -117,6 +117,10 @@ export default {
   },
 
   mounted: async function() {
+    const headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
      if (localStorage.getItem(USER_LANGUAGE) != "en") {
       document.getElementById("formTitle").innerHTML= localStorage.getItem(
         CREATETRIGGER
@@ -253,6 +257,10 @@ export default {
     },
 
     async save() {
+      let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       this.liveValidation = true;
       if (this.check_messageTitle(this.messageTitle) == false)
         this.invalid = true;
