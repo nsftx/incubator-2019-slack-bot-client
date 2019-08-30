@@ -166,6 +166,10 @@ document.getElementById("footer").style.backgroundColor="#191919";
     },
 
     async reloadActivity() {
+      let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       var pg = this.page - 1;
       try {
         const res = await axios.get(
@@ -184,6 +188,10 @@ document.getElementById("footer").style.backgroundColor="#191919";
     },
 
     async create() {
+      let headers = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN)
+};
       try {
         const res = await axios.get(
           API_BASE_URL + "/api/logs?page=0&size=" + this.rowSize + "&sort=createdAt,asc",
